@@ -1,0 +1,13 @@
+First, install nbautoexprort and register it so all .ipynb files saved under notebooks/ folder will be automatically
+converted into .py (code, under script/) and .html (outputs, under html/) files.
+When creating a new folder under notebook/, add a configuration file (the .nbautoexport works nonrecursively), with:
+$ nbautoexport configure <path to folder> -f script -f html --organize-by extension
+(or copy the .nbautoexport into the new folder)
+Go here for more details - https://pypi.org/project/nbautoexport/
+
+To work on a notebook on a different machine (e.g. open locally a git notebook), you have to first convert it into
+a jupyter notebook, using:
+$ jupytext --to notebook <path to .py file>
+Then move the file one level up to its notebooks nbautoexport configured folder and re-run the notebook. Saving it
+will now create both .py and .html files in their folders. 
+Careful - the output file will be replaced with the new local one when pushing to the repository.
