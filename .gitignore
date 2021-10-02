@@ -1,3 +1,9 @@
+# Adapted from here: https://gist.github.com/shinokada/30e2447973bce07a36ab8be8ba2ef738
+
+data
+results
+
+
 MANIFEST
 build
 dist

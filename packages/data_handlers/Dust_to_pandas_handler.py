@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
 import torch
@@ -26,10 +27,9 @@ class Dust_to_pandas_handler:
             column is "PM10 µg/m³", and the empty row between the data and title is deleted,
             so the only rows are: first row - titles, the rest - data.
             Note about the MEP format: the MEP date format is "01/01/2000  1:00:00" in Israel time, 
-            and every midnight (00:00) the date is for replaced with an int. 
+            and every midnight (00:00) the date is for some reason replaced with an int. 
             Values can be numbers or irrelevant strings.
             All of these are to be carefully transformed into TimeIndex and float (or NaN) values.
-            For ease of use in a notebook, the __init__ returns the prepared dust_lags dataframe
             saveto - if None, will not save. If a string - will save to that. Has to be a ".pkl"
             origin_start - the time from which averages of num_hours_to_avg will be calculated
             avg_th - averages of less than this threshold values will be dropped. Defaults to 50% 
