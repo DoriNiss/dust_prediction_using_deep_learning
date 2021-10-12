@@ -78,7 +78,7 @@ class DustPredictionDataset(Dataset):
                       (dust[:,self.dust_idx]>=self.th).nonzero().shape)
                 print("final_num_events:",final_num_events,"num_events_to_populate = final_num_events-events_idxs.shape[0]")
             return default_return
-        
+
 def dust_prediction_collate(batch):
     new_batch = []
     timestamps = []
