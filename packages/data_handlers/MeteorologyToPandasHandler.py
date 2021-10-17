@@ -5,9 +5,9 @@ import pandas as pd
 from tqdm.notebook import tqdm
 import torch
 
-class Meteorology_to_pandas_handler:
+class MeteorologyToPandasHandler:
     def __init__(self, params=None, folders=None, prefixes=None, netcdf_keys=None,
-        dates=None, debug=False):
+        dates=None, debug=False, keep_na=False):
         '''
             Used for loading meteorology params from a server (defaults values regards to the Chemfarm of WIS)
             and transform them into a pandas DataFrame
@@ -31,6 +31,7 @@ class Meteorology_to_pandas_handler:
         self.paths = {}
         self.param_idxs = {}
         self.init_paths()
+        self.keep_na = keep_na
 
     def set_default_params(self):
         return ["SLP", "Z", "U", "V", "PV"]
@@ -133,7 +134,9 @@ class Meteorology_to_pandas_handler:
                 fill_value=0).data
                 numpy_list.append(param_numpy) 
             dataframe[param] = numpy_list # Raises a message about np.arrays of different sizes and prefers it as objects. Ignoring for now
-        return dataframe.dropna(how="any")
+        if not self.keep_na:
+            dataframe = dataframe.dropna(how="any")
+        return dataframe
 
     def save_dataframe(self, dataframe, filename):
         if filename[-4:] == ".pkl":
@@ -153,7 +156,7 @@ class Meteorology_to_pandas_handler:
         df_by_year = dataframe[dataframe.index.year==year]
         torch.save(df_by_year, filename)
 #         df_by_year.to_pickle(filename)
-        print(f"Saved dataframe of year {year} to file {filename}")
+        print(f"Saved dataframe of year {year} to file {filename}, length: {len(df_by_year)}")
 
     def get_years_list(self):
         return list(set([date.year for date in self.dates])) 
@@ -162,4 +165,4 @@ class Meteorology_to_pandas_handler:
         years_list = self.get_years_list()
         for y in years_list:
             self.save_dataframe_wanted_year(dataframe, path_to_dir+"/"+base_filename+"_"+str(y)+".pkl", y)
-    
+

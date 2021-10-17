@@ -157,7 +157,7 @@ years_valid_split4_max_num_events_in_train_avg_valid = [
     2015,
     2016,
 ]
-    
+
 
 print("Split 4: years_train_split4_max_num_events_in_train_avg_valid")
 print("Training:")

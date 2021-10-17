@@ -9,7 +9,7 @@ from tqdm.notebook import tqdm
 # creates metadata - dust, meteorology
 # creates big tensors - dust, meteorology + normalizations
 
-class Dataset_handler:
+class DatasetHandler:
     '''
         Used for:
         1. Creating a combined dataframe of both meteorolgy and dust
@@ -35,17 +35,19 @@ class Dataset_handler:
         If you already have training and validation dataframes, you can load them with
         self.load_train_valid_df(filename_train_df, filename_valid_df) and continue
         to .create_datasets (step 3)
+        if keep_na==True: will add all missing datetimes in a new column, NaN values will be added to missing rows
     '''
-    def __init__(self,filename_meteorology, filename_dust, th=73.4, filename_combined="",
-        meteorology_columns_idxs=[0,1,2,3,4], 
-        dust_columns_idxs=[5,6,7,8,9,10,11,12,13,14]):
+    def __init__(self,filename_meteorology, filename_dust, th=73.4, filename_combined=None,
+                 meteorology_columns_idxs=[0,1,2,3,4], dust_columns_idxs=[5,6,7,8,9,10,11,12,13,14],
+                 keep_na=False):
         self.filename_meteorology = filename_meteorology
         self.filename_dust = filename_dust
         self.th = th
         self.meteorology_columns_idxs = meteorology_columns_idxs
         self.dust_columns_idxs = dust_columns_idxs
         self.combine_dataframes()
-        if filename_combined != "":
+        self.keep_na = keep_na
+        if filename_combined is not None:
             torch.save(self, filename_combined)
             print(f"Handler saved to {filename_combined}")
 
