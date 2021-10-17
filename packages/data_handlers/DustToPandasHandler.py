@@ -5,7 +5,7 @@ import torch
 import csv
 import pytz
 
-class Dust_to_pandas_handler:
+class DustToPandasHandler:
     '''
         This class is used for taking a dust file (defaulted to .csv from the Ministry of Env Protection site https://www.svivaaqm.net/)
         and transform it into a pandas dataframe. This df will be used later in combination with
@@ -14,7 +14,7 @@ class Dust_to_pandas_handler:
     '''
     def __init__(self, filename, timezone="Asia/Jerusalem", num_hours_to_avg="3h",lags=[0,-24,24,48,72],
                  delta_hours=3, data_type="MEP", saveto=None, avg_th=3, origin_start="2000-01-01 00:00:00+00:00",
-                 use_all=True):
+                 use_all=True, keep_na=False):
         '''
             timezones - the time zone of the taken measurements, to be translated to UTC (https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
             num_hours_to_avg - the hours
@@ -48,12 +48,14 @@ class Dust_to_pandas_handler:
         self.origin_start = origin_start
         self.avg_th = avg_th
         self.use_all = use_all
+        self.keep_na = keep_na
         print("Loading data and creating a pandas DataFrame: ...")
         self.dust_raw = self.get_data()
         print("... Done! Created a pandas DataFrame (times shifted to UTC):",self.dust_raw.describe(),"len:",len(self.dust_raw))
-        print("Removing NaN values: ...")
-        self.dust_raw = self.dust_raw.dropna(how="any")
-        print("... Done! Dropped NaN values:",self.dust_raw.describe(),"len:",len(self.dust_raw))
+        if not keep_na:
+            print("Removing NaN values: ...")
+            self.dust_raw = self.dust_raw.dropna(how="any")
+            print("... Done! Dropped NaN values:",self.dust_raw.describe(),"len:",len(self.dust_raw))
         print(f"Calculating {self.num_hours_to_avg} hourly averages since {self.origin_start}: ...")
         dust_avgs = self.calculate_averages(self.dust_raw)
         print(f"... Done! Averaged in timebase of {self.num_hours_to_avg}:")
@@ -153,7 +155,9 @@ class Dust_to_pandas_handler:
     def calculate_averages(self, dust_dataframe):
         dust_grouped = dust_dataframe.groupby(pd.Grouper( # remove the origin argument for pandas older than 1.1, this is only to make sure the times are synced. Default should work as well
             freq=self.num_hours_to_avg, origin=self.origin_start,label="left"))
-        dust_avgs = dust_grouped.mean()[dust_grouped.count()>=self.avg_th].dropna(how="any")
+        dust_avgs = dust_grouped.mean()[dust_grouped.count()>=self.avg_th]
+        if not self.keep_na:
+            dust_avgs = dust_avgs.dropna(how="any")
         return dust_avgs
     
     def calculate_lags(self, dust_avg):
@@ -168,7 +172,8 @@ class Dust_to_pandas_handler:
             dusts_just_before_lag = dusts_lag.shift(periods=self.delta_hours,freq="h")
             dust_avgs_lags[shift_name] = dusts_lag
             dust_avgs_lags[delta_name] = dusts_lag-dusts_just_before_lag
-        dust_avgs_lags = dust_avgs_lags.dropna(how="any")
+        if not self.keep_na:
+            dust_avgs_lags = dust_avgs_lags.dropna(how="any")
         return dust_avgs_lags
 
     def check_result(self, rows_start, rows_end):
