@@ -4,6 +4,7 @@ import numpy as np
 import torch
 import csv
 import pytz
+import torch
 
 class DustToPandasHandler:
     '''
@@ -70,12 +71,12 @@ class DustToPandasHandler:
 
     def saveto(self,filename):
         if filename[-4:] == ".pkl":
-            self.dust_lags.to_pickle(filename)
+#             self.dust_lags.to_pickle(filename)
+            torch.save(self.dust_lags,filename)
             print(f"Saved self.dust_lags to file {filename}")
         else:
             print("Could not save - bad file name. Has to end with .pkl. Use only self.saveto(filename) instead of re-computing everything")
 
-    
     def get_csv_only(self):
         # Used for debugging
         file = open(self.filename, 'r') 
