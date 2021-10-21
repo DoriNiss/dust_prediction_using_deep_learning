@@ -1,15 +1,18 @@
 #!/usr/bin/env python
 # coding: utf-8
 
+
+
+
 import sys
 sys.path.insert(0, '../../packages/data_handlers')
-from Meteorology_to_pandas_handler import *
+from MeteorologyToPandasHandler import *
 import numpy as np
 
 
 # meteo_handler = Meteorology_to_pandas_handler(debug=True)
 params = ["PV", "Z"]
-meteo_handler = Meteorology_to_pandas_handler(params=params, debug=False)
+meteo_handler = MeteorologyToPandasHandler(params=params, debug=False, keep_na=True)
 meteo_handler.params
 
 
@@ -42,8 +45,13 @@ meteo_dataframe["PV"][0].shape
 
 
 
+
+
+
 # loaded = torch.load(path_to_dir+"/meteorology_pv_z500_dataframe_2000.pkl")
 # loaded["PV"][0].shape, loaded["Z"][10].shape
+
+
 
 
 
@@ -56,6 +64,7 @@ print("PV shape: ",meteo_dataframe[0:5]["PV"][2].shape, ", Z shape: ",meteo_data
 
 
 path_to_dir = "../../data/pv_to_z500_wide"
+
 base_filename = "meteorology_pv_z500_dataframe"
 meteo_handler.save_dataframe_by_years(meteo_dataframe, path_to_dir, base_filename)
 
@@ -63,11 +72,14 @@ meteo_handler.save_dataframe_by_years(meteo_dataframe, path_to_dir, base_filenam
 
 
 
-# check sizes
 
+
+
+# check sizes
 
 import torch
 path_to_dir = "../../data/pv_to_z500_wide"
+
 
 for y in range(2000,2022):
     loaded = torch.load(path_to_dir+"/meteorology_pv_z500_dataframe_"+str(y)+".pkl")
@@ -75,6 +87,9 @@ for y in range(2000,2022):
 
 
 print(2928+2920+2920+2920+2928+2920+2920+2920+2928+2920+2920+2920+2928+2920+2920+2920+2928+2920+2920+2598)
+
+
+
 
 
 

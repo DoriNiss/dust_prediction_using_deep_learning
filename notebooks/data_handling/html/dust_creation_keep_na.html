@@ -14259,7 +14259,7 @@ a.anchor-link {
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
@@ -14275,11 +14275,11 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_csv_filename</span> <span class="o">=</span> <span class="s2">&quot;../../data/data_pm10_BeerSheva_20000101_20210630.csv&quot;</span>
-<span class="n">result_filename</span> <span class="o">=</span> <span class="s2">&quot;../../data/dust_20000101to20213006_0_keep_na.pkl&quot;</span>
+<span class="n">result_filename</span> <span class="o">=</span> <span class="s2">&quot;../../data/dust_20000101to20213006_6h_keep_na.pkl&quot;</span>
 </pre></div>
 
      </div>
@@ -14290,10 +14290,11 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_handler</span> <span class="o">=</span> <span class="n">DustToPandasHandler</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">dust_csv_filename</span><span class="p">,</span> <span class="n">saveto</span><span class="o">=</span><span class="n">result_filename</span><span class="p">,</span> <span class="n">keep_na</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_handler</span> <span class="o">=</span> <span class="n">DustToPandasHandler</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">dust_csv_filename</span><span class="p">,</span> <span class="n">saveto</span><span class="o">=</span><span class="n">result_filename</span><span class="p">,</span> <span class="n">keep_na</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+                                   <span class="n">num_hours_to_avg</span><span class="o">=</span><span class="s2">&quot;6h&quot;</span><span class="p">,</span> <span class="n">avg_th</span><span class="o">=</span><span class="mi">6</span><span class="p">,</span> <span class="n">delta_hours</span><span class="o">=</span><span class="mi">6</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14323,40 +14324,40 @@ min       -26.800000
 50%        37.000000
 75%        54.000000
 max      5375.100000 len: 376761
-Calculating 3h hourly averages since 2000-01-01 00:00:00+00:00: ...
-... Done! Averaged in timebase of 3h:
+Calculating 6h hourly averages since 2000-01-01 00:00:00+00:00: ...
+... Done! Averaged in timebase of 6h:
              dust_0
-count  53316.000000
-mean      53.704993
-std      101.679954
-min       -1.750000
-25%       26.133333
-50%       37.283333
-75%       54.000000
-max     4585.000000
+count  26688.000000
+mean      53.778569
+std       97.549201
+min        0.000000
+25%       26.900000
+50%       37.625000
+75%       53.700000
+max     3840.466667
 Calculating lags (dust,delta_dust) at these hours: [0, -24, 24, 48, 72]
 ... Done! Result is saved in self.dust_lags:
              dust_0       delta_0      dust_m24     delta_m24       dust_24  \
-count  53316.000000  52638.000000  53308.000000  52630.000000  53316.000000   
-mean      53.704993     -0.136413     53.704761     -0.136500     53.704993   
-std      101.679954     56.926287    101.687516     56.930368    101.679954   
-min       -1.750000  -2835.608333     -1.750000  -2835.608333     -1.750000   
-25%       26.133333     -7.133333     26.133333     -7.133333     26.133333   
-50%       37.283333     -0.100000     37.283333     -0.100000     37.283333   
-75%       54.000000      7.000000     54.000000      7.000000     54.000000   
-max     4585.000000   1735.933333   4585.000000   1735.933333   4585.000000   
+count  26688.000000  26261.000000  26684.000000  26257.000000  26688.000000   
+mean      53.778569     -0.063023     53.778241     -0.063209     53.778569   
+std       97.549201     71.490554     97.556462     71.495740     97.549201   
+min        0.000000  -2046.825000      0.000000  -2046.825000      0.000000   
+25%       26.900000     -8.650000     26.900000     -8.650000     26.900000   
+50%       37.625000      0.200000     37.625000      0.200000     37.625000   
+75%       53.700000      8.625000     53.700000      8.625000     53.700000   
+max     3840.466667   2576.300000   3840.466667   2576.300000   3840.466667   
 
            delta_24       dust_48      delta_48       dust_72      delta_72  
-count  52638.000000  53316.000000  52638.000000  53316.000000  52638.000000  
-mean      -0.136413     53.704993     -0.136413     53.704993     -0.136413  
-std       56.926287    101.679954     56.926287    101.679954     56.926287  
-min    -2835.608333     -1.750000  -2835.608333     -1.750000  -2835.608333  
-25%       -7.133333     26.133333     -7.133333     26.133333     -7.133333  
-50%       -0.100000     37.283333     -0.100000     37.283333     -0.100000  
-75%        7.000000     54.000000      7.000000     54.000000      7.000000  
-max     1735.933333   4585.000000   1735.933333   4585.000000   1735.933333  
+count  26261.000000  26688.000000  26261.000000  26688.000000  26261.000000  
+mean      -0.063023     53.778569     -0.063023     53.778569     -0.063023  
+std       71.490554     97.549201     71.490554     97.549201     71.490554  
+min    -2046.825000      0.000000  -2046.825000      0.000000  -2046.825000  
+25%       -8.650000     26.900000     -8.650000     26.900000     -8.650000  
+50%        0.200000     37.625000      0.200000     37.625000      0.200000  
+75%        8.625000     53.700000      8.625000     53.700000      8.625000  
+max     2576.300000   3840.466667   2576.300000   3840.466667   2576.300000  
 You can check the result using self.check_result(rows_start, rows_end)
-Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
+Saved self.dust_lags to file ../../data/dust_20000101to20213006_6h_keep_na.pkl
 </pre>
 </div>
 </div>
@@ -14368,7 +14369,7 @@ Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -14382,7 +14383,7 @@ Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">idxs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">10000</span><span class="p">,</span><span class="mi">10010</span><span class="p">)</span>
@@ -14402,7 +14403,7 @@ Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
 
 
 
@@ -14436,7 +14437,7 @@ Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">last_idx</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
@@ -14456,7 +14457,7 @@ Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
 
 
 
@@ -14469,6 +14470,20 @@ Saved self.dust_lags to file ../../data/dust_20000101to20213006_0_keep_na.pkl
 
 </div>
 
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">

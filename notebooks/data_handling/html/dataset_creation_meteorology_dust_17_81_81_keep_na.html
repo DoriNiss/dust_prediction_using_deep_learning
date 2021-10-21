@@ -14259,6 +14259,269 @@ a.anchor-link {
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">DatasetHandler</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># torch.save(dataframes[0][2900:3100],&quot;../../data/meteorology_dataframes_17_81_81_keep_na/meteorology_df_17_81_81_keep_na_debug.pkl&quot;)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataframes_paths_meteo</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;../../data/meteorology_dataframes_17_81_81_keep_na/meteorology_df_17_81_81_keep_na_2000.pkl&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;../../data/meteorology_dataframes_17_81_81_keep_na/meteorology_df_17_81_81_keep_na_2001.pkl&quot;</span><span class="p">]</span>
+<span class="n">dataframes_path_meteo_debug</span> <span class="o">=</span> <span class="s2">&quot;../../data/meteorology_dataframes_17_81_81_keep_na/meteorology_df_17_81_81_keep_na_debug.pkl&quot;</span>
+<span class="n">dataframe_path_dust</span> <span class="o">=</span> <span class="s2">&quot;../../data/dust_20000101to20213006_0_keep_na.pkl&quot;</span>
+
+<span class="n">dataframe0</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dataframes_path_meteo_debug</span><span class="p">)</span>
+<span class="n">dataframe1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dataframe_path_dust</span><span class="p">)</span>
+
+<span class="n">dataframes</span> <span class="o">=</span> <span class="p">[</span><span class="n">dataframe0</span><span class="p">,</span> <span class="n">dataframe1</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataframes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">dataframes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(Timestamp(&#39;2000-12-28 12:00:00+0000&#39;, tz=&#39;UTC&#39;, freq=&#39;3H&#39;),
+ Timestamp(&#39;1999-12-31 21:00:00+0000&#39;, tz=&#39;UTC&#39;, freq=&#39;3H&#39;))</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset_handler</span> <span class="o">=</span> <span class="n">DatasetHandler</span><span class="p">(</span><span class="n">dataframes</span><span class="p">,[</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span><span class="s2">&quot;U&quot;</span><span class="p">,</span><span class="s2">&quot;V&quot;</span><span class="p">,</span><span class="s2">&quot;PV&quot;</span><span class="p">],[</span><span class="s2">&quot;PV&quot;</span><span class="p">,</span><span class="s2">&quot;U&quot;</span><span class="p">,</span><span class="s2">&quot;V&quot;</span><span class="p">],[</span><span class="s2">&quot;Z&quot;</span><span class="p">],</span><span class="s2">&quot;bla&quot;</span><span class="p">,</span>
+                                 <span class="n">cols_channels_input</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">cols_channels_target</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+                
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-5-6e1c5e9749f2&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> dataset_handler = DatasetHandler(dataframes,[&#34;SLP&#34;,&#34;Z&#34;,&#34;U&#34;,&#34;V&#34;,&#34;PV&#34;],[&#34;PV&#34;,&#34;U&#34;,&#34;V&#34;],[&#34;Z&#34;],&#34;bla&#34;,
+</span><span class="ansi-green-intense-fg ansi-bold">      2</span>                                  cols_channels_input=None, cols_channels_target=None)
+<span class="ansi-green-intense-fg ansi-bold">      3</span> 
+
+<span class="ansi-green-fg">/gpfs01/work/dorini/projects/dust_prediction_using_deep_learning/packages/data_handlers/DatasetHandler.py</span> in <span class="ansi-cyan-fg">__init__</span><span class="ansi-blue-fg">(self, dataframes, cols_to_keep, cols_input, cols_target, channels_description, keep_na, include_all_timestamps, cols_channels_input, cols_channels_target)</span>
+<span class="ansi-green-intense-fg ansi-bold">     27</span>         self<span class="ansi-blue-fg">.</span>include_all_timestamps <span class="ansi-blue-fg">=</span> include_all_timestamps
+<span class="ansi-green-intense-fg ansi-bold">     28</span>         self<span class="ansi-blue-fg">.</span>init_cols_channels<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">---&gt; 29</span><span class="ansi-red-fg">         </span>self<span class="ansi-blue-fg">.</span>combine_dataframes<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">     30</span> <span class="ansi-red-fg">#         self.init_shapes()</span>
+<span class="ansi-green-intense-fg ansi-bold">     31</span> <span class="ansi-red-fg">#         self.combined_dataframe</span>
+
+<span class="ansi-red-fg">TypeError</span>: combine_dataframes() missing 1 required positional argument: &#39;dataframes&#39;</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dataset_handler</span><span class="o">.</span><span class="n">cols_target</span><span class="p">,</span> <span class="n">dataset_handler</span><span class="o">.</span><span class="n">cols_channels_target</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>([&#39;Z&#39;], {&#39;Z&#39;: None})</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="n">date1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-02-01&quot;</span><span class="p">)</span>
+<span class="n">date2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-02-02&quot;</span><span class="p">)</span>
+<span class="n">date1</span><span class="p">,</span> <span class="n">date2</span><span class="p">,</span> <span class="n">date1</span><span class="o">&lt;</span><span class="n">date2</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[10]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(Timestamp(&#39;2000-02-01 00:00:00&#39;), Timestamp(&#39;2000-02-02 00:00:00&#39;), True)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">series</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">date1</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">date2</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="s2">&quot;3h&quot;</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="s2">&quot;UTC&quot;</span><span class="p">)</span>
+<span class="n">series</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>DatetimeIndex([&#39;2000-02-01 00:00:00+00:00&#39;, &#39;2000-02-01 03:00:00+00:00&#39;,
+               &#39;2000-02-01 06:00:00+00:00&#39;, &#39;2000-02-01 09:00:00+00:00&#39;,
+               &#39;2000-02-01 12:00:00+00:00&#39;, &#39;2000-02-01 15:00:00+00:00&#39;,
+               &#39;2000-02-01 18:00:00+00:00&#39;, &#39;2000-02-01 21:00:00+00:00&#39;,
+               &#39;2000-02-02 00:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=&#39;3H&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
