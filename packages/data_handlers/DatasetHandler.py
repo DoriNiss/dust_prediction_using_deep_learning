@@ -15,7 +15,7 @@ class DatasetHandler:
         dataframes - list of dataframes, supposed to work per year. Each dataframe contains np.arrays with dtype = object
             The shapes of np.arrays are assumed to be [c,h,w] for meteorology dats or [1] for dust, and assuming
             target or input can be only dust or only meteorology
-        dataframes_descriptions - a must have list of description per dataframe (please describe the channels). 
+        dataframes_description - a must have description of the dataset (please describe the channels). 
             e.g.: {"input":{0:"Z500",1:"PV310"},"target":{0:"dust_0",1:"lags_0"}}
         cols_channels_input/target - dict with {cols:[idxs]}, e.g. {"PV":[0], "Z":None, "U":[1,3]}. 
             If None - will use all channels (for dust dataframes keep it None)
@@ -31,12 +31,15 @@ class DatasetHandler:
         self.cols_to_keep = self.cols_input+self.cols_target
         self.cols_channels_input = config_dict["cols_channels_input"]
         self.cols_channels_target = config_dict["cols_channels_target"]
-        self.dataframes_descriptions =  config_dict["dataframes_descriptions"]
-        self.keep_na =  config_dict["keep_na"]
-        self.as_float32 =  config_dict["as_float32"]
-        self.wanted_year =  config_dict["wanted_year"] # can be set to None
+        self.dataframes_descriptions = config_dict["dataframes_descriptions"]
+        self.keep_na = config_dict["keep_na"]
+        self.replace_na_in_target = config_dict["replace_na_in_target"]
+#         self.mask_tensor = config_dict["mask_tensor"]
+        self.as_float32 = config_dict["as_float32"]
+        self.wanted_year = config_dict["wanted_year"] # can be set to None
         self.include_all_timestamps_between =  config_dict["include_all_timestamps_between"]
         self.all_timestamps_intervals = config_dict["all_timestamps_intervals"] or "3h"
+#         self.order_of_cols = config_dict["order_of_cols"]
         if self.include_all_timestamps_between: self.init_all_timestamps()
         self.shapes = {"input": None, "target": None}
         self.col_channels_idxs = {"input": {}, "target": {}}
@@ -78,11 +81,18 @@ class DatasetHandler:
         self.combined_dataframe = self.dataframes[0]
         if len(self.dataframes)>1:
             for df in self.dataframes[1:]:
-                self.combined_dataframe = self.combined_dataframe.join(df, how="inner")
+                self.combined_dataframe = self.combined_dataframe.join(df, how="outer")
         self.combined_dataframe = self.combined_dataframe[self.cols_to_keep]
         if not self.keep_na:
             print("Removing NaN values...")  
             self.combined_dataframe.dropna(how="any")
+        if self.replace_na_in_target is not None:
+            print(f"Replacing NaN values with {self.replace_na_in_target}...")  
+            for col in self.cols_target:
+                for i in range(len(self.combined_dataframe[col])):
+                    if np.isnan(self.combined_dataframe[col][i]):
+                        d = self.combined_dataframe.index[i]
+                        self.combined_dataframe.loc[d,col]=self.replace_na_in_target
         print("...Done! Fixing shapes of singular data cols...")
         good_sample_idx = self.get_good_combined_idx()
         for col in self.cols_to_keep:
@@ -126,8 +136,12 @@ class DatasetHandler:
             cols_list = self.cols_input if dataset_type=="input" else self.cols_target
             sample_data = self.combined_dataframe[cols_list[0]][good_idx]
             _,h_all,w_all=self.get_shapes_of_data(sample_data)
+            channels_from_cols = self.cols_channels_input if dataset_type=="input" else self.cols_channels_target
             for col in cols_list:
                 x = self.combined_dataframe[col][good_idx]
+                if channels_from_cols[col] is not None:
+                    channels_to_keep = np.array(channels_from_cols[col])
+                    x = x[channels_to_keep,:,:]
                 c,h,w=self.get_shapes_of_data(x)
                 if w!=w_all or h!=h_all:
                     print(f"Bad shapes of input parameters! {h,w} and in {col} not {h_all,w_all}. Aborting...")
@@ -146,10 +160,15 @@ class DatasetHandler:
         cols_list = self.cols_input if dataset_type=="input" else self.cols_target
         for col in cols_list:
             channels = self.col_channels_idxs[dataset_type][col]
+            channels_from_df = np.arange(self.combined_dataframe[col][0].shape[0])
+            channels_from_cols = self.cols_channels_input if dataset_type=="input" else self.cols_channels_target
+            if channels_from_cols[col] is not None:
+                channels_from_df = np.array(channels_from_cols[col])
             if H==0 and W==0:
                 x[:,channels] = torch.tensor([c.astype("float32") for c in self.combined_dataframe[col]])
             else:
-                x[:,channels,:,:] = torch.tensor([c.astype("float32") for c in self.combined_dataframe[col]])
+                x_tf = torch.tensor([c.astype("float32") for c in self.combined_dataframe[col]])
+                x[:,channels,:,:] = x_tf[:,channels_from_df,:,:]
         return x
 
     def create_and_save_dataset(self, dir_path, base_filename):
@@ -212,6 +231,6 @@ class DatasetHandler:
             DatasetHandler.create_and_save_one_dataset_from_path)(dataframes_paths[i], datasets_arguments[i], save_as_list[i]) 
                 for i in range(num_datasets_to_save)
         )        
-        
 
-                 
+
+

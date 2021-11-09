@@ -47,7 +47,7 @@ class MeteorologyToPandasHandler:
     def get_default_params(self):
         default_list = ["SLP", "Z", "U", "V", "PV"]
         if self.add_cams: 
-            default_list+=["aod550","duaod550","aermssdul","aermssdum"]
+            default_list+=["aod550","duaod550","aermssdul","aermssdum","u10","v10"]
         return default_list
 
     def get_default_folders(self):
@@ -63,6 +63,8 @@ class MeteorologyToPandasHandler:
             default_dict["duaod550"] = "/work/meteogroup/cams/"
             default_dict["aermssdul"] = "/work/meteogroup/cams/"
             default_dict["aermssdum"] = "/work/meteogroup/cams/"
+            default_dict["u10"] = "/work/meteogroup/cams/"
+            default_dict["v10"] = "/work/meteogroup/cams/"
         return default_dict
 
     def get_default_prefixes(self):
@@ -72,6 +74,8 @@ class MeteorologyToPandasHandler:
             default_dict["duaod550"] = "D"
             default_dict["aermssdul"] = "D"
             default_dict["aermssdum"] = "D"
+            default_dict["u10"] = "D"
+            default_dict["v10"] = "D"
         return default_dict
 
     def get_default_netcdf_keys(self):
@@ -87,6 +91,8 @@ class MeteorologyToPandasHandler:
             default_dict["duaod550"] = ["time", "latitude", "longitude"]
             default_dict["aermssdul"] = ["time", "latitude", "longitude"]
             default_dict["aermssdum"] = ["time", "latitude", "longitude"]
+            default_dict["u10"] = ["time", "latitude", "longitude"]
+            default_dict["v10"] = ["time", "latitude", "longitude"]
         return default_dict
 
     def get_default_dates(self):
@@ -334,4 +340,6 @@ class MeteorologyToPandasHandler:
 # loaded = torch.load("test.pkl")
 # torch.tensor(df["Z"][0].astype(float))
         
-
+# from netCDF4 import Dataset
+# file = Dataset("/work/meteogroup/cams/2003/12/D20031214_12")
+# file.variables
