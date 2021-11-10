@@ -14,8 +14,7 @@ dust_dataframes_dir = "../../data/dust_20000101to20213006_6h_7days_before_and_af
 
 
 dataframes_descriptions_paths = [
-    meteorology_dataframes_dir+"metadata/meteorology_dataframes_23_81_189_description.pkl",
-    "../../data/dust_description_pm10_BeerSheva_20000101_20210630_6h.pkl"
+    "../../data/meteorology_dataframes_23_81_189/metadata/meteorology_dataframes_20_81_189_description.pkl"
 ]
 dataframes_descriptions = [torch.load(path) for path in dataframes_descriptions_paths]
 

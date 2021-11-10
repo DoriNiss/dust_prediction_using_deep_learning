@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>targets_averaging_and_labeling_20_81_189</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>description_creation_meteorology_20_81_189</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14259,35 +14259,10 @@ a.anchor-link {
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">utils.files_loading</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">data_handlers.tensors_labeling_and_averaging</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir_original</span> <span class="o">=</span> <span class="s2">&quot;../../data/datasets_20_81_189&quot;</span>
-<span class="n">data_dir_new</span> <span class="o">=</span> <span class="s2">&quot;../../data/datasets_20_81_189_averaged_dust_24h&quot;</span>
-<span class="n">base_filename_original</span> <span class="o">=</span> <span class="s2">&quot;dataset_20_81_189&quot;</span>
-<span class="n">base_filename_new</span> <span class="o">=</span> <span class="s2">&quot;dataset_20_81_189_averaged_dust_24h&quot;</span>
-<span class="n">suffix_target</span> <span class="o">=</span> <span class="s2">&quot;target.pkl&quot;</span>
-<span class="n">suffix_input</span> <span class="o">=</span> <span class="s2">&quot;input.pkl&quot;</span>
-<span class="n">suffix_timestamps</span> <span class="o">=</span> <span class="s2">&quot;timestamps.pkl&quot;</span>
-<span class="n">years_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">2019</span><span class="p">))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
 </pre></div>
 
      </div>
@@ -14301,219 +14276,50 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">73.4</span><span class="p">]</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">description</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Mean sea-level pressure&quot;</span><span class="p">},</span>
+        <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;Z@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Geopotential Height at P=850 mBar [m]&quot;</span><span class="p">},</span>
+        <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;Z@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Geopotential Height at P=500 mBar [m]&quot;</span><span class="p">},</span>
+        <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;Z@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Geopotential Height at P=250 mBar [m]&quot;</span><span class="p">},</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U component (eastward) of wind at P=850 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U component (eastward) of wind at P=500 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U component (eastward) of wind at P=250 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">7</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V component (northward) of wind at P=850 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V component (northward) of wind at P=500 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V component (northward) of wind at P=250 mBar [m/s]&quot;</span><span class="p">},</span>
+<span class="c1">#         10: {&quot;short&quot;:&quot;PV@310&quot;, &quot;long&quot;:&quot;Potential Vorticity at T=310K [pvu]&quot;}, # Problematic - bad corner</span>
+<span class="c1">#         11: {&quot;short&quot;:&quot;PV@315&quot;, &quot;long&quot;:&quot;Potential Vorticity at T=315K [pvu]&quot;}, # Problematic - bad corner</span>
+<span class="c1">#         12: {&quot;short&quot;:&quot;PV@320&quot;, &quot;long&quot;:&quot;Potential Vorticity at T=320K [pvu]&quot;}, # Problematic - bad corner</span>
+        <span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@325&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=325K [pvu]&quot;</span><span class="p">},</span>
+        <span class="mi">11</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@330&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=330K [pvu]&quot;</span><span class="p">},</span>
+        <span class="mi">12</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@335&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=335K [pvu]&quot;</span><span class="p">},</span>
+        <span class="mi">13</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@340&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=340K [pvu]&quot;</span><span class="p">},</span>
+        <span class="mi">14</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aod550&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Total Aerosol Optical Depth at 550nm&quot;</span><span class="p">},</span>
+        <span class="mi">15</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;duaod550&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Dust Aerosol Optical Depth at 550nm&quot;</span><span class="p">},</span>
+        <span class="mi">16</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aermssdul&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Vertically integrated mass of dust aerosol (9 - 20 um)&quot;</span><span class="p">},</span>
+        <span class="mi">17</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aermssdum&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Vertically integrated mass of dust aerosol (0.55 - 9 um)&quot;</span><span class="p">},</span>
+        <span class="mi">18</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;u10&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;10 metre U wind component [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">19</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;v10&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;10 metre V wind component [m/s]&quot;</span><span class="p">},</span>
+        <span class="s2">&quot;lons&quot;</span><span class="p">:</span> <span class="s2">&quot;-44:50&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lats&quot;</span><span class="p">:</span> <span class="s2">&quot;20:60&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;target&quot;</span><span class="p">:</span> <span class="p">{}</span>
+<span class="p">}</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">29</span><span class="p">):</span>
+    <span class="n">description</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;df_col&quot;</span><span class="p">:</span><span class="s2">&quot;dust_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;dust at i+&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;h&quot;</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span><span class="mi">57</span><span class="p">):</span>
+    <span class="n">description</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;df_col&quot;</span><span class="p">:</span><span class="s2">&quot;dust_m&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="mi">57</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;dust at i-&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="mi">57</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;h&quot;</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">29</span><span class="p">):</span>
+    <span class="n">description</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">][</span><span class="n">i</span><span class="o">+</span><span class="mi">57</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;df_col&quot;</span><span class="p">:</span><span class="s2">&quot;delta_&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;delta dust at i+&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">*</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;h&quot;</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">29</span><span class="p">,</span><span class="mi">57</span><span class="p">):</span>
+    <span class="n">description</span><span class="p">[</span><span class="s2">&quot;target&quot;</span><span class="p">][</span><span class="n">i</span><span class="o">+</span><span class="mi">57</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;df_col&quot;</span><span class="p">:</span><span class="s2">&quot;delta_m&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="mi">57</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;description&quot;</span><span class="p">:</span> <span class="s2">&quot;delta dust at i-&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">((</span><span class="mi">57</span><span class="o">-</span><span class="n">i</span><span class="p">)</span><span class="o">*</span><span class="mi">6</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;h&quot;</span><span class="p">}</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">years_list</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">1</span><span class="p">]):</span>
-    <span class="n">original_target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_original</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_original</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">original_target_labeled</span> <span class="o">=</span> <span class="n">add_labels</span><span class="p">(</span><span class="n">original_target</span><span class="p">,</span><span class="n">thresholds</span><span class="o">=</span><span class="n">thresholds</span><span class="p">,</span><span class="n">labels</span><span class="o">=</span><span class="n">labels</span><span class="p">,</span><span class="n">label_by_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">original_target_labeled</span><span class="p">[</span><span class="mi">1030</span><span class="p">:</span><span class="mi">1040</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span><span class="n">original_target_labeled</span><span class="p">[</span><span class="mi">1030</span><span class="p">:</span><span class="mi">1040</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-    
-    
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|██████████| 1/1 [00:00&lt;00:00, 425.43it/s]</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 115])
-tensor([49.7917, 26.1167, 31.4000, 53.2000, 49.1667, 31.1667, 35.1000, 68.7833,
-        99.6083, 39.6083]) tensor([0., 0., 0., 0., 0., 0., 0., 0., 1., 0.])
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span><span class="mi">8</span><span class="p">])</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-<span class="n">a</span><span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]</span><span class="o">=</span><span class="mi">0</span>
-
-<span class="n">a</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[4]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>tensor([[0., 1., 1., 1., 1., 0., 1., 1.],
-        [1., 0., 0., 0., 0., 1., 1., 1.],
-        [1., 1., 1., 1., 0., 1., 0., 1.],
-        [1., 0., 0., 0., 1., 1., 1., 1.],
-        [1., 1., 1., 1., 1., 0., 0., 0.]])</pre>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -14522,7 +14328,8 @@ tensor([49.7917, 26.1167, 31.4000, 53.2000, 49.1667, 31.1667, 35.1000, 68.7833,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">add_labels</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">thresholds</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="n">label_by_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lags</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">169</span><span class="p">,</span><span class="mi">6</span><span class="p">)]</span> <span class="o">+</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">168</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">6</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lags</span><span class="p">[</span><span class="mi">29</span><span class="p">:</span><span class="mi">2</span><span class="o">*</span><span class="mi">29</span><span class="p">])</span>
 </pre></div>
 
      </div>
@@ -14542,25 +14349,187 @@ tensor([49.7917, 26.1167, 31.4000, 53.2000, 49.1667, 31.1667, 35.1000, 68.7833,
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>Added labels [0, 1] at position [:,-1], new shape: torch.Size([5, 9])
+<pre>[-168, -162, -156, -150, -144, -138, -132, -126, -120, -114, -108, -102, -96, -90, -84, -78, -72, -66, -60, -54, -48, -42, -36, -30, -24, -18, -12, -6]
 </pre>
 </div>
 </div>
 
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">description</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>tensor([[0., 1., 1., 1., 1., 0., 1., 1., 1.],
-        [1., 0., 0., 0., 0., 1., 1., 1., 1.],
-        [1., 1., 1., 1., 0., 1., 0., 1., 1.],
-        [1., 0., 0., 0., 1., 1., 1., 1., 1.],
-        [1., 1., 1., 1., 1., 0., 0., 0., 1.]])</pre>
+<pre>{&#39;input&#39;: {0: {&#39;short&#39;: &#39;SLP&#39;, &#39;long&#39;: &#39;Mean sea-level pressure&#39;},
+  1: {&#39;short&#39;: &#39;Z@850&#39;, &#39;long&#39;: &#39;Geopotential Height at P=850 mBar [m]&#39;},
+  2: {&#39;short&#39;: &#39;Z@500&#39;, &#39;long&#39;: &#39;Geopotential Height at P=500 mBar [m]&#39;},
+  3: {&#39;short&#39;: &#39;Z@250&#39;, &#39;long&#39;: &#39;Geopotential Height at P=250 mBar [m]&#39;},
+  4: {&#39;short&#39;: &#39;U@850&#39;,
+   &#39;long&#39;: &#39;U component (eastward) of wind at P=850 mBar [m/s]&#39;},
+  5: {&#39;short&#39;: &#39;U@500&#39;,
+   &#39;long&#39;: &#39;U component (eastward) of wind at P=500 mBar [m/s]&#39;},
+  6: {&#39;short&#39;: &#39;U@250&#39;,
+   &#39;long&#39;: &#39;U component (eastward) of wind at P=250 mBar [m/s]&#39;},
+  7: {&#39;short&#39;: &#39;V@850&#39;,
+   &#39;long&#39;: &#39;V component (northward) of wind at P=850 mBar [m/s]&#39;},
+  8: {&#39;short&#39;: &#39;V@500&#39;,
+   &#39;long&#39;: &#39;V component (northward) of wind at P=500 mBar [m/s]&#39;},
+  9: {&#39;short&#39;: &#39;V@250&#39;,
+   &#39;long&#39;: &#39;V component (northward) of wind at P=250 mBar [m/s]&#39;},
+  10: {&#39;short&#39;: &#39;PV@325&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=325K [pvu]&#39;},
+  11: {&#39;short&#39;: &#39;PV@330&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=330K [pvu]&#39;},
+  12: {&#39;short&#39;: &#39;PV@335&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=335K [pvu]&#39;},
+  13: {&#39;short&#39;: &#39;PV@340&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=340K [pvu]&#39;},
+  14: {&#39;short&#39;: &#39;aod550&#39;, &#39;long&#39;: &#39;Total Aerosol Optical Depth at 550nm&#39;},
+  15: {&#39;short&#39;: &#39;duaod550&#39;, &#39;long&#39;: &#39;Dust Aerosol Optical Depth at 550nm&#39;},
+  16: {&#39;short&#39;: &#39;aermssdul&#39;,
+   &#39;long&#39;: &#39;Vertically integrated mass of dust aerosol (9 - 20 um)&#39;},
+  17: {&#39;short&#39;: &#39;aermssdum&#39;,
+   &#39;long&#39;: &#39;Vertically integrated mass of dust aerosol (0.55 - 9 um)&#39;},
+  18: {&#39;short&#39;: &#39;u10&#39;, &#39;long&#39;: &#39;10 metre U wind component [m/s]&#39;},
+  19: {&#39;short&#39;: &#39;v10&#39;, &#39;long&#39;: &#39;10 metre V wind component [m/s]&#39;},
+  &#39;lons&#39;: &#39;-44:50&#39;,
+  &#39;lats&#39;: &#39;20:60&#39;},
+ &#39;target&#39;: {0: {&#39;df_col&#39;: &#39;dust_0&#39;, &#39;description&#39;: &#39;dust at i+0h&#39;},
+  1: {&#39;df_col&#39;: &#39;dust_6&#39;, &#39;description&#39;: &#39;dust at i+6h&#39;},
+  2: {&#39;df_col&#39;: &#39;dust_12&#39;, &#39;description&#39;: &#39;dust at i+12h&#39;},
+  3: {&#39;df_col&#39;: &#39;dust_18&#39;, &#39;description&#39;: &#39;dust at i+18h&#39;},
+  4: {&#39;df_col&#39;: &#39;dust_24&#39;, &#39;description&#39;: &#39;dust at i+24h&#39;},
+  5: {&#39;df_col&#39;: &#39;dust_30&#39;, &#39;description&#39;: &#39;dust at i+30h&#39;},
+  6: {&#39;df_col&#39;: &#39;dust_36&#39;, &#39;description&#39;: &#39;dust at i+36h&#39;},
+  7: {&#39;df_col&#39;: &#39;dust_42&#39;, &#39;description&#39;: &#39;dust at i+42h&#39;},
+  8: {&#39;df_col&#39;: &#39;dust_48&#39;, &#39;description&#39;: &#39;dust at i+48h&#39;},
+  9: {&#39;df_col&#39;: &#39;dust_54&#39;, &#39;description&#39;: &#39;dust at i+54h&#39;},
+  10: {&#39;df_col&#39;: &#39;dust_60&#39;, &#39;description&#39;: &#39;dust at i+60h&#39;},
+  11: {&#39;df_col&#39;: &#39;dust_66&#39;, &#39;description&#39;: &#39;dust at i+66h&#39;},
+  12: {&#39;df_col&#39;: &#39;dust_72&#39;, &#39;description&#39;: &#39;dust at i+72h&#39;},
+  13: {&#39;df_col&#39;: &#39;dust_78&#39;, &#39;description&#39;: &#39;dust at i+78h&#39;},
+  14: {&#39;df_col&#39;: &#39;dust_84&#39;, &#39;description&#39;: &#39;dust at i+84h&#39;},
+  15: {&#39;df_col&#39;: &#39;dust_90&#39;, &#39;description&#39;: &#39;dust at i+90h&#39;},
+  16: {&#39;df_col&#39;: &#39;dust_96&#39;, &#39;description&#39;: &#39;dust at i+96h&#39;},
+  17: {&#39;df_col&#39;: &#39;dust_102&#39;, &#39;description&#39;: &#39;dust at i+102h&#39;},
+  18: {&#39;df_col&#39;: &#39;dust_108&#39;, &#39;description&#39;: &#39;dust at i+108h&#39;},
+  19: {&#39;df_col&#39;: &#39;dust_114&#39;, &#39;description&#39;: &#39;dust at i+114h&#39;},
+  20: {&#39;df_col&#39;: &#39;dust_120&#39;, &#39;description&#39;: &#39;dust at i+120h&#39;},
+  21: {&#39;df_col&#39;: &#39;dust_126&#39;, &#39;description&#39;: &#39;dust at i+126h&#39;},
+  22: {&#39;df_col&#39;: &#39;dust_132&#39;, &#39;description&#39;: &#39;dust at i+132h&#39;},
+  23: {&#39;df_col&#39;: &#39;dust_138&#39;, &#39;description&#39;: &#39;dust at i+138h&#39;},
+  24: {&#39;df_col&#39;: &#39;dust_144&#39;, &#39;description&#39;: &#39;dust at i+144h&#39;},
+  25: {&#39;df_col&#39;: &#39;dust_150&#39;, &#39;description&#39;: &#39;dust at i+150h&#39;},
+  26: {&#39;df_col&#39;: &#39;dust_156&#39;, &#39;description&#39;: &#39;dust at i+156h&#39;},
+  27: {&#39;df_col&#39;: &#39;dust_162&#39;, &#39;description&#39;: &#39;dust at i+162h&#39;},
+  28: {&#39;df_col&#39;: &#39;dust_168&#39;, &#39;description&#39;: &#39;dust at i+168h&#39;},
+  29: {&#39;df_col&#39;: &#39;dust_m168&#39;, &#39;description&#39;: &#39;dust at i-168h&#39;},
+  30: {&#39;df_col&#39;: &#39;dust_m162&#39;, &#39;description&#39;: &#39;dust at i-162h&#39;},
+  31: {&#39;df_col&#39;: &#39;dust_m156&#39;, &#39;description&#39;: &#39;dust at i-156h&#39;},
+  32: {&#39;df_col&#39;: &#39;dust_m150&#39;, &#39;description&#39;: &#39;dust at i-150h&#39;},
+  33: {&#39;df_col&#39;: &#39;dust_m144&#39;, &#39;description&#39;: &#39;dust at i-144h&#39;},
+  34: {&#39;df_col&#39;: &#39;dust_m138&#39;, &#39;description&#39;: &#39;dust at i-138h&#39;},
+  35: {&#39;df_col&#39;: &#39;dust_m132&#39;, &#39;description&#39;: &#39;dust at i-132h&#39;},
+  36: {&#39;df_col&#39;: &#39;dust_m126&#39;, &#39;description&#39;: &#39;dust at i-126h&#39;},
+  37: {&#39;df_col&#39;: &#39;dust_m120&#39;, &#39;description&#39;: &#39;dust at i-120h&#39;},
+  38: {&#39;df_col&#39;: &#39;dust_m114&#39;, &#39;description&#39;: &#39;dust at i-114h&#39;},
+  39: {&#39;df_col&#39;: &#39;dust_m108&#39;, &#39;description&#39;: &#39;dust at i-108h&#39;},
+  40: {&#39;df_col&#39;: &#39;dust_m102&#39;, &#39;description&#39;: &#39;dust at i-102h&#39;},
+  41: {&#39;df_col&#39;: &#39;dust_m96&#39;, &#39;description&#39;: &#39;dust at i-96h&#39;},
+  42: {&#39;df_col&#39;: &#39;dust_m90&#39;, &#39;description&#39;: &#39;dust at i-90h&#39;},
+  43: {&#39;df_col&#39;: &#39;dust_m84&#39;, &#39;description&#39;: &#39;dust at i-84h&#39;},
+  44: {&#39;df_col&#39;: &#39;dust_m78&#39;, &#39;description&#39;: &#39;dust at i-78h&#39;},
+  45: {&#39;df_col&#39;: &#39;dust_m72&#39;, &#39;description&#39;: &#39;dust at i-72h&#39;},
+  46: {&#39;df_col&#39;: &#39;dust_m66&#39;, &#39;description&#39;: &#39;dust at i-66h&#39;},
+  47: {&#39;df_col&#39;: &#39;dust_m60&#39;, &#39;description&#39;: &#39;dust at i-60h&#39;},
+  48: {&#39;df_col&#39;: &#39;dust_m54&#39;, &#39;description&#39;: &#39;dust at i-54h&#39;},
+  49: {&#39;df_col&#39;: &#39;dust_m48&#39;, &#39;description&#39;: &#39;dust at i-48h&#39;},
+  50: {&#39;df_col&#39;: &#39;dust_m42&#39;, &#39;description&#39;: &#39;dust at i-42h&#39;},
+  51: {&#39;df_col&#39;: &#39;dust_m36&#39;, &#39;description&#39;: &#39;dust at i-36h&#39;},
+  52: {&#39;df_col&#39;: &#39;dust_m30&#39;, &#39;description&#39;: &#39;dust at i-30h&#39;},
+  53: {&#39;df_col&#39;: &#39;dust_m24&#39;, &#39;description&#39;: &#39;dust at i-24h&#39;},
+  54: {&#39;df_col&#39;: &#39;dust_m18&#39;, &#39;description&#39;: &#39;dust at i-18h&#39;},
+  55: {&#39;df_col&#39;: &#39;dust_m12&#39;, &#39;description&#39;: &#39;dust at i-12h&#39;},
+  56: {&#39;df_col&#39;: &#39;dust_m6&#39;, &#39;description&#39;: &#39;dust at i-6h&#39;},
+  57: {&#39;df_col&#39;: &#39;delta_0&#39;, &#39;description&#39;: &#39;delta dust at i+0h&#39;},
+  58: {&#39;df_col&#39;: &#39;delta_6&#39;, &#39;description&#39;: &#39;delta dust at i+6h&#39;},
+  59: {&#39;df_col&#39;: &#39;delta_12&#39;, &#39;description&#39;: &#39;delta dust at i+12h&#39;},
+  60: {&#39;df_col&#39;: &#39;delta_18&#39;, &#39;description&#39;: &#39;delta dust at i+18h&#39;},
+  61: {&#39;df_col&#39;: &#39;delta_24&#39;, &#39;description&#39;: &#39;delta dust at i+24h&#39;},
+  62: {&#39;df_col&#39;: &#39;delta_30&#39;, &#39;description&#39;: &#39;delta dust at i+30h&#39;},
+  63: {&#39;df_col&#39;: &#39;delta_36&#39;, &#39;description&#39;: &#39;delta dust at i+36h&#39;},
+  64: {&#39;df_col&#39;: &#39;delta_42&#39;, &#39;description&#39;: &#39;delta dust at i+42h&#39;},
+  65: {&#39;df_col&#39;: &#39;delta_48&#39;, &#39;description&#39;: &#39;delta dust at i+48h&#39;},
+  66: {&#39;df_col&#39;: &#39;delta_54&#39;, &#39;description&#39;: &#39;delta dust at i+54h&#39;},
+  67: {&#39;df_col&#39;: &#39;delta_60&#39;, &#39;description&#39;: &#39;delta dust at i+60h&#39;},
+  68: {&#39;df_col&#39;: &#39;delta_66&#39;, &#39;description&#39;: &#39;delta dust at i+66h&#39;},
+  69: {&#39;df_col&#39;: &#39;delta_72&#39;, &#39;description&#39;: &#39;delta dust at i+72h&#39;},
+  70: {&#39;df_col&#39;: &#39;delta_78&#39;, &#39;description&#39;: &#39;delta dust at i+78h&#39;},
+  71: {&#39;df_col&#39;: &#39;delta_84&#39;, &#39;description&#39;: &#39;delta dust at i+84h&#39;},
+  72: {&#39;df_col&#39;: &#39;delta_90&#39;, &#39;description&#39;: &#39;delta dust at i+90h&#39;},
+  73: {&#39;df_col&#39;: &#39;delta_96&#39;, &#39;description&#39;: &#39;delta dust at i+96h&#39;},
+  74: {&#39;df_col&#39;: &#39;delta_102&#39;, &#39;description&#39;: &#39;delta dust at i+102h&#39;},
+  75: {&#39;df_col&#39;: &#39;delta_108&#39;, &#39;description&#39;: &#39;delta dust at i+108h&#39;},
+  76: {&#39;df_col&#39;: &#39;delta_114&#39;, &#39;description&#39;: &#39;delta dust at i+114h&#39;},
+  77: {&#39;df_col&#39;: &#39;delta_120&#39;, &#39;description&#39;: &#39;delta dust at i+120h&#39;},
+  78: {&#39;df_col&#39;: &#39;delta_126&#39;, &#39;description&#39;: &#39;delta dust at i+126h&#39;},
+  79: {&#39;df_col&#39;: &#39;delta_132&#39;, &#39;description&#39;: &#39;delta dust at i+132h&#39;},
+  80: {&#39;df_col&#39;: &#39;delta_138&#39;, &#39;description&#39;: &#39;delta dust at i+138h&#39;},
+  81: {&#39;df_col&#39;: &#39;delta_144&#39;, &#39;description&#39;: &#39;delta dust at i+144h&#39;},
+  82: {&#39;df_col&#39;: &#39;delta_150&#39;, &#39;description&#39;: &#39;delta dust at i+150h&#39;},
+  83: {&#39;df_col&#39;: &#39;delta_156&#39;, &#39;description&#39;: &#39;delta dust at i+156h&#39;},
+  84: {&#39;df_col&#39;: &#39;delta_162&#39;, &#39;description&#39;: &#39;delta dust at i+162h&#39;},
+  85: {&#39;df_col&#39;: &#39;delta_168&#39;, &#39;description&#39;: &#39;delta dust at i+168h&#39;},
+  86: {&#39;df_col&#39;: &#39;delta_m168&#39;, &#39;description&#39;: &#39;delta dust at i-168h&#39;},
+  87: {&#39;df_col&#39;: &#39;delta_m162&#39;, &#39;description&#39;: &#39;delta dust at i-162h&#39;},
+  88: {&#39;df_col&#39;: &#39;delta_m156&#39;, &#39;description&#39;: &#39;delta dust at i-156h&#39;},
+  89: {&#39;df_col&#39;: &#39;delta_m150&#39;, &#39;description&#39;: &#39;delta dust at i-150h&#39;},
+  90: {&#39;df_col&#39;: &#39;delta_m144&#39;, &#39;description&#39;: &#39;delta dust at i-144h&#39;},
+  91: {&#39;df_col&#39;: &#39;delta_m138&#39;, &#39;description&#39;: &#39;delta dust at i-138h&#39;},
+  92: {&#39;df_col&#39;: &#39;delta_m132&#39;, &#39;description&#39;: &#39;delta dust at i-132h&#39;},
+  93: {&#39;df_col&#39;: &#39;delta_m126&#39;, &#39;description&#39;: &#39;delta dust at i-126h&#39;},
+  94: {&#39;df_col&#39;: &#39;delta_m120&#39;, &#39;description&#39;: &#39;delta dust at i-120h&#39;},
+  95: {&#39;df_col&#39;: &#39;delta_m114&#39;, &#39;description&#39;: &#39;delta dust at i-114h&#39;},
+  96: {&#39;df_col&#39;: &#39;delta_m108&#39;, &#39;description&#39;: &#39;delta dust at i-108h&#39;},
+  97: {&#39;df_col&#39;: &#39;delta_m102&#39;, &#39;description&#39;: &#39;delta dust at i-102h&#39;},
+  98: {&#39;df_col&#39;: &#39;delta_m96&#39;, &#39;description&#39;: &#39;delta dust at i-96h&#39;},
+  99: {&#39;df_col&#39;: &#39;delta_m90&#39;, &#39;description&#39;: &#39;delta dust at i-90h&#39;},
+  100: {&#39;df_col&#39;: &#39;delta_m84&#39;, &#39;description&#39;: &#39;delta dust at i-84h&#39;},
+  101: {&#39;df_col&#39;: &#39;delta_m78&#39;, &#39;description&#39;: &#39;delta dust at i-78h&#39;},
+  102: {&#39;df_col&#39;: &#39;delta_m72&#39;, &#39;description&#39;: &#39;delta dust at i-72h&#39;},
+  103: {&#39;df_col&#39;: &#39;delta_m66&#39;, &#39;description&#39;: &#39;delta dust at i-66h&#39;},
+  104: {&#39;df_col&#39;: &#39;delta_m60&#39;, &#39;description&#39;: &#39;delta dust at i-60h&#39;},
+  105: {&#39;df_col&#39;: &#39;delta_m54&#39;, &#39;description&#39;: &#39;delta dust at i-54h&#39;},
+  106: {&#39;df_col&#39;: &#39;delta_m48&#39;, &#39;description&#39;: &#39;delta dust at i-48h&#39;},
+  107: {&#39;df_col&#39;: &#39;delta_m42&#39;, &#39;description&#39;: &#39;delta dust at i-42h&#39;},
+  108: {&#39;df_col&#39;: &#39;delta_m36&#39;, &#39;description&#39;: &#39;delta dust at i-36h&#39;},
+  109: {&#39;df_col&#39;: &#39;delta_m30&#39;, &#39;description&#39;: &#39;delta dust at i-30h&#39;},
+  110: {&#39;df_col&#39;: &#39;delta_m24&#39;, &#39;description&#39;: &#39;delta dust at i-24h&#39;},
+  111: {&#39;df_col&#39;: &#39;delta_m18&#39;, &#39;description&#39;: &#39;delta dust at i-18h&#39;},
+  112: {&#39;df_col&#39;: &#39;delta_m12&#39;, &#39;description&#39;: &#39;delta dust at i-12h&#39;},
+  113: {&#39;df_col&#39;: &#39;delta_m6&#39;, &#39;description&#39;: &#39;delta dust at i-6h&#39;}}}</pre>
 </div>
 
 </div>
@@ -14572,12 +14541,11 @@ tensor([49.7917, 26.1167, 31.4000, 53.2000, 49.1667, 31.1667, 35.1000, 68.7833,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols_to_average</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">i</span><span class="p">,</span><span class="mi">4</span><span class="o">*</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">)]</span>
-<span class="n">valid_threshold</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
-<span class="n">cols_to_average</span><span class="p">,</span><span class="n">valid_threshold</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">description_path</span> <span class="o">=</span> <span class="s2">&quot;../../data/meteorology_dataframes_23_81_189/metadata/meteorology_dataframes_20_81_189_description.pkl&quot;</span>
+<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">description</span><span class="p">,</span><span class="n">description_path</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14588,70 +14556,14 @@ tensor([49.7917, 26.1167, 31.4000, 53.2000, 49.1667, 31.1667, 35.1000, 68.7833,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">x_averaged</span><span class="p">,</span><span class="n">rows_to_keep</span> <span class="o">=</span> <span class="n">average_cols_and_drop_invalid</span><span class="p">(</span><span class="n">a</span><span class="p">,</span><span class="n">cols_to_average</span><span class="p">,</span><span class="n">valid_threshold</span><span class="p">,</span><span class="n">invalid_values</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">x_averaged</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">rows_to_keep</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># create new inputs and save</span>
-<span class="c1"># create new metatdata and save</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
+<span class="n">data_dir_original</span> <span class="o">=</span> <span class="s2">&quot;../../data/datasets_20_81_189/metadata&quot;</span>
+<span class="n">base_filename_original</span> <span class="o">=</span> <span class="s2">&quot;dataset_20_81_189&quot;</span>
+<span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">2019</span><span class="p">):</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">description</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_original</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_original</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_descriptions.pkl&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>

@@ -11,10 +11,11 @@ def add_labels(x, thresholds=[73.4], labels=[0,1], label_by_col=0):
             1: 4<=x<10
             2: x>=10
     """
-    t_labels = torch.zeros([x.shape[0],1], device=x.device)+labels[0]
+    labels_as_tensors = torch.tensor(labels,device=x.device)*1.
+    x_labels = torch.zeros([x.shape[0],1],device=x.device)+labels[0]
     for i,th in enumerate(thresholds):
-        t_labels = torch.where(x[:,label_by_col]>=th,labels[i+1],t_labels)
-    x_labeled = torch.cat([x,t_labels],dim=1)
+        x_labels = torch.where((x[:,label_by_col]>=th).unsqueeze(0).transpose(1,0),labels_as_tensors[i+1],x_labels)
+    x_labeled = torch.cat([x,x_labels],dim=1)
     print(f"Added labels {labels} at position [:,-1], new shape: {x_labeled.shape}")
     return x_labeled
 
@@ -29,7 +30,6 @@ def average_cols_and_drop_invalid(x,cols_to_average,valid_threshold,invalid_valu
     """
     invalid_values = invalid_values or [np.nan, np.inf, -np.inf]
     averages_list = []
-    rows_to_keep = []
     for cols,drop_rate in zip(cols_to_average,valid_threshold):
         x_cols = x[:,cols]
         cols_average_per_row = []
@@ -42,9 +42,17 @@ def average_cols_and_drop_invalid(x,cols_to_average,valid_threshold,invalid_valu
                 cols_average_per_row+=[torch.tensor(np.nan)]
             else:
                 cols_average_per_row+=[x_cols[row].mean()]
-                rows_to_keep+=[row]
         averages_list+=[torch.tensor(cols_average_per_row)]
-    return torch.cat(averages_list), np.array(list(group(rows_to_keep)))
-        
-        
-    
+    x_averaged = torch.stack(averages_list).transpose(0,1)
+    indices_to_keep = torch.isnan(x_averaged).sum(dim=1)==0
+    rows_to_keep = np.arange(x_averaged.shape[0])[indices_to_keep]
+    return x_averaged, rows_to_keep
+
+
+def duplicate_col_i(x,i):
+    col_i = x[:,i].unsqueeze(0).transpose(0,1)
+    x_left = x[:,:i]
+    x_right = x[:,i:]
+    return torch.cat([x_left,col_i,x_right],dim=1)
+
+
