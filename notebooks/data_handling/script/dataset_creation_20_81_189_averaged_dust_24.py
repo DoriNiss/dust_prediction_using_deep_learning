@@ -56,10 +56,14 @@ cols_to_avg_delta_dust_past = [np.arange(i,i+4) for i in range(88,116,4)]
 
 valid_thresholds = [0.5]*14
 
-cols_to_average = (cols_to_avg_dust_0+cols_to_avg_dust_future+cols_to_avg_dust_past+
-                   cols_to_avg_delta_0+cols_to_avg_delta_dust_future+cols_to_avg_delta_dust_past)
+cols_to_avg_label = [np.array([116])]
+valid_thresholds_label = [0]
 
-valid_threshold = valid_threshold_dust_0+valid_thresholds+valid_threshold_delta_0+valid_thresholds
+
+cols_to_average = (cols_to_avg_dust_0+cols_to_avg_dust_future+cols_to_avg_dust_past+
+                   cols_to_avg_delta_0+cols_to_avg_delta_dust_future+cols_to_avg_delta_dust_past+cols_to_avg_label)
+
+valid_threshold = valid_threshold_dust_0+valid_thresholds+valid_threshold_delta_0+valid_thresholds+valid_thresholds_label
 
 
 for i in range(len(cols_to_average)):
@@ -79,7 +83,7 @@ labels = [0,1]
 
 
 for y in tqdm(years_list):
-    print(f"\nYear {y}:")
+    print(f"\n#### Year {y}:")
     original_target = torch.load(f"{data_dir_original}/{base_filename_original}_{y}_{suffix_target}")
     original_input = torch.load(f"{data_dir_original}/{base_filename_original}_{y}_{suffix_input}")
     original_timestamps = torch.load(f"{data_dir_original}/{base_filename_original}_{y}_{suffix_timestamps}")
@@ -92,6 +96,7 @@ for y in tqdm(years_list):
     new_target = new_target[rows_to_keep]
     new_input = original_input[rows_to_keep]
     new_timestamps = original_timestamps[rows_to_keep]
+    print(f"Shapes: inputs: {new_input.shape}, targets: {new_target.shape}, timestamps: {len(new_timestamps)}")
     torch.save(new_target,f"{data_dir_new}/{base_filename_new}_{y}_{suffix_target}")
     torch.save(new_input,f"{data_dir_new}/{base_filename_new}_{y}_{suffix_input}")
     torch.save(new_timestamps,f"{data_dir_new}/{base_filename_new}_{y}_{suffix_timestamps}")
@@ -107,7 +112,7 @@ sample_timestamps = torch.load(f"{data_dir_new}/{base_filename_new}_{sample_year
 print(sample_input.shape,sample_target.shape,len(sample_timestamps))
 
 
-
+sample_target[0]
 
 
 

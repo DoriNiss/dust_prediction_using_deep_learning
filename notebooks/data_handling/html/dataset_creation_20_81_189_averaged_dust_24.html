@@ -14398,7 +14398,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># cols after duplicating col 0 at [0] (dust 0) and col 57 (which turns to 58) at [58] (delta_0):</span>
@@ -14414,10 +14414,14 @@ a.anchor-link {
 
 <span class="n">valid_thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.5</span><span class="p">]</span><span class="o">*</span><span class="mi">14</span>
 
-<span class="n">cols_to_average</span> <span class="o">=</span> <span class="p">(</span><span class="n">cols_to_avg_dust_0</span><span class="o">+</span><span class="n">cols_to_avg_dust_future</span><span class="o">+</span><span class="n">cols_to_avg_dust_past</span><span class="o">+</span>
-                   <span class="n">cols_to_avg_delta_0</span><span class="o">+</span><span class="n">cols_to_avg_delta_dust_future</span><span class="o">+</span><span class="n">cols_to_avg_delta_dust_past</span><span class="p">)</span>
+<span class="n">cols_to_avg_label</span> <span class="o">=</span> <span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">116</span><span class="p">])]</span>
+<span class="n">valid_thresholds_label</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-<span class="n">valid_threshold</span> <span class="o">=</span> <span class="n">valid_threshold_dust_0</span><span class="o">+</span><span class="n">valid_thresholds</span><span class="o">+</span><span class="n">valid_threshold_delta_0</span><span class="o">+</span><span class="n">valid_thresholds</span>
+
+<span class="n">cols_to_average</span> <span class="o">=</span> <span class="p">(</span><span class="n">cols_to_avg_dust_0</span><span class="o">+</span><span class="n">cols_to_avg_dust_future</span><span class="o">+</span><span class="n">cols_to_avg_dust_past</span><span class="o">+</span>
+                   <span class="n">cols_to_avg_delta_0</span><span class="o">+</span><span class="n">cols_to_avg_delta_dust_future</span><span class="o">+</span><span class="n">cols_to_avg_delta_dust_past</span><span class="o">+</span><span class="n">cols_to_avg_label</span><span class="p">)</span>
+
+<span class="n">valid_threshold</span> <span class="o">=</span> <span class="n">valid_threshold_dust_0</span><span class="o">+</span><span class="n">valid_thresholds</span><span class="o">+</span><span class="n">valid_threshold_delta_0</span><span class="o">+</span><span class="n">valid_thresholds</span><span class="o">+</span><span class="n">valid_thresholds_label</span>
 </pre></div>
 
      </div>
@@ -14428,7 +14432,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">cols_to_average</span><span class="p">)):</span>
@@ -14543,6 +14547,9 @@ average of delta dust of [&#39;-48h&#39;, &#39;-42h&#39;, &#39;-36h&#39;, &#39;-
 
 29: cols: [112 113 114 115], th: 0.5
 average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-6h&#39;] (average of the last 24 to 0 hours)
+
+30: cols: [116], th: 0
+Label: threshold = 73.4[ug/m3], label=0 if dust_0&lt;threshold, label=1 if dust_0&gt;=threshold
 </pre>
 </div>
 </div>
@@ -14554,7 +14561,7 @@ average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># description_original[&quot;target&quot;]</span>
@@ -14568,7 +14575,7 @@ average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># torch.save(description,description_new_path)</span>
@@ -14583,7 +14590,7 @@ average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">thresholds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">73.4</span><span class="p">]</span>
@@ -14598,11 +14605,11 @@ average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">y</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">years_list</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Year </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">#### Year </span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
     <span class="n">original_target</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_original</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_original</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">original_input</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_original</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_original</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_input</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">original_timestamps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_original</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_original</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_timestamps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -14615,6 +14622,7 @@ average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-
     <span class="n">new_target</span> <span class="o">=</span> <span class="n">new_target</span><span class="p">[</span><span class="n">rows_to_keep</span><span class="p">]</span>
     <span class="n">new_input</span> <span class="o">=</span> <span class="n">original_input</span><span class="p">[</span><span class="n">rows_to_keep</span><span class="p">]</span>
     <span class="n">new_timestamps</span> <span class="o">=</span> <span class="n">original_timestamps</span><span class="p">[</span><span class="n">rows_to_keep</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shapes: inputs: </span><span class="si">{</span><span class="n">new_input</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, targets: </span><span class="si">{</span><span class="n">new_target</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">, timestamps: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_timestamps</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">new_target</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_new</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_new</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">new_input</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_new</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_new</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_input</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">new_timestamps</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir_new</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename_new</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">suffix_timestamps</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -14650,9 +14658,10 @@ average of delta dust of [&#39;-24h&#39;, &#39;-18h&#39;, &#39;-12h&#39;, &#39;-
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2003:
+#### Year 2003:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 889
+Shapes: inputs: torch.Size([889, 20, 81, 189]), targets: torch.Size([889, 31]), timestamps: 889
 </pre>
 </div>
 </div>
@@ -14664,7 +14673,7 @@ Original length: 1460, new length: 889
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>  6%|▋         | 1/16 [00:07&lt;01:58,  7.88s/it]</pre>
+<pre>  6%|▋         | 1/16 [00:08&lt;02:00,  8.04s/it]</pre>
 </div>
 </div>
 
@@ -14676,9 +14685,10 @@ Original length: 1460, new length: 889
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2004:
+#### Year 2004:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1464, 117])
 Original length: 1464, new length: 959
+Shapes: inputs: torch.Size([959, 20, 81, 189]), targets: torch.Size([959, 31]), timestamps: 959
 </pre>
 </div>
 </div>
@@ -14690,7 +14700,7 @@ Original length: 1464, new length: 959
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 12%|█▎        | 2/16 [00:16&lt;01:52,  8.03s/it]</pre>
+<pre> 12%|█▎        | 2/16 [00:16&lt;01:54,  8.17s/it]</pre>
 </div>
 </div>
 
@@ -14702,9 +14712,10 @@ Original length: 1464, new length: 959
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2005:
+#### Year 2005:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 790
+Shapes: inputs: torch.Size([790, 20, 81, 189]), targets: torch.Size([790, 31]), timestamps: 790
 </pre>
 </div>
 </div>
@@ -14716,7 +14727,7 @@ Original length: 1460, new length: 790
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 19%|█▉        | 3/16 [00:23&lt;01:43,  7.93s/it]</pre>
+<pre> 19%|█▉        | 3/16 [00:24&lt;01:44,  8.01s/it]</pre>
 </div>
 </div>
 
@@ -14728,9 +14739,10 @@ Original length: 1460, new length: 790
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2006:
+#### Year 2006:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 1108
+Shapes: inputs: torch.Size([1108, 20, 81, 189]), targets: torch.Size([1108, 31]), timestamps: 1108
 </pre>
 </div>
 </div>
@@ -14742,7 +14754,7 @@ Original length: 1460, new length: 1108
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 25%|██▌       | 4/16 [00:32&lt;01:36,  8.05s/it]</pre>
+<pre> 25%|██▌       | 4/16 [00:32&lt;01:37,  8.12s/it]</pre>
 </div>
 </div>
 
@@ -14754,9 +14766,10 @@ Original length: 1460, new length: 1108
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2007:
+#### Year 2007:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 1354
+Shapes: inputs: torch.Size([1354, 20, 81, 189]), targets: torch.Size([1354, 31]), timestamps: 1354
 </pre>
 </div>
 </div>
@@ -14768,7 +14781,7 @@ Original length: 1460, new length: 1354
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 31%|███▏      | 5/16 [00:40&lt;01:30,  8.25s/it]</pre>
+<pre> 31%|███▏      | 5/16 [00:41&lt;01:32,  8.37s/it]</pre>
 </div>
 </div>
 
@@ -14780,9 +14793,10 @@ Original length: 1460, new length: 1354
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2008:
+#### Year 2008:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1464, 117])
 Original length: 1464, new length: 1206
+Shapes: inputs: torch.Size([1206, 20, 81, 189]), targets: torch.Size([1206, 31]), timestamps: 1206
 </pre>
 </div>
 </div>
@@ -14794,7 +14808,7 @@ Original length: 1464, new length: 1206
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 38%|███▊      | 6/16 [00:49&lt;01:23,  8.31s/it]</pre>
+<pre> 38%|███▊      | 6/16 [00:49&lt;01:24,  8.42s/it]</pre>
 </div>
 </div>
 
@@ -14806,9 +14820,10 @@ Original length: 1464, new length: 1206
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2009:
+#### Year 2009:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 995
+Shapes: inputs: torch.Size([995, 20, 81, 189]), targets: torch.Size([995, 31]), timestamps: 995
 </pre>
 </div>
 </div>
@@ -14832,9 +14847,10 @@ Original length: 1460, new length: 995
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2010:
+#### Year 2010:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 1273
+Shapes: inputs: torch.Size([1273, 20, 81, 189]), targets: torch.Size([1273, 31]), timestamps: 1273
 </pre>
 </div>
 </div>
@@ -14858,9 +14874,10 @@ Original length: 1460, new length: 1273
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2011:
+#### Year 2011:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 768
+Shapes: inputs: torch.Size([768, 20, 81, 189]), targets: torch.Size([768, 31]), timestamps: 768
 </pre>
 </div>
 </div>
@@ -14872,7 +14889,7 @@ Original length: 1460, new length: 768
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 56%|█████▋    | 9/16 [01:13&lt;00:56,  8.01s/it]</pre>
+<pre> 56%|█████▋    | 9/16 [01:13&lt;00:56,  8.05s/it]</pre>
 </div>
 </div>
 
@@ -14884,7 +14901,7 @@ Original length: 1460, new length: 768
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2012:
+#### Year 2012:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1464, 117])
 Original length: 1464, new length: 277
 </pre>
@@ -14898,7 +14915,7 @@ Original length: 1464, new length: 277
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 62%|██████▎   | 10/16 [01:19&lt;00:44,  7.35s/it]</pre>
+<pre> 62%|██████▎   | 10/16 [01:19&lt;00:44,  7.41s/it]</pre>
 </div>
 </div>
 
@@ -14909,10 +14926,12 @@ Original length: 1464, new length: 277
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>
-Year 2013:
+<pre>Shapes: inputs: torch.Size([277, 20, 81, 189]), targets: torch.Size([277, 31]), timestamps: 277
+
+#### Year 2013:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 827
+Shapes: inputs: torch.Size([827, 20, 81, 189]), targets: torch.Size([827, 31]), timestamps: 827
 </pre>
 </div>
 </div>
@@ -14924,7 +14943,7 @@ Original length: 1460, new length: 827
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 69%|██████▉   | 11/16 [01:26&lt;00:37,  7.46s/it]</pre>
+<pre> 69%|██████▉   | 11/16 [01:27&lt;00:37,  7.51s/it]</pre>
 </div>
 </div>
 
@@ -14936,9 +14955,10 @@ Original length: 1460, new length: 827
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2014:
+#### Year 2014:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 770
+Shapes: inputs: torch.Size([770, 20, 81, 189]), targets: torch.Size([770, 31]), timestamps: 770
 </pre>
 </div>
 </div>
@@ -14950,7 +14970,7 @@ Original length: 1460, new length: 770
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 75%|███████▌  | 12/16 [01:34&lt;00:30,  7.51s/it]</pre>
+<pre> 75%|███████▌  | 12/16 [01:35&lt;00:30,  7.57s/it]</pre>
 </div>
 </div>
 
@@ -14962,9 +14982,10 @@ Original length: 1460, new length: 770
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2015:
+#### Year 2015:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 903
+Shapes: inputs: torch.Size([903, 20, 81, 189]), targets: torch.Size([903, 31]), timestamps: 903
 </pre>
 </div>
 </div>
@@ -14976,7 +14997,7 @@ Original length: 1460, new length: 903
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 81%|████████▏ | 13/16 [01:42&lt;00:22,  7.58s/it]</pre>
+<pre> 81%|████████▏ | 13/16 [01:42&lt;00:22,  7.62s/it]</pre>
 </div>
 </div>
 
@@ -14988,9 +15009,10 @@ Original length: 1460, new length: 903
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2016:
+#### Year 2016:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1464, 117])
 Original length: 1464, new length: 1204
+Shapes: inputs: torch.Size([1204, 20, 81, 189]), targets: torch.Size([1204, 31]), timestamps: 1204
 </pre>
 </div>
 </div>
@@ -15002,7 +15024,7 @@ Original length: 1464, new length: 1204
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 88%|████████▊ | 14/16 [01:50&lt;00:15,  7.83s/it]</pre>
+<pre> 88%|████████▊ | 14/16 [01:51&lt;00:15,  7.83s/it]</pre>
 </div>
 </div>
 
@@ -15014,9 +15036,10 @@ Original length: 1464, new length: 1204
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2017:
+#### Year 2017:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 849
+Shapes: inputs: torch.Size([849, 20, 81, 189]), targets: torch.Size([849, 31]), timestamps: 849
 </pre>
 </div>
 </div>
@@ -15028,7 +15051,7 @@ Original length: 1460, new length: 849
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre> 94%|█████████▍| 15/16 [01:58&lt;00:07,  7.90s/it]</pre>
+<pre> 94%|█████████▍| 15/16 [01:59&lt;00:07,  7.88s/it]</pre>
 </div>
 </div>
 
@@ -15040,9 +15063,10 @@ Original length: 1460, new length: 849
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
 <pre>
-Year 2018:
+#### Year 2018:
 Added labels [0, 1] at position [:,-1], new shape: torch.Size([1460, 117])
 Original length: 1460, new length: 963
+Shapes: inputs: torch.Size([963, 20, 81, 189]), targets: torch.Size([963, 31]), timestamps: 963
 </pre>
 </div>
 </div>
@@ -15054,7 +15078,7 @@ Original length: 1460, new length: 963
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
-<pre>100%|██████████| 16/16 [02:06&lt;00:00,  7.91s/it]
+<pre>100%|██████████| 16/16 [02:07&lt;00:00,  7.96s/it]
 </pre>
 </div>
 </div>
@@ -15066,7 +15090,7 @@ Original length: 1460, new length: 963
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[33]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_year</span> <span class="o">=</span> <span class="mi">2015</span>
@@ -15095,7 +15119,7 @@ Original length: 1460, new length: 963
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>torch.Size([903, 20, 81, 189]) torch.Size([903, 30]) 903
+<pre>torch.Size([903, 20, 81, 189]) torch.Size([903, 31]) 903
 </pre>
 </div>
 </div>
@@ -15104,18 +15128,47 @@ Original length: 1460, new length: 963
 
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[34]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_target</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 </pre></div>
 
      </div>
 </div>
 </div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[34]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>tensor([ 5.4525e+01,  1.2683e+02,  1.1993e+02,  3.2898e+01,  2.6588e+01,
+         2.7683e+01,  7.0103e+02,  2.5145e+02,  3.5290e+01,  4.1783e+01,
+         3.9873e+01,  3.8048e+01,  5.2585e+01,  6.1885e+01,  5.5202e+01,
+        -1.5842e+01,  2.5548e+01, -2.1435e+01, -1.6750e+01,  6.3750e-01,
+        -4.1668e-03,  3.2286e+02, -3.2309e+02, -1.3917e+00,  3.2646e+00,
+        -3.2438e+00,  2.4375e-01,  6.8375e+00,  3.4375e-01, -2.0750e+00,
+         0.0000e+00])</pre>
+</div>
+
+</div>
+
+</div>
+
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
