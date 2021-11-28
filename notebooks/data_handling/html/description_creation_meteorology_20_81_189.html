@@ -14259,7 +14259,7 @@ a.anchor-link {
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">torch</span>
@@ -14278,29 +14278,26 @@ a.anchor-link {
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">description</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Mean sea-level pressure&quot;</span><span class="p">},</span>
+        <span class="mi">0</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Mean Sea-Level Pressure&quot;</span><span class="p">},</span>
         <span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;Z@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Geopotential Height at P=850 mBar [m]&quot;</span><span class="p">},</span>
         <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;Z@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Geopotential Height at P=500 mBar [m]&quot;</span><span class="p">},</span>
         <span class="mi">3</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;Z@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Geopotential Height at P=250 mBar [m]&quot;</span><span class="p">},</span>
-        <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U component (eastward) of wind at P=850 mBar [m/s]&quot;</span><span class="p">},</span>
-        <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U component (eastward) of wind at P=500 mBar [m/s]&quot;</span><span class="p">},</span>
-        <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U component (eastward) of wind at P=250 mBar [m/s]&quot;</span><span class="p">},</span>
-        <span class="mi">7</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V component (northward) of wind at P=850 mBar [m/s]&quot;</span><span class="p">},</span>
-        <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V component (northward) of wind at P=500 mBar [m/s]&quot;</span><span class="p">},</span>
-        <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V component (northward) of wind at P=250 mBar [m/s]&quot;</span><span class="p">},</span>
-<span class="c1">#         10: {&quot;short&quot;:&quot;PV@310&quot;, &quot;long&quot;:&quot;Potential Vorticity at T=310K [pvu]&quot;}, # Problematic - bad corner</span>
-<span class="c1">#         11: {&quot;short&quot;:&quot;PV@315&quot;, &quot;long&quot;:&quot;Potential Vorticity at T=315K [pvu]&quot;}, # Problematic - bad corner</span>
-<span class="c1">#         12: {&quot;short&quot;:&quot;PV@320&quot;, &quot;long&quot;:&quot;Potential Vorticity at T=320K [pvu]&quot;}, # Problematic - bad corner</span>
+        <span class="mi">4</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U Component (Eastward) of Wind at P=850 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">5</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U Component (Eastward) of Wind at P=500 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">6</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;U@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;U Component (Eastward) of Wind at P=250 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">7</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@850&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V Component (Northward) of Wind at P=850 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">8</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@500&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V Component (Northward) of Wind at P=500 mBar [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">9</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;V@250&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;V Component (Northward) of Wind at P=250 mBar [m/s]&quot;</span><span class="p">},</span>
         <span class="mi">10</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@325&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=325K [pvu]&quot;</span><span class="p">},</span>
         <span class="mi">11</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@330&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=330K [pvu]&quot;</span><span class="p">},</span>
         <span class="mi">12</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@335&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=335K [pvu]&quot;</span><span class="p">},</span>
         <span class="mi">13</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;PV@340&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Potential Vorticity at T=340K [pvu]&quot;</span><span class="p">},</span>
         <span class="mi">14</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aod550&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Total Aerosol Optical Depth at 550nm&quot;</span><span class="p">},</span>
         <span class="mi">15</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;duaod550&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Dust Aerosol Optical Depth at 550nm&quot;</span><span class="p">},</span>
-        <span class="mi">16</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aermssdul&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Vertically integrated mass of dust aerosol (9 - 20 um)&quot;</span><span class="p">},</span>
-        <span class="mi">17</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aermssdum&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Vertically integrated mass of dust aerosol (0.55 - 9 um)&quot;</span><span class="p">},</span>
-        <span class="mi">18</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;u10&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;10 metre U wind component [m/s]&quot;</span><span class="p">},</span>
-        <span class="mi">19</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;v10&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;10 metre V wind component [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">16</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aermssdul&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Vertically Integrated Mass of Dust Aerosol (9 - 20 um)&quot;</span><span class="p">},</span>
+        <span class="mi">17</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;aermssdum&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;Vertically Integrated Mass of Dust Aerosol (0.55 - 9 um)&quot;</span><span class="p">},</span>
+        <span class="mi">18</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;u10&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;10 Metre U Wind Component [m/s]&quot;</span><span class="p">},</span>
+        <span class="mi">19</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;short&quot;</span><span class="p">:</span><span class="s2">&quot;v10&quot;</span><span class="p">,</span> <span class="s2">&quot;long&quot;</span><span class="p">:</span><span class="s2">&quot;10 Metre V Wind Component [m/s]&quot;</span><span class="p">},</span>
         <span class="s2">&quot;lons&quot;</span><span class="p">:</span> <span class="s2">&quot;-44:50&quot;</span><span class="p">,</span>
         <span class="s2">&quot;lats&quot;</span><span class="p">:</span> <span class="s2">&quot;20:60&quot;</span><span class="p">,</span>
     <span class="p">},</span>
@@ -14386,22 +14383,22 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{&#39;input&#39;: {0: {&#39;short&#39;: &#39;SLP&#39;, &#39;long&#39;: &#39;Mean sea-level pressure&#39;},
+<pre>{&#39;input&#39;: {0: {&#39;short&#39;: &#39;SLP&#39;, &#39;long&#39;: &#39;Mean Sea-Level Pressure&#39;},
   1: {&#39;short&#39;: &#39;Z@850&#39;, &#39;long&#39;: &#39;Geopotential Height at P=850 mBar [m]&#39;},
   2: {&#39;short&#39;: &#39;Z@500&#39;, &#39;long&#39;: &#39;Geopotential Height at P=500 mBar [m]&#39;},
   3: {&#39;short&#39;: &#39;Z@250&#39;, &#39;long&#39;: &#39;Geopotential Height at P=250 mBar [m]&#39;},
   4: {&#39;short&#39;: &#39;U@850&#39;,
-   &#39;long&#39;: &#39;U component (eastward) of wind at P=850 mBar [m/s]&#39;},
+   &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=850 mBar [m/s]&#39;},
   5: {&#39;short&#39;: &#39;U@500&#39;,
-   &#39;long&#39;: &#39;U component (eastward) of wind at P=500 mBar [m/s]&#39;},
+   &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=500 mBar [m/s]&#39;},
   6: {&#39;short&#39;: &#39;U@250&#39;,
-   &#39;long&#39;: &#39;U component (eastward) of wind at P=250 mBar [m/s]&#39;},
+   &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=250 mBar [m/s]&#39;},
   7: {&#39;short&#39;: &#39;V@850&#39;,
-   &#39;long&#39;: &#39;V component (northward) of wind at P=850 mBar [m/s]&#39;},
+   &#39;long&#39;: &#39;V Component (Northward) of Wind at P=850 mBar [m/s]&#39;},
   8: {&#39;short&#39;: &#39;V@500&#39;,
-   &#39;long&#39;: &#39;V component (northward) of wind at P=500 mBar [m/s]&#39;},
+   &#39;long&#39;: &#39;V Component (Northward) of Wind at P=500 mBar [m/s]&#39;},
   9: {&#39;short&#39;: &#39;V@250&#39;,
-   &#39;long&#39;: &#39;V component (northward) of wind at P=250 mBar [m/s]&#39;},
+   &#39;long&#39;: &#39;V Component (Northward) of Wind at P=250 mBar [m/s]&#39;},
   10: {&#39;short&#39;: &#39;PV@325&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=325K [pvu]&#39;},
   11: {&#39;short&#39;: &#39;PV@330&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=330K [pvu]&#39;},
   12: {&#39;short&#39;: &#39;PV@335&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=335K [pvu]&#39;},
@@ -14409,11 +14406,11 @@ a.anchor-link {
   14: {&#39;short&#39;: &#39;aod550&#39;, &#39;long&#39;: &#39;Total Aerosol Optical Depth at 550nm&#39;},
   15: {&#39;short&#39;: &#39;duaod550&#39;, &#39;long&#39;: &#39;Dust Aerosol Optical Depth at 550nm&#39;},
   16: {&#39;short&#39;: &#39;aermssdul&#39;,
-   &#39;long&#39;: &#39;Vertically integrated mass of dust aerosol (9 - 20 um)&#39;},
+   &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (9 - 20 um)&#39;},
   17: {&#39;short&#39;: &#39;aermssdum&#39;,
-   &#39;long&#39;: &#39;Vertically integrated mass of dust aerosol (0.55 - 9 um)&#39;},
-  18: {&#39;short&#39;: &#39;u10&#39;, &#39;long&#39;: &#39;10 metre U wind component [m/s]&#39;},
-  19: {&#39;short&#39;: &#39;v10&#39;, &#39;long&#39;: &#39;10 metre V wind component [m/s]&#39;},
+   &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (0.55 - 9 um)&#39;},
+  18: {&#39;short&#39;: &#39;u10&#39;, &#39;long&#39;: &#39;10 Metre U Wind Component [m/s]&#39;},
+  19: {&#39;short&#39;: &#39;v10&#39;, &#39;long&#39;: &#39;10 Metre V Wind Component [m/s]&#39;},
   &#39;lons&#39;: &#39;-44:50&#39;,
   &#39;lats&#39;: &#39;20:60&#39;},
  &#39;target&#39;: {0: {&#39;df_col&#39;: &#39;dust_0&#39;, &#39;description&#39;: &#39;dust at i+0h&#39;},

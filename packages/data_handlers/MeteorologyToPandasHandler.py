@@ -12,7 +12,8 @@ from PIL import Image
 # +
 class MeteorologyToPandasHandler:
     def __init__(self, params=None, folders=None, prefixes=None, netcdf_keys=None,
-        dates=None, debug=False, keep_na=False, add_cams=True, upsample_to=[81,169]):
+                 dates=None, debug=False, keep_na=False, add_cams=True, upsample_to=[81,169],
+                 interpolate_to_3h=False, params_to_be_interpolated=None):
         '''
             Used for loading meteorology params from a server (defaults values regards to the Chemfarm of WIS)
             and transform them into a pandas DataFrame
@@ -30,6 +31,8 @@ class MeteorologyToPandasHandler:
         self.keep_na = keep_na
         self.add_cams = add_cams
         self.debug = debug
+        self.interpolate_to_3h = interpolate_to_3h
+        self.params_to_be_interpolated = params_to_be_interpolated
         self.paths = {}
         self.params_to_take_from_paths = {}
         self.param_idxs = {}
@@ -39,7 +42,8 @@ class MeteorologyToPandasHandler:
         self.folders = folders or self.get_default_folders()
         self.prefixes = prefixes or self.get_default_prefixes()
         self.netcdf_keys = netcdf_keys or self.get_default_netcdf_keys()
-        self.dates = dates or self.get_default_dates()
+        self.dates = dates if dates is not None else self.get_default_dates()
+        print(f"Initiating paths for \n{self.dates[:5]}\n...\n{self.dates[-5:]}")
         self.init_paths()
         self.init_params_to_take_from_paths()
         self.init_param_shapes()
@@ -48,6 +52,8 @@ class MeteorologyToPandasHandler:
         default_list = ["SLP", "Z", "U", "V", "PV"]
         if self.add_cams: 
             default_list+=["aod550","duaod550","aermssdul","aermssdum","u10","v10"]
+        if self.interpolate_to_3h and self.params_to_be_interpolated is None:
+            self.params_to_be_interpolated = ["aod550","duaod550","aermssdul","aermssdum","u10","v10"]
         return default_list
 
     def get_default_folders(self):
@@ -97,10 +103,12 @@ class MeteorologyToPandasHandler:
 
     def get_default_dates(self):
         if self.debug:
-            start,end = "2002-12-25 00:00","2003-01-05 18:00"
+            start,end = "2002-12-30 00:00","2003-01-02 18:00"
+        elif self.add_cams: 
+            start,end = "2003-01-01 00:00","2018-12-31 18:00"
         else:
             start,end = "2000-01-01 00:00","2021-12-31 18:00"
-        freq = "6h" if self.add_cams else "3h"
+        freq = "6h" if (self.add_cams and not self.interpolate_to_3h) else "3h"
         dates = pd.date_range(start=start, end=end, tz="UTC", freq=freq)
         return dates
    
@@ -137,18 +145,31 @@ class MeteorologyToPandasHandler:
                 return False
         return True
     
+    def does_date_exist_in_all_params_not_to_be_interpolated(self,date,date_idx):
+        params_not_to_be_interpolated = [p for p in self.params if p not in self.params_to_be_interpolated]
+        for param in params_not_to_be_interpolated:
+            if self.paths[param][date_idx]== "": # meaning no date was found when init_paths()
+                return False
+        return True
+
     def init_params_to_take_from_paths(self):
         """
             Run through all dates until a valid date is found (is_date_exist_in_all_params==True),
             set self.params_to_take_from_paths to {date:{path:[params_to_be_taken]}}. 
             Increases effeciency of load_data()
+            By default, if one of the paths is empty for that date, will set {}. If interpolate_to_3h,
+            will set instead the paths that exist for other parameters, and add [] for those
+            that do not exist, e.g. cams
         """
         print("Initiating parameters to take from each path...")
         for i,date in enumerate(tqdm(self.dates)):
             dict_of_date = {}
             self.params_to_take_from_paths[date] = dict_of_date    
             if not self.does_date_exist_in_all_params(date,i):
-                continue
+                if not self.interpolate_to_3h:
+                    continue
+                if not self.does_date_exist_in_all_params_not_to_be_interpolated(date,i):
+                    continue
             # Init dict of paths:
             for p in self.params:
                 p_path = self.paths[p][i]
@@ -157,7 +178,7 @@ class MeteorologyToPandasHandler:
             for p in self.params:
                 p_path = self.paths[p][i]
                 dict_of_date[p_path]+=[p]
-            self.params_to_take_from_paths[date] = dict_of_date    
+            self.params_to_take_from_paths[date] = dict_of_date # If need to interpolate - [""] contains params  
         print("...Done initiating parameters to take from each path")
             
     def init_param_shapes(self):
@@ -232,6 +253,30 @@ class MeteorologyToPandasHandler:
         upsampled = np.array(upsampled)
         return np.expand_dims(upsampled,0)
     
+    def does_row_have_nan(self,df,row_idx):
+        has_nan = df[row_idx:row_idx+1].isnull().any(axis=1)[0]
+        return has_nan
+    
+    def interpolate_missing_rows(self,df,timestep="3h"):
+        """
+            Currently only linear (mean) interpolation is implemented
+            Interpolates only if NaN between 2 valid rows
+        """
+        timestep_pd = pd.Timedelta(timestep)
+#         first_row = 0 if not self.does_row_have_nan(df,0) else 1
+        print(f"Interpolating missing rows for columns {self.params_to_be_interpolated}...")
+        for row_idx in tqdm(range(1,len(df)-1)):
+            row = df[row_idx:row_idx+1]
+            time = df.index[row_idx]
+            if self.does_row_have_nan(df,row_idx-1) or self.does_row_have_nan(df,row_idx+1):
+                continue
+            if df.index[row_idx-1] != time-timestep_pd or df.index[row_idx+1] != time+timestep_pd:
+                continue
+            for p in self.params_to_be_interpolated:
+                df[p][row_idx] = 0.5*(df[p][row_idx-1]+df[p][row_idx+1])
+        print("... Done!")
+        return df
+
     def get_yearly_dataframe(self, year):
         # Assuming one date for all paramters in a row - if not: add NaN and skip date
         dates = []
@@ -248,7 +293,12 @@ class MeteorologyToPandasHandler:
                     dataframe_row[p] = [np.nan]
                 dataframe = dataframe.append(dataframe_row)
                 continue
+            if "" in paths_and_params_from_date.keys():
+                for p in paths_and_params_from_date[""]:
+                    dataframe_row[p] = [np.nan]
             for path in paths_and_params_from_date.keys():
+                if path == "":
+                    continue
                 full_file = self.load_full_netcdf_file(path)
                 params = paths_and_params_from_date[path]
                 for param in params:
@@ -260,8 +310,12 @@ class MeteorologyToPandasHandler:
                     param_numpy = np.array(self.interpolate_na(param_numpy),dtype=object) # still a wierd message
                     dataframe_row[param] = [param_numpy]
             dataframe = dataframe.append(dataframe_row)
+        if self.interpolate_to_3h:
+            dataframe = self.interpolate_missing_rows(dataframe,timestep="3h")
         if not self.keep_na:
+            print(f"Removing NaN. Current length: {len(dataframe)}...")
             dataframe = dataframe.dropna(how="any")
+            print(f"... Done!. Reulting length: {len(dataframe)}...")
         return dataframe
     
     def load_and_save_data_of_one_year(self, year, path_to_dir, base_filename):

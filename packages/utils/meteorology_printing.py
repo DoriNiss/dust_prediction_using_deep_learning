@@ -5,6 +5,7 @@ import torch.nn as nn
 import numpy as np
 import matplotlib.pyplot as plt
 import cartopy.crs as ccrs
+import math
 
 
 # +
@@ -30,31 +31,37 @@ def print_parameter(full_tensor, p_idx, title="", lons=None,lats=None, save_as="
         plt.savefig(save_as)        
         print("Saved to: ", save_as)
         
-def print_2_parameters_no_cartopy(tensors, channel, main_title="", titles=["",""],
-                                  inverse_rows=True, lons=None, lats=None, save_as=""):
-    # Assuming temsor of shape [c,lats,longs]
-    plt.clf();
-    lons = lons or [n/2. for n in range(-44*2,40*2+1)]
-    lats = lats or [n/2. for n in range(20*2,60*2+1)]
-    fig,axes=plt.subplots(1,2,figsize=(13,4),dpi=50);
-    plt.set_cmap('bwr')
-    fig.text(0.5, 1.1, main_title, horizontalalignment='center', verticalalignment='top',
-                fontdict={"fontsize":18})
-    fig.subplots_adjust(wspace=0.5, hspace=0.7)
-    for i in range(0,2):
-        axes[i].title.set_text(titles[i])
-        t = tensors[i][channel].flip(0) if inverse_rows else tensors[i][channel]
-        t = t.detach().cpu()
-        c=axes[i].contourf(lons,lats, t)
-        clb=plt.colorbar(c, shrink=0.5, pad=0.05, ax=axes[i])  
-        fig.tight_layout(rect=[0, 0.03, 1, 0.95]) 
-    plt.show();  
-    if save_as != "":
-        plt.savefig(save_as)        
-        print("Saved to: ", save_as)
-        
-def print_tensors_with_cartopy(tensors, main_title="", titles=None,
-                               lons=None, lats=None, save_as="",lock_bar=False, lock_bar_idxs=None, num_levels=None):
+def get_num_rows_known_cols(num_tensors,num_cols):
+    return num_tensors//num_cols
+    
+def get_num_cols_known_rows(num_tensors,num_rows):
+    return num_tensors//num_rows
+    
+def get_plot_parameters(num_rows, num_cols):
+    if num_cols==4:
+        fig_w = 15
+    if num_cols==5:
+        fig_w = 17
+    if num_cols==6:
+        fig_w = 19
+    if num_cols==7:
+        fig_w = 21
+    if num_rows==2:
+        cb_0,cb_h,fig_h = 0.21,0.58,5
+    if num_rows==3:
+        cb_0,cb_h,fig_h = 0.15,0.7,7
+    if num_rows==4:
+        cb_0,cb_h,fig_h = 0.15,0.7,9
+    if num_rows==5:
+        cb_0,cb_h,fig_h = 0.15,0.7,11
+    if num_rows==6:
+        cb_0,cb_h,fig_h = 0.15,0.7,13
+    figsize = (fig_w,fig_h)
+    return cb_0,cb_h,figsize
+
+def print_tensors_with_cartopy(tensors, main_title="", titles=None, num_rows=None, num_cols=None,
+                               lons=None, lats=None, save_as="",lock_bar=False, lock_bar_idxs=None, 
+                               num_levels=None, levels_around_zero=False, manual_levels=None):
     """
         tensors: list of tensors of shape [len(lats),len(lons)]
     """
@@ -72,32 +79,22 @@ def print_tensors_with_cartopy(tensors, main_title="", titles=None,
     projection=ccrs.PlateCarree()
     if lock_bar:
         lock_bar_idxs = lock_bar_idxs or list(range(len(tensors)))
-        vmin = torch.stack([tensors[idx] for idx in lock_bar_idxs]).min()
-        vmax = torch.stack([tensors[idx] for idx in lock_bar_idxs]).max()
-        levels = np.arange(start=vmin,stop=vmax+1,step=(vmax-vmin)/num_levels)
-    if num_tensors==8:
-        num_rows,num_cols = 2,4
-        dpi=100
-        figsize = (15,5)
-    if num_tensors==12:
-        num_rows,num_cols = 3,4
-        dpi=100
-        figsize = (15,7)
-    if num_tensors==16:
-        num_rows,num_cols = 4,4
-        dpi=100
-        figsize = (15,9)
-    if num_tensors==20:
-        num_rows,num_cols = 5,4
-        dpi=100
-        figsize = (15,11)
-    if num_tensors==24:
-        num_rows,num_cols = 6,4
-        dpi=100
-        figsize = (15,13)
-    fig,axes=plt.subplots(num_rows,num_cols,figsize=figsize,dpi=dpi,subplot_kw={'projection': projection});
+        if manual_levels is None:
+            stacked_t =torch.stack([tensors[idx] for idx in lock_bar_idxs])
+            vmin,vmax = stacked_t.min(),stacked_t.max()
+            if levels_around_zero:
+                extreme = math.ceil(max(abs(vmin),abs(vmax)))*1.
+                vmin,vmax = -extreme,extreme
+            step_size = (vmax-vmin)/num_levels
+            levels = np.arange(start=vmin,stop=vmax+0.5*step_size,step=step_size)
+        else:
+            levels = manual_levels
+    num_cols = num_cols or 4 # default value
+    num_rows = num_rows or get_num_rows_known_cols(num_tensors,num_cols)
+    cb_0,cb_h,figsize = get_plot_parameters(num_rows, num_cols)
+    fig,axes=plt.subplots(num_rows,num_cols,figsize=figsize,dpi=100,subplot_kw={'projection': projection});
     plt.set_cmap('bwr')
-    fig.text(0.5, 0.95, main_title, horizontalalignment='center', verticalalignment='top',fontdict={"fontsize":18})
+    fig.text(0.4, 0.95, main_title, horizontalalignment='center', verticalalignment='top',fontdict={"fontsize":18})
     fig.subplots_adjust(wspace=0.5, hspace=0.7)
     for row in range(num_rows):
         for col in range(num_cols):
@@ -111,8 +108,12 @@ def print_tensors_with_cartopy(tensors, main_title="", titles=None,
                 c=axes[row,col].contourf(lons,lats,t,levels=levels)
             else:
                 c=axes[row,col].contourf(lons,lats,t)
-            clb=plt.colorbar(c, shrink=0.5, pad=0.05, ax=axes[row,col])  
+                clb=plt.colorbar(c, shrink=0.5, pad=0.05, ax=axes[row,col])  
             fig.tight_layout(rect=[0, 0.03, 1, 0.95]) 
+    if lock_bar:
+        plt.subplots_adjust(bottom=0.1, right=0.8, top=0.9)
+        cax = plt.axes([0.82, cb_0, 0.01, cb_h])
+        plt.colorbar(mappable=c, cax=cax, shrink=0.5, pad=0.05)  
     plt.show();  
     if save_as != "":
         plt.savefig(save_as)        

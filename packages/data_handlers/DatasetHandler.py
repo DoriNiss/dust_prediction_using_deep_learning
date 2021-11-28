@@ -84,9 +84,10 @@ class DatasetHandler:
                 self.combined_dataframe = self.combined_dataframe.join(df, how="outer")
         self.combined_dataframe = self.combined_dataframe[self.cols_to_keep]
         if not self.keep_na:
-            print("Removing NaN values...")  
-            self.combined_dataframe.dropna(how="any")
-        if self.replace_na_in_target is not None:
+            print(f"Removing NaN values: from length of {len(self.combined_dataframe)} ...")  
+            self.combined_dataframe = self.combined_dataframe.dropna(how="any")
+            print(f"... keeping {len(self.combined_dataframe)}...")
+        elif self.replace_na_in_target is not None:
             print(f"Replacing NaN values with {self.replace_na_in_target}...")  
             for col in self.cols_target:
                 for i in range(len(self.combined_dataframe[col])):
@@ -99,16 +100,13 @@ class DatasetHandler:
             if len(self.combined_dataframe[col][good_sample_idx].shape)<=1:
                 self.combined_dataframe[col] = self.combined_dataframe[col].astype("object")
                 self.combined_dataframe[col] = [p for p in np.expand_dims(np.array(self.combined_dataframe[col]),1)]
-        print("...Done! The resulting dataframe is saved in self.dataframe:")
+        print("...Done! The resulting dataframe is kept in self.combined_dataframe:")
         self.print_statistics(self.combined_dataframe)        
 
     def print_statistics(self, df):
         print("Number of values per column:")
         print(df.count())
-        print("First rows dates:")
-        print(df.index[:5])
-        print("Last rows dates:")
-        print(df.index[-5:])
+        print(f"Dates: {df.index[:5]}\n...\n{df.index[-5:]}")
         
     def get_good_combined_idx(self):
         for i,date in enumerate(self.combined_dataframe.index):
@@ -190,12 +188,7 @@ class DatasetHandler:
         torch.save(x_target, filename_target)
         torch.save(timestamps, filename_timestamps)
         torch.save(self.dataframes_descriptions, filename_description)
-                 
-    def create_sequential_dataset(self):
-        # Using a specific class which contains both full tensor and sequencing info and has a function that returns seq[idx]
-        # TODO
-        return
-    
+                    
     @staticmethod
     def create_and_save_one_dataset_from_path(dataframes_paths, dataset_arguments, save_as):
         dataframes = [torch.load(path) for path in dataframes_paths]
@@ -230,7 +223,7 @@ class DatasetHandler:
         Parallel(n_jobs=njobs,verbose=100)(delayed(
             DatasetHandler.create_and_save_one_dataset_from_path)(dataframes_paths[i], datasets_arguments[i], save_as_list[i]) 
                 for i in range(num_datasets_to_save)
-        )        
+        )     
 
 
 

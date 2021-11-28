@@ -35,62 +35,106 @@ inputs_clear,targets_clear,timestamps_clear,idxs_clear =     get_inputs_targets_
 
 
 seasons = ["DJF", "MAM", "JJA", "SON"]
-timestamps_dict = {"clear":timestamps_clear, "events":timestamps_events}
+timestamps_dict = {"clear":timestamps_clear, "events":timestamps_events, "global":timestamps}
 seasons_months = {"DJF":[12,1,2], "MAM":[3,4,5], "JJA":[6,7,8], "SON":[9,10,11]}
+time_types = ["clear","events","global"]
 
-seasonal_idxs = {"clear":{}, "events":{}}
-seasonal_timestamps = {"clear":{}, "events":{}}
-for time_type in ["clear", "events"]:
+seasonal_idxs = {t_type:{} for t_type in time_types}
+seasonal_timestamps = {t_type:{} for t_type in time_types}
+for time_type in time_types:
     for season in seasons:
         seasonal_idxs[time_type][season] = []
         seasonal_timestamps[time_type][season] = []
 
-for time_type in ["clear", "events"]:
+for time_type in time_types:
     for i,time in enumerate(timestamps_dict[time_type]):
         for season in ["DJF", "MAM", "JJA", "SON"]:
             if time.month in seasons_months[season]:
                 seasonal_idxs[time_type][season]+=[i]
                 seasonal_timestamps[time_type][season]+=[time]
 
-for time_type in ["clear", "events"]:
+for time_type in time_types:
     for season in seasons:
         seasonal_idxs[time_type][season] = np.array(seasonal_idxs[time_type][season])
-        seasonal_timestamps[time_type][season] = pd.to_datetime(seasonal_idxs[time_type][season])
-        print(f"\n\n#### {time_type}, {season}: length = {len(seasonal_idxs[time_type][season])}: "               f"\n{seasonal_timestamps[time_type][season][:5]}\n...\n{seasonal_timestamps[time_type][season][:5]}")
+        seasonal_timestamps[time_type][season] = pd.to_datetime(seasonal_timestamps[time_type][season])
+        print(f"\n\n#### {time_type}, {season}: length = {len(seasonal_idxs[time_type][season])}: "               f"\n{seasonal_timestamps[time_type][season][:5]}\n...\n{seasonal_timestamps[time_type][season][-5:]}")
 
 
-## Seasonal averages creation - saved to f"{data_dir}/{base_filename}_seasonal_averages.pkl"
+# ## Seasonal averages creation - saved to f"{data_dir}/{base_filename}_seasonal_averages.pkl"
 
-# averages_seasonal = {"clear":{}, "events":{}, "global":{}}
+# averages_seasonal = {t_type:{} for t_type in time_types}
 
-# inputs_dict = {"clear":inputs_clear, "events":inputs_events}
+# inputs_dict = {"clear":inputs_clear, "events":inputs_events, "global": inputs}
 
 
-# for time_type in ["clear", "events", "global"]:
+# for time_type in time_types:
 #     print(f"#### {time_type}:")
 #     for season in seasons:
-#         if time_type == "global":
-#             season_idxs_clear = seasonal_idxs["clear"][season]
-#             season_idxs_events = seasonal_idxs["events"][season]
-#             global_tensor = torch.cat([inputs_dict["clear"][season_idxs_clear],
-#                                        inputs_dict["events"][season_idxs_events]])
-#             old_shape = global_tensor.shape
-#             averages_seasonal[time_type][season] = batch_average_datapoint(global_tensor)
-#         else:
-#             season_idxs = seasonal_idxs[time_type][season]
-#             old_shape = inputs_dict[time_type][season_idxs].shape
-#             averages_seasonal[time_type][season] = batch_average_datapoint(inputs_dict[time_type][season_idxs])
+#         season_idxs = seasonal_idxs[time_type][season]
+#         old_shape = inputs_dict[time_type][season_idxs].shape
+#         averages_seasonal[time_type][season] = batch_average_datapoint(inputs_dict[time_type][season_idxs])
 #         print(f"     {season} shape: {old_shape} -> {averages_seasonal[time_type][season].shape}")
+
+
+# # # #### clear:
+# # #      DJF shape: torch.Size([3031, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      MAM shape: torch.Size([3076, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      JJA shape: torch.Size([3943, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      SON shape: torch.Size([3165, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # # #### events:
+# # #      DJF shape: torch.Size([619, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      MAM shape: torch.Size([711, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      JJA shape: torch.Size([176, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      SON shape: torch.Size([414, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # # #### global:
+# # #      DJF shape: torch.Size([3650, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      MAM shape: torch.Size([3787, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      JJA shape: torch.Size([4119, 20, 81, 189]) -> torch.Size([20, 81, 189])
+# # #      SON shape: torch.Size([3579, 20, 81, 189]) -> torch.Size([20, 81, 189])
 
 
 # torch.save(averages_seasonal,f"{data_dir}/{base_filename}_seasonal_averages.pkl")
 averages_seasonal = torch.load(f"{data_dir}/{base_filename}_seasonal_averages.pkl")
 
 
-time_types = ["clear", "events", "global"]
+# inputs_minus_seasonal = inputs*0.
+# for season in seasons:
+#     idxs = seasonal_idxs["global"][season]
+#     inputs_minus_seasonal[idxs] = inputs[idxs]-averages_seasonal["global"][season]
+    
+
+
+# torch.save(averages_seasonal,f"{data_dir}/{base_filename}_inputs_minus_seasonal.pkl")
+inputs_minus_seasonal = torch.load(f"{data_dir}/{base_filename}_seasonal_averages.pkl")
+
+
+inputs_minus_seasonal.shape
+
+
+
+
+
+
+
+
+
+
+
 tensors_seasonal_averages = [averages_seasonal[time_type][season] for time_type in time_types for season in seasons]
 titles_seasonal_averages = [f"{time_type}, {season}" for time_type in time_types for season in seasons]
 len(tensors_seasonal_averages), len(titles_seasonal_averages)
+
+
+
+
+
+inputs_season_reduced = inputs
+for t in timestamps:
+    idxs_season = 
+    inputs_season_reduced[timestamps]
+
+
+
 
 
 # tensors = [t[0] for t in tensors_seasonal_averages[:4]]*2

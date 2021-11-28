@@ -1,0 +1,101 @@
+import sys
+sys.path.insert(0, '../../packages/data_handlers')
+from MeteorologyToPandasHandler import *
+import numpy as np
+
+data_dir = "../../data/meteorology_dataframes_20_81_189_3h"
+debug_dir = data_dir+"/debug"
+debug_base_filename = "meteorology_dataframe_20_81_189_3h_debug"
+base_filename = "meteorology_dataframe_20_81_189_3h"
+
+meteo_handler = MeteorologyToPandasHandler(debug=True, keep_na=False, add_cams=True, upsample_to=[81,169],
+                 interpolate_to_3h=True, invalid_values=None)
+meteo_handler.params
+
+ meteo_handler.params_to_take_from_paths
+
+
+
+
+
+
+
+# meteo_handler.print_param_info("SLP")
+
+times = np.array([0])
+lats = np.arange(220,301,1) # 20 to 60
+lons = np.arange(272,461,1) # -44 to 50
+print("SLP:")
+meteo_handler.set_idxs("SLP",[times,lats,lons])
+
+# meteo_handler.print_param_info("Z")
+
+times = np.array([0])
+levs = np.array([6,15,20])
+lats = np.arange(220,301,1) # 20 to 60
+lons = np.arange(272,461,1) # -44 to 50
+print("Z:")
+meteo_handler.set_idxs("Z",[times,levs,lats,lons])
+
+# meteo_handler.print_param_info("U")
+# meteo_handler.print_param_info("V")
+
+times = np.array([0])
+levs = np.array([6,15,20])
+lats = np.arange(220,301,1) # 20 to 60
+lons = np.arange(272,461,1) # -44 to 50
+print("U:")
+meteo_handler.set_idxs("U",[times,levs,lats,lons])
+print("\nV:")
+meteo_handler.set_idxs("V",[times,levs,lats,lons])
+
+# meteo_handler.print_param_info("PV")
+
+times = np.array([0])
+levs = np.array([2,3,4,5,6,7,8])
+lats = np.arange(220,301,1) # 20 to 60
+lons = np.arange(272,461,1) # -44 to 50
+print("PV:")
+meteo_handler.set_idxs("PV",[times,levs,lats,lons])
+
+# meteo_handler.print_param_info("aod550")
+
+time = np.array([0])
+latitude = np.arange(70,29,-1) # 20 to 60
+longitude = np.arange(136,231,1) # -44 to 50
+print("aod550:")
+meteo_handler.set_idxs("aod550",[time,latitude,longitude])
+print("\nduaod550:")
+meteo_handler.set_idxs("duaod550",[time,latitude,longitude])
+print("\naermssdul:")
+meteo_handler.set_idxs("aermssdul",[time,latitude,longitude])
+print("\naermssdum:")
+meteo_handler.set_idxs("aermssdum",[time,latitude,longitude])
+print("\nu10:")
+meteo_handler.set_idxs("u10",[time,latitude,longitude])
+print("\nv10:")
+meteo_handler.set_idxs("v10",[time,latitude,longitude])
+
+meteo_handler.load_and_save_yearly_data(data_dir, base_filename, njobs=3)
+
+
+
+
+
+# from scipy import interpolate
+# import scipy.ndimage
+# from PIL import Image
+# import numpy as np
+
+# upsample_to = [81,189]
+
+# original = np.zeros([1,41,95])
+# print(original.shape)
+# upsampled = scipy.ndimage.zoom(original[0], 2, order=3)
+# print(upsampled.shape)
+# upsampled = Image.fromarray(upsampled).resize([upsample_to[-1],upsample_to[-2]])
+# upsampled = np.array(upsampled)
+# print(upsampled.shape)
+
+
+
