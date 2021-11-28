@@ -49,6 +49,21 @@ class SequentialHandler:
         print(f"   Time: {self.timestamps[self.rows_that_have_sequences[idx]]}")
         print(f"   Sequence: {[self.timestamps[i] for i in self.sequential_rows_idxs[idx]]}")
         
+    def translate_original_idx_to_handler(self, original_idx): # Terribly slow
+        """
+            e.g.: Returns 0 for original_idx=24, if the rows_that_have_sequences[0]==24 
+            If the wanted idx does not appear in rows_that_have_sequences, returns None
+        """
+        if original_idx not in self.rows_that_have_sequences:
+            return None
+        return self.rows_that_have_sequences.index(original_idx)
+    
+    def translate_handler_idx_to_original(self, handler_idx):
+        """
+            e.g.: Returns 24 for handler_idx=0, if the rows_that_have_sequences[0]==24 
+        """
+        return self.rows_that_have_sequences[handler_idx]
+
     def get_sequence(self,x,idx,add_dim=True):
         """
             Adds new dimension by default at position [0], e.g.: returns [seq_len,20,81,189] from [20,81,189] 
@@ -67,6 +82,23 @@ class SequentialHandler:
             Warning: Might be highly memory expensive
         """
         return torch.stack([self.get_sequence(x,i,add_dim=add_dim) for i in range(self.num_sequences)])
+
+    def get_batched_sequences(self,x,batch_idxs,add_dim=True):
+        """
+            Iterates through all rows in batch_idxs and returns a new tensor of all sequences in batch_idxs, 
+            of shape [self.num_sequences]+self.get_sequence(x,0,add_dim=add_dim).shape
+            Warning: Might be highly memory expensive
+        """
+        return torch.stack([self.get_sequence(x,i,add_dim=add_dim) for i in batch_idxs])
+    
+    def get_batched_sequences_from_original_idxs(self,x,original_idxs,add_dim=True):
+        """
+            Same as get_batched_sequences, but first translates the wanted original idxs to the corresponding
+            idxs of the handler. Useful for contructing sequences of known label, e.g. pulling events' sequences
+        """
+        idxs = [self.translate_original_idx_to_handler(i) for i in original_idxs]
+        idxs = [i for i in idxs if i is not None]
+        return self.get_batched_sequences(x,idxs,add_dim=add_dim)
 
     @staticmethod
     def get_paths_from_years_list(years_list, paths_dir, base_filename, suffix):

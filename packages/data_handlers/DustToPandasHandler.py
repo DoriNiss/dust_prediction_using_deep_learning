@@ -15,12 +15,12 @@ class DustToPandasHandler:
     '''
     def __init__(self, filename, timezone="Asia/Jerusalem", num_hours_to_avg="3h",lags=[0,-24,24,48,72],
                  delta_hours=3, data_type="MEP", saveto=None, avg_th=3, origin_start="2000-01-01 00:00:00+00:00",
-                 use_all=True, keep_na=False):
+                 use_all=True, keep_na=False,event_th=73.4):
         '''
             timezones - the time zone of the taken measurements, to be translated to UTC (https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
             num_hours_to_avg - the hours
             lags - must include 0 at first. The lags which the network will use for loss calculations.
-            The resulting data will be, for each lag: [dust_lag, delta_lag]
+            The resulting data will be, for each lag: [dust_lag, delta_lag] ([all lags...,all delta...])
             delta_hours - is used for delta calculation. delta_lag = dust_lag - dust_(lag-delta_hours). 
             Defaults to 3.
             data_type - MEP is a slightly editted .csv file from the MEP site: all the summary
@@ -52,23 +52,27 @@ class DustToPandasHandler:
         self.keep_na = keep_na
         print("Loading data and creating a pandas DataFrame: ...")
         self.dust_raw = self.get_data()
-        print("... Done! Created a pandas DataFrame (times shifted to UTC):",self.dust_raw.describe(),"len:",len(self.dust_raw))
-        if not keep_na:
-            print("Removing NaN values: ...")
-            self.dust_raw = self.dust_raw.dropna(how="any")
-            print("... Done! Dropped NaN values:",self.dust_raw.describe(),"len:",len(self.dust_raw))
+        print("... Done! Created a pandas DataFrame (times shifted to UTC):")
+        self.print_dataframe(self.dust_raw)
         print(f"Calculating {self.num_hours_to_avg} hourly averages since {self.origin_start}: ...")
         dust_avgs = self.calculate_averages(self.dust_raw)
-        print(f"... Done! Averaged in timebase of {self.num_hours_to_avg}:")
-        print(dust_avgs.describe())
-        print(f"Calculating lags (dust,delta_dust) at these hours: {lags}")
+        print(f"... Done! Averaged in timebase of {self.num_hours_to_avg} and taken averages only if number of "\
+              f"values to average >= {self.avg_th}:")
+        self.print_dataframe(dust_avgs)
+        print(f"Calculating lags (dust,delta_dust) at these hours: {lags} ...")
         self.dust_lags = self.calculate_lags(dust_avgs)
-        print(f"... Done! Result is saved in self.dust_lags:")
-        print(self.dust_lags.describe())
-        print("You can check the result using self.check_result(rows_start, rows_end)")
+        if not keep_na:
+            print("Removing NaN values: ...")
+            self.dust_lags = self.dust_lags.dropna(how="any")
+        print(f"... Done! Result is kept in self.dust_lags:")
+        self.print_dataframe(self.dust_lags)
+        self.print_yearly_events_count(th=event_th)
         if saveto is not None:
             self.saveto(saveto)
 
+    def print_dataframe(self, df):
+        print(f"{df[:5]}\n...\n{df[-5:]}\nLength: {len(df)}, number of non-NaN values: {df.count()[0]}")
+    
     def saveto(self,filename):
         if filename[-4:] == ".pkl":
 #             self.dust_lags.to_pickle(filename)
@@ -93,7 +97,7 @@ class DustToPandasHandler:
         
     def get_formatted_dates_and_values_from_csv_reader_list(self, reader_list):
         dates,values = [],[]
-        rows_to_use = reader_list if self.use_all else reader_list[:30000]
+        rows_to_use = reader_list if self.use_all else reader_list[:10000]
         for i,row in enumerate(rows_to_use):
             if row[0] == "":
                 continue
@@ -156,9 +160,11 @@ class DustToPandasHandler:
     def calculate_averages(self, dust_dataframe):
         dust_grouped = dust_dataframe.groupby(pd.Grouper( # remove the origin argument for pandas older than 1.1, this is only to make sure the times are synced. Default should work as well
             freq=self.num_hours_to_avg, origin=self.origin_start,label="left"))
-        dust_avgs = dust_grouped.mean()[dust_grouped.count()>=self.avg_th]
-        if not self.keep_na:
-            dust_avgs = dust_avgs.dropna(how="any")
+        idxs = dust_grouped.count()>=self.avg_th
+        idxs = idxs["dust_0"].values
+        dust_avgs = dust_grouped.mean()[idxs]
+#         if not self.keep_na:
+#             dust_avgs = dust_avgs.dropna(how="any")
         return dust_avgs
     
     def calculate_lags(self, dust_avg):
@@ -166,17 +172,26 @@ class DustToPandasHandler:
             {"dust_0": dust_avg["dust_0"]},
             index=dust_avg.index
         )
-        for lag in self.lags:
+        for lag in self.lags: # splitted into 2 loops so all lags and all deltas are together
             shift_name = f"dust_{lag}" if lag>=0 else f"dust_m{-lag}"
+            dusts_lag = dust_avgs_lags["dust_0"].shift(periods=-lag,freq="h")
+            dust_avgs_lags[shift_name] = dusts_lag
+        for lag in self.lags:
             delta_name = f"delta_{lag}" if lag>=0 else f"delta_m{-lag}"
             dusts_lag = dust_avgs_lags["dust_0"].shift(periods=-lag,freq="h")
             dusts_just_before_lag = dusts_lag.shift(periods=self.delta_hours,freq="h")
-            dust_avgs_lags[shift_name] = dusts_lag
             dust_avgs_lags[delta_name] = dusts_lag-dusts_just_before_lag
-        if not self.keep_na:
-            dust_avgs_lags = dust_avgs_lags.dropna(how="any")
+#         if not self.keep_na:
+#             dust_avgs_lags = dust_avgs_lags.dropna(how="any")
         return dust_avgs_lags
 
+    def print_yearly_events_count(self,th=73.4):
+        print(f"Yearly events count, threshold={th}:")
+        first_year,last_year = self.dust_lags.index[0].year,self.dust_lags.index[-1].year
+        for y in range(first_year,last_year+1):
+            events_count = sum(self.dust_lags[self.dust_lags.index.year==y]["dust_0"]>=th)
+            print(f"{y}:{events_count}")
+    
     def check_result(self, rows_start, rows_end):
         print("Not implemented yet. You actually can't check the result like that")
 

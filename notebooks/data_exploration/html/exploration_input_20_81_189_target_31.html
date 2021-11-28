@@ -14259,7 +14259,7 @@ a.anchor-link {
 <div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
@@ -14285,7 +14285,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[161]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">years_list</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">2019</span><span class="p">))</span>
@@ -14303,7 +14303,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inputs</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename</span><span class="si">}</span><span class="s2">_all_inputs.pkl&quot;</span><span class="p">)</span>
@@ -14325,7 +14325,7 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
 
 
 
@@ -14343,7 +14343,7 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">inputs_events</span><span class="p">,</span><span class="n">targets_events</span><span class="p">,</span><span class="n">timestamps_events</span><span class="p">,</span><span class="n">idxs_events</span> <span class="o">=</span> \
@@ -14383,33 +14383,34 @@ Label: 0, inputs: torch.Size([13215, 20, 81, 189]), targets: torch.Size([13215, 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">seasons</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DJF&quot;</span><span class="p">,</span> <span class="s2">&quot;MAM&quot;</span><span class="p">,</span> <span class="s2">&quot;JJA&quot;</span><span class="p">,</span> <span class="s2">&quot;SON&quot;</span><span class="p">]</span>
-<span class="n">timestamps_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clear&quot;</span><span class="p">:</span><span class="n">timestamps_clear</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span><span class="n">timestamps_events</span><span class="p">}</span>
+<span class="n">timestamps_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clear&quot;</span><span class="p">:</span><span class="n">timestamps_clear</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">:</span><span class="n">timestamps_events</span><span class="p">,</span> <span class="s2">&quot;global&quot;</span><span class="p">:</span><span class="n">timestamps</span><span class="p">}</span>
 <span class="n">seasons_months</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;DJF&quot;</span><span class="p">:[</span><span class="mi">12</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">],</span> <span class="s2">&quot;MAM&quot;</span><span class="p">:[</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">],</span> <span class="s2">&quot;JJA&quot;</span><span class="p">:[</span><span class="mi">6</span><span class="p">,</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">],</span> <span class="s2">&quot;SON&quot;</span><span class="p">:[</span><span class="mi">9</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">]}</span>
+<span class="n">time_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;clear&quot;</span><span class="p">,</span><span class="s2">&quot;events&quot;</span><span class="p">,</span><span class="s2">&quot;global&quot;</span><span class="p">]</span>
 
-<span class="n">seasonal_idxs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clear&quot;</span><span class="p">:{},</span> <span class="s2">&quot;events&quot;</span><span class="p">:{}}</span>
-<span class="n">seasonal_timestamps</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;clear&quot;</span><span class="p">:{},</span> <span class="s2">&quot;events&quot;</span><span class="p">:{}}</span>
-<span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;clear&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">]:</span>
+<span class="n">seasonal_idxs</span> <span class="o">=</span> <span class="p">{</span><span class="n">t_type</span><span class="p">:{}</span> <span class="k">for</span> <span class="n">t_type</span> <span class="ow">in</span> <span class="n">time_types</span><span class="p">}</span>
+<span class="n">seasonal_timestamps</span> <span class="o">=</span> <span class="p">{</span><span class="n">t_type</span><span class="p">:{}</span> <span class="k">for</span> <span class="n">t_type</span> <span class="ow">in</span> <span class="n">time_types</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="n">time_types</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
         <span class="n">seasonal_idxs</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
 
-<span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;clear&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="n">time_types</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">time</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">timestamps_dict</span><span class="p">[</span><span class="n">time_type</span><span class="p">]):</span>
         <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;DJF&quot;</span><span class="p">,</span> <span class="s2">&quot;MAM&quot;</span><span class="p">,</span> <span class="s2">&quot;JJA&quot;</span><span class="p">,</span> <span class="s2">&quot;SON&quot;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="n">time</span><span class="o">.</span><span class="n">month</span> <span class="ow">in</span> <span class="n">seasons_months</span><span class="p">[</span><span class="n">season</span><span class="p">]:</span>
                 <span class="n">seasonal_idxs</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span><span class="o">+=</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
                 <span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span><span class="o">+=</span><span class="p">[</span><span class="n">time</span><span class="p">]</span>
 
-<span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;clear&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">]:</span>
+<span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="n">time_types</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">:</span>
         <span class="n">seasonal_idxs</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">seasonal_idxs</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">])</span>
-        <span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">seasonal_idxs</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">])</span>
+        <span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">])</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">#### </span><span class="si">{</span><span class="n">time_type</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s2">: length = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">seasonal_idxs</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">])</span><span class="si">}</span><span class="s2">: &quot;</span> \
-              <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">...</span><span class="se">\n</span><span class="si">{</span><span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+              <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">][:</span><span class="mi">5</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s2">...</span><span class="se">\n</span><span class="si">{</span><span class="n">seasonal_timestamps</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">][</span><span class="o">-</span><span class="mi">5</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14432,131 +14433,147 @@ Label: 0, inputs: torch.Size([13215, 20, 81, 189]), targets: torch.Size([13215, 
 <pre>
 
 #### clear, DJF: length = 3031: 
-DatetimeIndex([          &#39;1970-01-01 00:00:00&#39;,
-               &#39;1970-01-01 00:00:00.000000001&#39;,
-               &#39;1970-01-01 00:00:00.000000002&#39;,
-               &#39;1970-01-01 00:00:00.000000003&#39;,
-               &#39;1970-01-01 00:00:00.000000004&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-01-07 18:00:00+00:00&#39;, &#39;2003-01-08 00:00:00+00:00&#39;,
+               &#39;2003-01-08 06:00:00+00:00&#39;, &#39;2003-01-08 12:00:00+00:00&#39;,
+               &#39;2003-01-08 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([          &#39;1970-01-01 00:00:00&#39;,
-               &#39;1970-01-01 00:00:00.000000001&#39;,
-               &#39;1970-01-01 00:00:00.000000002&#39;,
-               &#39;1970-01-01 00:00:00.000000003&#39;,
-               &#39;1970-01-01 00:00:00.000000004&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-12-30 18:00:00+00:00&#39;, &#39;2018-12-31 00:00:00+00:00&#39;,
+               &#39;2018-12-31 06:00:00+00:00&#39;, &#39;2018-12-31 12:00:00+00:00&#39;,
+               &#39;2018-12-31 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### clear, MAM: length = 3076: 
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000162&#39;,
-               &#39;1970-01-01 00:00:00.000000163&#39;,
-               &#39;1970-01-01 00:00:00.000000164&#39;,
-               &#39;1970-01-01 00:00:00.000000165&#39;,
-               &#39;1970-01-01 00:00:00.000000166&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-03-01 00:00:00+00:00&#39;, &#39;2003-03-01 06:00:00+00:00&#39;,
+               &#39;2003-03-01 12:00:00+00:00&#39;, &#39;2003-03-01 18:00:00+00:00&#39;,
+               &#39;2003-03-02 00:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000162&#39;,
-               &#39;1970-01-01 00:00:00.000000163&#39;,
-               &#39;1970-01-01 00:00:00.000000164&#39;,
-               &#39;1970-01-01 00:00:00.000000165&#39;,
-               &#39;1970-01-01 00:00:00.000000166&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-05-30 18:00:00+00:00&#39;, &#39;2018-05-31 00:00:00+00:00&#39;,
+               &#39;2018-05-31 06:00:00+00:00&#39;, &#39;2018-05-31 12:00:00+00:00&#39;,
+               &#39;2018-05-31 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### clear, JJA: length = 3943: 
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000339&#39;,
-               &#39;1970-01-01 00:00:00.000000340&#39;,
-               &#39;1970-01-01 00:00:00.000000341&#39;,
-               &#39;1970-01-01 00:00:00.000000342&#39;,
-               &#39;1970-01-01 00:00:00.000000343&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-06-01 00:00:00+00:00&#39;, &#39;2003-06-01 06:00:00+00:00&#39;,
+               &#39;2003-06-01 12:00:00+00:00&#39;, &#39;2003-06-01 18:00:00+00:00&#39;,
+               &#39;2003-06-02 00:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000339&#39;,
-               &#39;1970-01-01 00:00:00.000000340&#39;,
-               &#39;1970-01-01 00:00:00.000000341&#39;,
-               &#39;1970-01-01 00:00:00.000000342&#39;,
-               &#39;1970-01-01 00:00:00.000000343&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-08-13 00:00:00+00:00&#39;, &#39;2018-08-13 06:00:00+00:00&#39;,
+               &#39;2018-08-13 12:00:00+00:00&#39;, &#39;2018-08-13 18:00:00+00:00&#39;,
+               &#39;2018-08-14 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### clear, SON: length = 3165: 
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000646&#39;,
-               &#39;1970-01-01 00:00:00.000000647&#39;,
-               &#39;1970-01-01 00:00:00.000000648&#39;,
-               &#39;1970-01-01 00:00:00.000000649&#39;,
-               &#39;1970-01-01 00:00:00.000000650&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-09-14 12:00:00+00:00&#39;, &#39;2003-09-14 18:00:00+00:00&#39;,
+               &#39;2003-09-15 00:00:00+00:00&#39;, &#39;2003-09-15 06:00:00+00:00&#39;,
+               &#39;2003-09-15 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000646&#39;,
-               &#39;1970-01-01 00:00:00.000000647&#39;,
-               &#39;1970-01-01 00:00:00.000000648&#39;,
-               &#39;1970-01-01 00:00:00.000000649&#39;,
-               &#39;1970-01-01 00:00:00.000000650&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-11-26 18:00:00+00:00&#39;, &#39;2018-11-27 00:00:00+00:00&#39;,
+               &#39;2018-11-27 06:00:00+00:00&#39;, &#39;2018-11-27 12:00:00+00:00&#39;,
+               &#39;2018-11-27 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### events, DJF: length = 619: 
-DatetimeIndex([          &#39;1970-01-01 00:00:00&#39;,
-               &#39;1970-01-01 00:00:00.000000001&#39;,
-               &#39;1970-01-01 00:00:00.000000002&#39;,
-               &#39;1970-01-01 00:00:00.000000003&#39;,
-               &#39;1970-01-01 00:00:00.000000004&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-01-12 18:00:00+00:00&#39;, &#39;2003-01-13 12:00:00+00:00&#39;,
+               &#39;2003-01-13 18:00:00+00:00&#39;, &#39;2003-01-14 00:00:00+00:00&#39;,
+               &#39;2003-01-14 06:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([          &#39;1970-01-01 00:00:00&#39;,
-               &#39;1970-01-01 00:00:00.000000001&#39;,
-               &#39;1970-01-01 00:00:00.000000002&#39;,
-               &#39;1970-01-01 00:00:00.000000003&#39;,
-               &#39;1970-01-01 00:00:00.000000004&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-12-16 06:00:00+00:00&#39;, &#39;2018-12-16 18:00:00+00:00&#39;,
+               &#39;2018-12-17 18:00:00+00:00&#39;, &#39;2018-12-19 18:00:00+00:00&#39;,
+               &#39;2018-12-27 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### events, MAM: length = 711: 
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000047&#39;,
-               &#39;1970-01-01 00:00:00.000000048&#39;,
-               &#39;1970-01-01 00:00:00.000000049&#39;,
-               &#39;1970-01-01 00:00:00.000000050&#39;,
-               &#39;1970-01-01 00:00:00.000000051&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-03-02 18:00:00+00:00&#39;, &#39;2003-03-03 00:00:00+00:00&#39;,
+               &#39;2003-03-03 06:00:00+00:00&#39;, &#39;2003-03-03 12:00:00+00:00&#39;,
+               &#39;2003-03-18 00:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000047&#39;,
-               &#39;1970-01-01 00:00:00.000000048&#39;,
-               &#39;1970-01-01 00:00:00.000000049&#39;,
-               &#39;1970-01-01 00:00:00.000000050&#39;,
-               &#39;1970-01-01 00:00:00.000000051&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-05-23 00:00:00+00:00&#39;, &#39;2018-05-25 00:00:00+00:00&#39;,
+               &#39;2018-05-25 06:00:00+00:00&#39;, &#39;2018-05-25 12:00:00+00:00&#39;,
+               &#39;2018-05-26 06:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### events, JJA: length = 176: 
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000096&#39;,
-               &#39;1970-01-01 00:00:00.000000097&#39;,
-               &#39;1970-01-01 00:00:00.000000098&#39;,
-               &#39;1970-01-01 00:00:00.000000224&#39;,
-               &#39;1970-01-01 00:00:00.000000225&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-07-06 18:00:00+00:00&#39;, &#39;2003-07-07 00:00:00+00:00&#39;,
+               &#39;2003-08-26 06:00:00+00:00&#39;, &#39;2004-06-19 12:00:00+00:00&#39;,
+               &#39;2004-07-06 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000096&#39;,
-               &#39;1970-01-01 00:00:00.000000097&#39;,
-               &#39;1970-01-01 00:00:00.000000098&#39;,
-               &#39;1970-01-01 00:00:00.000000224&#39;,
-               &#39;1970-01-01 00:00:00.000000225&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2016-06-15 06:00:00+00:00&#39;, &#39;2016-08-03 00:00:00+00:00&#39;,
+               &#39;2017-07-03 00:00:00+00:00&#39;, &#39;2017-07-16 00:00:00+00:00&#39;,
+               &#39;2018-06-16 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 
 
 #### events, SON: length = 414: 
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
-               &#39;1970-01-01 00:00:00.000000100&#39;,
-               &#39;1970-01-01 00:00:00.000000101&#39;,
-               &#39;1970-01-01 00:00:00.000000102&#39;,
-               &#39;1970-01-01 00:00:00.000000103&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2003-09-17 12:00:00+00:00&#39;, &#39;2003-10-09 06:00:00+00:00&#39;,
+               &#39;2003-10-09 12:00:00+00:00&#39;, &#39;2003-10-09 18:00:00+00:00&#39;,
+               &#39;2003-10-10 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 ...
-DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
-               &#39;1970-01-01 00:00:00.000000100&#39;,
-               &#39;1970-01-01 00:00:00.000000101&#39;,
-               &#39;1970-01-01 00:00:00.000000102&#39;,
-               &#39;1970-01-01 00:00:00.000000103&#39;],
-              dtype=&#39;datetime64[ns]&#39;, freq=None)
+DatetimeIndex([&#39;2018-10-30 12:00:00+00:00&#39;, &#39;2018-10-31 06:00:00+00:00&#39;,
+               &#39;2018-10-31 12:00:00+00:00&#39;, &#39;2018-11-01 06:00:00+00:00&#39;,
+               &#39;2018-11-01 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+
+
+#### global, DJF: length = 3650: 
+DatetimeIndex([&#39;2003-01-07 18:00:00+00:00&#39;, &#39;2003-01-08 00:00:00+00:00&#39;,
+               &#39;2003-01-08 06:00:00+00:00&#39;, &#39;2003-01-08 12:00:00+00:00&#39;,
+               &#39;2003-01-08 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+...
+DatetimeIndex([&#39;2018-12-30 18:00:00+00:00&#39;, &#39;2018-12-31 00:00:00+00:00&#39;,
+               &#39;2018-12-31 06:00:00+00:00&#39;, &#39;2018-12-31 12:00:00+00:00&#39;,
+               &#39;2018-12-31 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+
+
+#### global, MAM: length = 3787: 
+DatetimeIndex([&#39;2003-03-01 00:00:00+00:00&#39;, &#39;2003-03-01 06:00:00+00:00&#39;,
+               &#39;2003-03-01 12:00:00+00:00&#39;, &#39;2003-03-01 18:00:00+00:00&#39;,
+               &#39;2003-03-02 00:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+...
+DatetimeIndex([&#39;2018-05-30 18:00:00+00:00&#39;, &#39;2018-05-31 00:00:00+00:00&#39;,
+               &#39;2018-05-31 06:00:00+00:00&#39;, &#39;2018-05-31 12:00:00+00:00&#39;,
+               &#39;2018-05-31 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+
+
+#### global, JJA: length = 4119: 
+DatetimeIndex([&#39;2003-06-01 00:00:00+00:00&#39;, &#39;2003-06-01 06:00:00+00:00&#39;,
+               &#39;2003-06-01 12:00:00+00:00&#39;, &#39;2003-06-01 18:00:00+00:00&#39;,
+               &#39;2003-06-02 00:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+...
+DatetimeIndex([&#39;2018-08-13 00:00:00+00:00&#39;, &#39;2018-08-13 06:00:00+00:00&#39;,
+               &#39;2018-08-13 12:00:00+00:00&#39;, &#39;2018-08-13 18:00:00+00:00&#39;,
+               &#39;2018-08-14 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+
+
+#### global, SON: length = 3579: 
+DatetimeIndex([&#39;2003-09-14 12:00:00+00:00&#39;, &#39;2003-09-14 18:00:00+00:00&#39;,
+               &#39;2003-09-15 00:00:00+00:00&#39;, &#39;2003-09-15 06:00:00+00:00&#39;,
+               &#39;2003-09-15 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
+...
+DatetimeIndex([&#39;2018-11-26 18:00:00+00:00&#39;, &#39;2018-11-27 00:00:00+00:00&#39;,
+               &#39;2018-11-27 06:00:00+00:00&#39;, &#39;2018-11-27 12:00:00+00:00&#39;,
+               &#39;2018-11-27 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=None)
 </pre>
 </div>
 </div>
@@ -14568,31 +14585,40 @@ DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[34]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">## Seasonal averages creation - saved to f&quot;{data_dir}/{base_filename}_seasonal_averages.pkl&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># ## Seasonal averages creation - saved to f&quot;{data_dir}/{base_filename}_seasonal_averages.pkl&quot;</span>
 
-<span class="c1"># averages_seasonal = {&quot;clear&quot;:{}, &quot;events&quot;:{}, &quot;global&quot;:{}}</span>
+<span class="c1"># averages_seasonal = {t_type:{} for t_type in time_types}</span>
 
-<span class="c1"># inputs_dict = {&quot;clear&quot;:inputs_clear, &quot;events&quot;:inputs_events}</span>
+<span class="c1"># inputs_dict = {&quot;clear&quot;:inputs_clear, &quot;events&quot;:inputs_events, &quot;global&quot;: inputs}</span>
 
 
-<span class="c1"># for time_type in [&quot;clear&quot;, &quot;events&quot;, &quot;global&quot;]:</span>
+<span class="c1"># for time_type in time_types:</span>
 <span class="c1">#     print(f&quot;#### {time_type}:&quot;)</span>
 <span class="c1">#     for season in seasons:</span>
-<span class="c1">#         if time_type == &quot;global&quot;:</span>
-<span class="c1">#             season_idxs_clear = seasonal_idxs[&quot;clear&quot;][season]</span>
-<span class="c1">#             season_idxs_events = seasonal_idxs[&quot;events&quot;][season]</span>
-<span class="c1">#             global_tensor = torch.cat([inputs_dict[&quot;clear&quot;][season_idxs_clear],</span>
-<span class="c1">#                                        inputs_dict[&quot;events&quot;][season_idxs_events]])</span>
-<span class="c1">#             old_shape = global_tensor.shape</span>
-<span class="c1">#             averages_seasonal[time_type][season] = batch_average_datapoint(global_tensor)</span>
-<span class="c1">#         else:</span>
-<span class="c1">#             season_idxs = seasonal_idxs[time_type][season]</span>
-<span class="c1">#             old_shape = inputs_dict[time_type][season_idxs].shape</span>
-<span class="c1">#             averages_seasonal[time_type][season] = batch_average_datapoint(inputs_dict[time_type][season_idxs])</span>
+<span class="c1">#         season_idxs = seasonal_idxs[time_type][season]</span>
+<span class="c1">#         old_shape = inputs_dict[time_type][season_idxs].shape</span>
+<span class="c1">#         averages_seasonal[time_type][season] = batch_average_datapoint(inputs_dict[time_type][season_idxs])</span>
 <span class="c1">#         print(f&quot;     {season} shape: {old_shape} -&gt; {averages_seasonal[time_type][season].shape}&quot;)</span>
+
+
+<span class="c1"># # # #### clear:</span>
+<span class="c1"># # #      DJF shape: torch.Size([3031, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      MAM shape: torch.Size([3076, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      JJA shape: torch.Size([3943, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      SON shape: torch.Size([3165, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # # #### events:</span>
+<span class="c1"># # #      DJF shape: torch.Size([619, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      MAM shape: torch.Size([711, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      JJA shape: torch.Size([176, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      SON shape: torch.Size([414, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # # #### global:</span>
+<span class="c1"># # #      DJF shape: torch.Size([3650, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      MAM shape: torch.Size([3787, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      JJA shape: torch.Size([4119, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
+<span class="c1"># # #      SON shape: torch.Size([3579, 20, 81, 189]) -&gt; torch.Size([20, 81, 189])</span>
 </pre></div>
 
      </div>
@@ -14638,7 +14664,7 @@ DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[35]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># torch.save(averages_seasonal,f&quot;{data_dir}/{base_filename}_seasonal_averages.pkl&quot;)</span>
@@ -14650,14 +14676,125 @@ DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
 </div>
 </div>
 
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[34]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># inputs_minus_seasonal = inputs*0.</span>
+<span class="c1"># for season in seasons:</span>
+<span class="c1">#     idxs = seasonal_idxs[&quot;global&quot;][season]</span>
+<span class="c1">#     inputs_minus_seasonal[idxs] = inputs[idxs]-averages_seasonal[&quot;global&quot;][season]</span>
+    
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[35]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># torch.save(averages_seasonal,f&quot;{data_dir}/{base_filename}_inputs_minus_seasonal.pkl&quot;)</span>
+<span class="n">inputs_minus_seasonal</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">base_filename</span><span class="si">}</span><span class="s2">_seasonal_averages.pkl&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[72]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">time_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;clear&quot;</span><span class="p">,</span> <span class="s2">&quot;events&quot;</span><span class="p">,</span> <span class="s2">&quot;global&quot;</span><span class="p">]</span>
-<span class="n">tensors_seasonal_averages</span> <span class="o">=</span> <span class="p">[</span><span class="n">averages_seasonal</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="n">time_types</span> <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">]</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">inputs_minus_seasonal</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[36]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>torch.Size([15135, 20, 81, 189])</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensors_seasonal_averages</span> <span class="o">=</span> <span class="p">[</span><span class="n">averages_seasonal</span><span class="p">[</span><span class="n">time_type</span><span class="p">][</span><span class="n">season</span><span class="p">]</span> <span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="n">time_types</span> <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">]</span>
 <span class="n">titles_seasonal_averages</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time_type</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">time_type</span> <span class="ow">in</span> <span class="n">time_types</span> <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">]</span>
 <span class="nb">len</span><span class="p">(</span><span class="n">tensors_seasonal_averages</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">titles_seasonal_averages</span><span class="p">)</span>
 </pre></div>
@@ -14675,7 +14812,7 @@ DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[72]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
 
 
 
@@ -14688,6 +14825,51 @@ DatetimeIndex([&#39;1970-01-01 00:00:00.000000099&#39;,
 
 </div>
 
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">inputs_season_reduced</span> <span class="o">=</span> <span class="n">inputs</span>
+<span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">timestamps</span><span class="p">:</span>
+    <span class="n">idxs_season</span> <span class="o">=</span> 
+    <span class="n">inputs_season_reduced</span><span class="p">[</span><span class="n">timestamps</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
