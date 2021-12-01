@@ -100,6 +100,36 @@ class SequentialHandler:
         idxs = [i for i in idxs if i is not None]
         return self.get_batched_sequences(x,idxs,add_dim=add_dim)
 
+    def get_dataset_from_handler_idx(self,handler_idx,inputs_to_sequence,targets,timestamps,add_dim=True):
+        """
+            All inputs should have the same length at dim 0
+            Returns sequenced input, target and timestamp
+        """
+        input_sequenced = self.get_sequence(inputs_to_sequence,handler_idx,add_dim=add_dim)
+        original_idx = self.translate_handler_idx_to_original(handler_idx)
+        return input_sequenced,targets[original_idx],timestamps[original_idx]
+
+    def get_dataset_from_original_idx(self,original_idx,inputs_to_sequence,targets,timestamps,add_dim=True):
+        """
+            All inputs should have the same length at dim 0
+            Returns sequenced input, target and timestamp
+        """
+        handler_idx = self.translate_original_idx_to_handler(original_idx)
+        if handler_idx is None:
+            print("Original row does not have a sequence, returning None's")
+            return None,None,None
+        input_sequenced = self.get_sequence(inputs_to_sequence,handler_idx,add_dim=add_dim)
+        return input_sequenced,targets[original_idx],timestamps[original_idx]
+    
+    def get_batched_dataset_from_handler_idxs(self,handler_idxs,inputs_to_sequence,targets,timestamps,add_dim=True):
+        inputs_sequenced = self.get_batched_sequences(inputs_to_sequence,handler_idxs,add_dim=add_dim)  
+        original_idxs = [self.translate_handler_idx_to_original(handler_i) for handler_i in handler_idxs]
+        return inputs_sequenced,targets[original_idxs],timestamps[original_idxs]
+
+    def get_batched_dataset_from_original_idxs(self,original_idxs,inputs_to_sequence,targets,timestamps,add_dim=True):
+        inputs_sequenced = self.get_batched_sequences_from_original_idxs(inputs_to_sequence,original_idxs,add_dim=add_dim)   
+        return inputs_sequenced,targets[original_idxs],timestamps[original_idxs]
+    
     @staticmethod
     def get_paths_from_years_list(years_list, paths_dir, base_filename, suffix):
         """
