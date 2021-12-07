@@ -193,12 +193,11 @@ def get_kmeans_elbow_scores(x,max_n_clusters=20,verbose=1,mode="sklearn_minibatc
 #     return clusters_scores
 
 
-# -
-
+# +
 def get_patched_tensor(t, patch_size,flatten_patches=False):
     """
         example: t shape = [5, 6, 81, 189] with kernel size = (27,27) -> out shape = [5, 21, 4374]
-        if not flatten_patches: [5, 6, 21, 729]
+        if not flatten_patches: [5, 6, 21, 729] (5,6,num_patches,patch_size)
     """
     t_unf_flatten = torch.nn.functional.unfold(t,kernel_size=patch_size, dilation=1, padding=0, stride=patch_size).transpose(1,2)
     if flatten_patches:
@@ -206,6 +205,60 @@ def get_patched_tensor(t, patch_size,flatten_patches=False):
     C = t.shape[1]
     N,num_patches,patch_size = t_unf_flatten.shape
     return t_unf_flatten.reshape([N,num_patches,C,patch_size//C]).transpose(1,2)
+
+def calc_t_idxs_from_patch(patch_size,patch_rows,patch_cols):
+    p_h,p_w = patch_size
+    rows_t = np.concatenate([[i for i in range(row*p_h,(row+1)*p_h)] for row in patch_rows])
+    cols_t = np.concatenate([[i for i in range(col*p_w,(col+1)*p_w)] for col in patch_cols])
+    return rows_t,cols_t
+
+def get_channels_moments_min_max(t):
+    """
+        t shape: [N,C,num_patches,patch_size]
+        out shape: [N,C,num_patches,6]
+    """
+    means = t.mean(-1)
+    diffs = t-means[:,:,:,None]
+    stds = t.std(-1)
+    zscores = diffs/stds[:,:,:,None]
+    skews = (torch.pow(zscores,3)).mean(-1)
+    kurtosis = (torch.pow(zscores,4)).mean(-1)
+    mins,maxs = t.min(-1)[0],t.max(-1)[0]
+    out = torch.stack([means,mins,maxs,stds,skews,kurtosis],axis=3)
+    return out
+
+def calculate_patches_and_values(t,patch_idxs_rows,patch_idxs_cols,patch_sizes):
+    """
+        t shape: [N,C,H,W]
+        patch_idxs_rows,patch_idxs_cols,patch_sizes: lists of the same lengths
+        patch_idxs_rows,patch_idxs_cols: np.arrays of patch indices to keep after patching. Note: order of rows is 
+        reversed
+        e.g. for H,W = 81,189, patch_size=[27,27], the whole patched new tensor will result in shape of [N,C,3,7]
+        to keep the right-lower corner, use patch_idxs_i,patch_idxs_j=np.array([0]),np.array([6])
+        Returns the patched tensor of the original size, tensor of 4 moments (mean, std, skewness and kurtosis) 
+        and 2 extreme values (min,max): t_patched of shape [6,N,C,H,W] and t_values of shape 
+        [N,C,num_patches_all,6] where the 6's order is: [mean,min,max,std,skew,kurtosis] of each patch
+        and num_patches_all is the resulting num of used patches
+    """
+    num_values = 6
+    t_values = []
+    N,C,H,W = t.shape
+    t_patched = torch.zeros_like(t.unsqueeze(0)).repeat([num_values,1,1,1,1])
+    for i,patch_size in enumerate(patch_sizes):
+        num_patches_rows,num_patches_cols = H//patch_size[0],W//patch_size[1]
+        t_patched_i = get_patched_tensor(t, patch_size,flatten_patches=False) 
+        _,_,num_patches,size_patch = t_patched_i.shape
+        rows_patch,cols_patch=patch_idxs_rows[i],patch_idxs_cols[i]
+        patch_idxs = [row*num_patches_cols+col for row in rows_patch for col in cols_patch]      
+        patches_values = get_channels_moments_min_max(t_patched_i[:,:,patch_idxs,:])
+        t_values.append(patches_values)
+        for v_idx in range(num_values):
+            patched_v = t_patched_i[:,:,:,0]*0
+            patched_v[:,:,patch_idxs] = patches_values[:,:,:,v_idx]
+            patched_v_reshaped = patched_v.reshape([N,C,num_patches_rows,num_patches_cols])
+            t_patched[v_idx]+=torch.nn.functional.interpolate(patched_v_reshaped,size=[H,W])
+    t_values = torch.cat([v for v in t_values],axis=2)
+    return t_patched,t_values
 
 
 # +
