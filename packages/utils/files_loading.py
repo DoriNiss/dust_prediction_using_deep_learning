@@ -33,16 +33,17 @@ def get_stacked_timestamps_from_paths(paths):
         stacked_timestamps_datetimeindex+=[timestamp for timestamp in timestamps]
     return pd.to_datetime(stacked_timestamps_datetimeindex)
 
-def load_stacked_inputs_targets_timestamps_from_years_list(years_list, path_dir, base_filename):
+def load_stacked_inputs_targets_timestamps_from_years_list(years_list, path_dir, base_filename, ignore_targets=False):
     targets_paths = get_paths_from_years_list(years_list, path_dir, base_filename, "target")
     inputs_paths = get_paths_from_years_list(years_list, path_dir, base_filename, "input")
     timestamps_paths = get_paths_from_years_list(years_list, path_dir, base_filename, "timestamps")
-    print("Creating one tensor from all targets...")
-    targets = get_stacked_tensor_from_paths(targets_paths)
+    targets = None
+    if not ignore_targets: 
+        print("Creating one tensor from all targets...")
+        targets = get_stacked_tensor_from_paths(targets_paths)
     print("Creating one tensor from all inputs...")
     inputs = get_stacked_tensor_from_paths(inputs_paths)
     timestamps = get_stacked_timestamps_from_paths(timestamps_paths)
     print(f"\n\nDone! Result sizes: inputs: {inputs.shape}, targets: {targets.shape}, timestamps: {len(timestamps)}")
     return inputs, targets, timestamps
-    
-    
+        

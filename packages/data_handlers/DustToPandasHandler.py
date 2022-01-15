@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import numpy as np
-import torch
 import csv
 import pytz
 import torch
@@ -15,7 +14,10 @@ class DustToPandasHandler:
     '''
     def __init__(self, filename, timezone="Asia/Jerusalem", num_hours_to_avg="3h",lags=[0,-24,24,48,72],
                  delta_hours=3, data_type="MEP", saveto=None, avg_th=3, origin_start="2000-01-01 00:00:00+00:00",
-                 use_all=True, keep_na=False,event_th=73.4):
+                 use_all=True, keep_na=False, event_th=73.4, stations_num_values_th=200000,
+                 station_metadata_cols=None, stations_dust_col_name="PM10", 
+                 stations_date_col_name="date",stations_hour_col_name="hour",stations_name_col_name="Name"): 
+                 # TODO event_th=None, event_background_range=[date1,date2]
         '''
             timezones - the time zone of the taken measurements, to be translated to UTC (https://pandas.pydata.org/pandas-docs/stable/user_guide/timeseries.html)
             num_hours_to_avg - the hours
@@ -23,7 +25,7 @@ class DustToPandasHandler:
             The resulting data will be, for each lag: [dust_lag, delta_lag] ([all lags...,all delta...])
             delta_hours - is used for delta calculation. delta_lag = dust_lag - dust_(lag-delta_hours). 
             Defaults to 3.
-            data_type - MEP is a slightly editted .csv file from the MEP site: all the summary
+            data_type - "MEP" is a slightly editted .csv file from the MEP site: all the summary
             items are deleted, the dates' column changed to English "date and time", the other
             column is "PM10 µg/m³", and the empty row between the data and title is deleted,
             so the only rows are: first row - titles, the rest - data.
@@ -31,6 +33,9 @@ class DustToPandasHandler:
             and every midnight (00:00) the date is for some reason replaced with an int. 
             Values can be numbers or irrelevant strings.
             All of these are to be carefully transformed into TimeIndex and float (or NaN) values.
+                      - "all_stations_2000_to_2018": The new data from Alex (separeted files for PM10 and PM2.5)
+                        Each file (10 and 2.5) will yield a new dataframe, to be joined later in a Dataset
+            stations_num_values_th - the minimal number of values per station needed to keep a station. 
             saveto - if None, will not save. If a string - will save to that. Has to be a ".pkl"
             origin_start - the time from which averages of num_hours_to_avg will be calculated
             avg_th - averages of less than this threshold values will be dropped. Defaults to 50% 
@@ -50,12 +55,19 @@ class DustToPandasHandler:
         self.avg_th = avg_th
         self.use_all = use_all
         self.keep_na = keep_na
+        self.station_metadata_cols = station_metadata_cols
+        self.stations_num_values_th = stations_num_values_th
+        self.stations_dust_col_name = stations_dust_col_name
+        self.stations_date_col_name = stations_date_col_name
+        self.stations_hour_col_name = stations_hour_col_name
+        self.stations_name_col_name = stations_name_col_name
         print("Loading data and creating a pandas DataFrame: ...")
         self.dust_raw = self.get_data()
         print("... Done! Created a pandas DataFrame (times shifted to UTC):")
         self.print_dataframe(self.dust_raw)
         print(f"Calculating {self.num_hours_to_avg} hourly averages since {self.origin_start}: ...")
         dust_avgs = self.calculate_averages(self.dust_raw)
+        # ##### self.event_th = event_th or self.calculate_event_th()
         print(f"... Done! Averaged in timebase of {self.num_hours_to_avg} and taken averages only if number of "\
               f"values to average >= {self.avg_th}:")
         self.print_dataframe(dust_avgs)
@@ -92,23 +104,7 @@ class DustToPandasHandler:
         dust_csv = list(csv.reader(file))
         if self.data_type == "MEP":
             dates, values = self.get_formatted_dates_and_values_from_csv_reader_list(dust_csv[1:])
-        return pd.DataFrame({"dust_0":values},index=dates)
-        # return pd.read_csv(self.filename)
-        
-    def get_formatted_dates_and_values_from_csv_reader_list(self, reader_list):
-        dates,values = [],[]
-        rows_to_use = reader_list if self.use_all else reader_list[:10000]
-        for i,row in enumerate(rows_to_use):
-            if row[0] == "":
-                continue
-            date = self.to_foramtted_date(i,reader_list)
-            if date is None:
-                continue
-            row_value = row[1]
-            value = self.to_foramtted_value(row_value)
-            dates.append(date)
-            values.append(value)
-        return dates,values
+            return pd.DataFrame({"dust_0":values},index=dates)
 
     def to_foramtted_date(self, row_idx, all_rows):
         # returns a TimeIndex date, assuming the bad integers happens every 00:00 only
@@ -146,7 +142,6 @@ class DustToPandasHandler:
         except pytz.AmbiguousTimeError:
             # print(formatted_date,formatted_date.day)
             return None          
-
 
     def to_foramtted_value(self, value_in_csv):
         def is_valid_value(str_value):

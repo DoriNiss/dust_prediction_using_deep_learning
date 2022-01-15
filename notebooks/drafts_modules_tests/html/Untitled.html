@@ -14256,7 +14256,404 @@ a.anchor-link {
     </script>
     <!-- End of mathjax configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">torch</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
 
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">data_handlers.DatasetHandler_DataframeToTensor_Dust</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
+<span class="n">metadata_base_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_multistations/metadata/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d_metadata&quot;</span>
+<span class="n">metadata_all_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">metadata_base_filename</span><span class="si">}</span><span class="s2">_all.pkl&quot;</span>
+<span class="n">dust_dataframe_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_multistations/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d.pkl&quot;</span>
+<span class="n">dust_dataset_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_108_2_45&quot;</span>
+<span class="n">file_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dataset_dir</span><span class="si">}</span><span class="s2">/dust_108_2_45&quot;</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">metadata</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">metadata_all_filename</span><span class="p">)</span>
+<span class="n">all_stations</span> <span class="o">=</span> <span class="p">[</span><span class="n">station</span><span class="p">[</span><span class="s2">&quot;Name&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">station</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;all&quot;</span><span class="p">]]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All stations: (</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">all_stations</span><span class="p">)</span><span class="si">}</span><span class="s2">)</span><span class="se">\n</span><span class="si">{</span><span class="n">all_stations</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">pm_types</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;PM10&quot;</span><span class="p">,</span><span class="s2">&quot;PM25&quot;</span><span class="p">]</span>
+
+<span class="n">lags</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">24</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span><span class="o">+</span><span class="p">[</span><span class="n">i</span><span class="o">*</span><span class="mi">24</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">8</span><span class="p">)]</span>
+<span class="n">lag_suffixes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">lag</span> <span class="ow">in</span> <span class="n">lags</span><span class="p">:</span>
+    <span class="n">lag_suffix</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lag</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="n">lag</span><span class="o">&gt;=</span><span class="mi">0</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;m</span><span class="si">{</span><span class="o">-</span><span class="n">lag</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">lag_suffixes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">lag_suffix</span><span class="p">)</span>
+<span class="n">data_suffixes</span> <span class="o">=</span> <span class="n">lag_suffixes</span><span class="o">+</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;delta_</span><span class="si">{</span><span class="n">lag_str</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">lag_str</span> <span class="ow">in</span> <span class="n">lag_suffixes</span><span class="p">]</span><span class="o">+</span>\
+                <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;values_count_</span><span class="si">{</span><span class="n">lag_str</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">lag_str</span> <span class="ow">in</span> <span class="n">lag_suffixes</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;lags: </span><span class="si">{</span><span class="n">lags</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">data_suffixes</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">data_suffixes</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>All stations: (108)
+[&#39;BEER_SHEVA&#39;, &#39;OFEK&#39;, &#39;KVISH9&#39;, &#39;MAVKIIM&#39;, &#39;GEDERA&#39;, &#39;KVISH4&#39;, &#39;EREZ&#39;, &#39;SDEROT&#39;, &#39;NESHER&#39;, &#39;MODEIN&#39;, &#39;ARIEL&#39;, &#39;NIR_GALIM&#39;, &#39;KIRYAT_MALAHI&#39;, &#39;KIRYAT_TIVON&#39;, &#39;YAVNE_CITY&#39;, &#39;PARK_HACARMEL&#39;, &#39;AFULA&#39;, &#39;BEGIN&#39;, &#39;PARDES_HANA&#39;, &#39;NAVE_YOSEF&#39;, &#39;EAST_NEGEV&#39;, &#39;REHOVOT&#39;, &#39;ASHDOD_IGUD&#39;, &#39;HEFZIBA&#39;, &#39;KFAR_MASARIK&#39;, &#39;IGUD&#39;, &#39;BEIT_HASHMONAY&#39;, &#39;ASHKELON&#39;, &#39;LOT&#39;, &#39;YAD_RAMBAM_2&#39;, &#39;SHFEYA&#39;, &#39;KARMEY_YOSSEF&#39;, &#39;IZRAELIA&#39;, &#39;KAZIR_NEW&#39;, &#39;NAVE_ILAN&#39;, &#39;GVARAAM&#39;, &#39;NIR_ISRAEL&#39;, &#39;ROVA_TV&#39;, &#39;TAHANA_MERKAZIT&#39;, &#39;BEN_GURION_AIRPORT&#39;, &#39;EVEN_AMI&#39;, &#39;AMIEL&#39;, &#39;KARON_KIACH&#39;, &#39;SDE_YOAV&#39;, &#39;REMEZ&#39;, &#39;SHIKUN_L&#39;, &#39;YAD_LEBANIM&#39;, &#39;BNEI_ATAROT&#39;, &#39;BEIT_SHEMESH&#39;, &#39;BAT_HADAR&#39;, &#39;EILAT6&#39;, &#39;CEASARIA&#39;, &#39;KIRYAT_ATA&#39;, &#39;ROMMEMA&#39;, &#39;IRONID&#39;, &#39;BNEI_DAROM&#39;, &#39;ORT&#39;, &#39;KAKAL&#39;, &#39;HAKFAR_HAYAROK&#39;, &#39;UM_EL_FAHEM_C&#39;, &#39;MAGAL&#39;, &#39;YAD_AVNER&#39;, &#39;SAFRA&#39;, &#39;BAR_ILAN&#39;, &#39;HADAR&#39;, &#39;ANTOKOLSKY&#39;, &#39;TAHANA_MERKAZIT_JERUSALEM&#39;, &#39;BARKAI&#39;, &#39;WEST_GALIL&#39;, &#39;ATZMAUT_B&#39;, &#39;KIRYAT_BINYAMIN&#39;, &#39;ARAD_MUNICIPALITY&#39;, &#39;CARMEL_ZARFATI&#39;, &#39;GIVATAIM&#39;, &#39;HADERA_B&#39;, &#39;HATIKVA&#39;, &#39;NEOT_HAKIKAR&#39;, &#39;YEFET_YAFO&#39;, &#39;GUSH_EZION&#39;, &#39;ASHALIM&#39;, &#39;MODEIN_IEC&#39;, &#39;AHUZA_G&#39;, &#39;KIRYAT_HAIM_REGAVIM&#39;, &#39;EHAD_HAAM&#39;, &#39;EFRATA&#39;, &#39;DALYA&#39;, &#39;HOLON&#39;, &#39;KIRYAT_BIALIK&#39;, &#39;CARMELIA&#39;, &#39;CARMIYA&#39;, &#39;UM_EL_KUTUF&#39;, &#39;BEIT_RIVKA&#39;, &#39;AZUR&#39;, &#39;KFAR_SABA&#39;, &#39;PETAH_TIKVA_ROAD&#39;, &#39;AKO&#39;, &#39;AGRIPAS&#39;, &#39;BARTAA&#39;, &#39;GIMZO&#39;, &#39;NAVE_SHANAAN&#39;, &#39;YAHALOM&#39;, &#39;EILAT_IEC&#39;, &#39;ASHKELON_SOUTH&#39;, &#39;KIRYAT_HAIM&#39;, &#39;RISHON_LEZION&#39;, &#39;RAANANA&#39;, &#39;RAKEVET_HASHALOM&#39;, &#39;SHUK&#39;]
+lags: [0, -168, -144, -120, -96, -72, -48, -24, 24, 48, 72, 96, 120, 144, 168], [&#39;0&#39;, &#39;m168&#39;, &#39;m144&#39;, &#39;m120&#39;, &#39;m96&#39;, &#39;m72&#39;, &#39;m48&#39;, &#39;m24&#39;, &#39;24&#39;, &#39;48&#39;, &#39;72&#39;, &#39;96&#39;, &#39;120&#39;, &#39;144&#39;, &#39;168&#39;, &#39;delta_0&#39;, &#39;delta_m168&#39;, &#39;delta_m144&#39;, &#39;delta_m120&#39;, &#39;delta_m96&#39;, &#39;delta_m72&#39;, &#39;delta_m48&#39;, &#39;delta_m24&#39;, &#39;delta_24&#39;, &#39;delta_48&#39;, &#39;delta_72&#39;, &#39;delta_96&#39;, &#39;delta_120&#39;, &#39;delta_144&#39;, &#39;delta_168&#39;, &#39;values_count_0&#39;, &#39;values_count_m168&#39;, &#39;values_count_m144&#39;, &#39;values_count_m120&#39;, &#39;values_count_m96&#39;, &#39;values_count_m72&#39;, &#39;values_count_m48&#39;, &#39;values_count_m24&#39;, &#39;values_count_24&#39;, &#39;values_count_48&#39;, &#39;values_count_72&#39;, &#39;values_count_96&#39;, &#39;values_count_120&#39;, &#39;values_count_144&#39;, &#39;values_count_168&#39;], 45
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dims_cols_strings</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="n">all_stations</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="n">pm_types</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="n">data_suffixes</span><span class="p">}</span>
+<span class="n">dims_cols_strings</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[9]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{1: [&#39;BEER_SHEVA&#39;,
+  &#39;OFEK&#39;,
+  &#39;KVISH9&#39;,
+  &#39;MAVKIIM&#39;,
+  &#39;GEDERA&#39;,
+  &#39;KVISH4&#39;,
+  &#39;EREZ&#39;,
+  &#39;SDEROT&#39;,
+  &#39;NESHER&#39;,
+  &#39;MODEIN&#39;,
+  &#39;ARIEL&#39;,
+  &#39;NIR_GALIM&#39;,
+  &#39;KIRYAT_MALAHI&#39;,
+  &#39;KIRYAT_TIVON&#39;,
+  &#39;YAVNE_CITY&#39;,
+  &#39;PARK_HACARMEL&#39;,
+  &#39;AFULA&#39;,
+  &#39;BEGIN&#39;,
+  &#39;PARDES_HANA&#39;,
+  &#39;NAVE_YOSEF&#39;,
+  &#39;EAST_NEGEV&#39;,
+  &#39;REHOVOT&#39;,
+  &#39;ASHDOD_IGUD&#39;,
+  &#39;HEFZIBA&#39;,
+  &#39;KFAR_MASARIK&#39;,
+  &#39;IGUD&#39;,
+  &#39;BEIT_HASHMONAY&#39;,
+  &#39;ASHKELON&#39;,
+  &#39;LOT&#39;,
+  &#39;YAD_RAMBAM_2&#39;,
+  &#39;SHFEYA&#39;,
+  &#39;KARMEY_YOSSEF&#39;,
+  &#39;IZRAELIA&#39;,
+  &#39;KAZIR_NEW&#39;,
+  &#39;NAVE_ILAN&#39;,
+  &#39;GVARAAM&#39;,
+  &#39;NIR_ISRAEL&#39;,
+  &#39;ROVA_TV&#39;,
+  &#39;TAHANA_MERKAZIT&#39;,
+  &#39;BEN_GURION_AIRPORT&#39;,
+  &#39;EVEN_AMI&#39;,
+  &#39;AMIEL&#39;,
+  &#39;KARON_KIACH&#39;,
+  &#39;SDE_YOAV&#39;,
+  &#39;REMEZ&#39;,
+  &#39;SHIKUN_L&#39;,
+  &#39;YAD_LEBANIM&#39;,
+  &#39;BNEI_ATAROT&#39;,
+  &#39;BEIT_SHEMESH&#39;,
+  &#39;BAT_HADAR&#39;,
+  &#39;EILAT6&#39;,
+  &#39;CEASARIA&#39;,
+  &#39;KIRYAT_ATA&#39;,
+  &#39;ROMMEMA&#39;,
+  &#39;IRONID&#39;,
+  &#39;BNEI_DAROM&#39;,
+  &#39;ORT&#39;,
+  &#39;KAKAL&#39;,
+  &#39;HAKFAR_HAYAROK&#39;,
+  &#39;UM_EL_FAHEM_C&#39;,
+  &#39;MAGAL&#39;,
+  &#39;YAD_AVNER&#39;,
+  &#39;SAFRA&#39;,
+  &#39;BAR_ILAN&#39;,
+  &#39;HADAR&#39;,
+  &#39;ANTOKOLSKY&#39;,
+  &#39;TAHANA_MERKAZIT_JERUSALEM&#39;,
+  &#39;BARKAI&#39;,
+  &#39;WEST_GALIL&#39;,
+  &#39;ATZMAUT_B&#39;,
+  &#39;KIRYAT_BINYAMIN&#39;,
+  &#39;ARAD_MUNICIPALITY&#39;,
+  &#39;CARMEL_ZARFATI&#39;,
+  &#39;GIVATAIM&#39;,
+  &#39;HADERA_B&#39;,
+  &#39;HATIKVA&#39;,
+  &#39;NEOT_HAKIKAR&#39;,
+  &#39;YEFET_YAFO&#39;,
+  &#39;GUSH_EZION&#39;,
+  &#39;ASHALIM&#39;,
+  &#39;MODEIN_IEC&#39;,
+  &#39;AHUZA_G&#39;,
+  &#39;KIRYAT_HAIM_REGAVIM&#39;,
+  &#39;EHAD_HAAM&#39;,
+  &#39;EFRATA&#39;,
+  &#39;DALYA&#39;,
+  &#39;HOLON&#39;,
+  &#39;KIRYAT_BIALIK&#39;,
+  &#39;CARMELIA&#39;,
+  &#39;CARMIYA&#39;,
+  &#39;UM_EL_KUTUF&#39;,
+  &#39;BEIT_RIVKA&#39;,
+  &#39;AZUR&#39;,
+  &#39;KFAR_SABA&#39;,
+  &#39;PETAH_TIKVA_ROAD&#39;,
+  &#39;AKO&#39;,
+  &#39;AGRIPAS&#39;,
+  &#39;BARTAA&#39;,
+  &#39;GIMZO&#39;,
+  &#39;NAVE_SHANAAN&#39;,
+  &#39;YAHALOM&#39;,
+  &#39;EILAT_IEC&#39;,
+  &#39;ASHKELON_SOUTH&#39;,
+  &#39;KIRYAT_HAIM&#39;,
+  &#39;RISHON_LEZION&#39;,
+  &#39;RAANANA&#39;,
+  &#39;RAKEVET_HASHALOM&#39;,
+  &#39;SHUK&#39;],
+ 2: [&#39;PM10&#39;, &#39;PM25&#39;],
+ 3: [&#39;0&#39;,
+  &#39;m168&#39;,
+  &#39;m144&#39;,
+  &#39;m120&#39;,
+  &#39;m96&#39;,
+  &#39;m72&#39;,
+  &#39;m48&#39;,
+  &#39;m24&#39;,
+  &#39;24&#39;,
+  &#39;48&#39;,
+  &#39;72&#39;,
+  &#39;96&#39;,
+  &#39;120&#39;,
+  &#39;144&#39;,
+  &#39;168&#39;,
+  &#39;delta_0&#39;,
+  &#39;delta_m168&#39;,
+  &#39;delta_m144&#39;,
+  &#39;delta_m120&#39;,
+  &#39;delta_m96&#39;,
+  &#39;delta_m72&#39;,
+  &#39;delta_m48&#39;,
+  &#39;delta_m24&#39;,
+  &#39;delta_24&#39;,
+  &#39;delta_48&#39;,
+  &#39;delta_72&#39;,
+  &#39;delta_96&#39;,
+  &#39;delta_120&#39;,
+  &#39;delta_144&#39;,
+  &#39;delta_168&#39;,
+  &#39;values_count_0&#39;,
+  &#39;values_count_m168&#39;,
+  &#39;values_count_m144&#39;,
+  &#39;values_count_m120&#39;,
+  &#39;values_count_m96&#39;,
+  &#39;values_count_m72&#39;,
+  &#39;values_count_m48&#39;,
+  &#39;values_count_m24&#39;,
+  &#39;values_count_24&#39;,
+  &#39;values_count_48&#39;,
+  &#39;values_count_72&#39;,
+  &#39;values_count_96&#39;,
+  &#39;values_count_120&#39;,
+  &#39;values_count_144&#39;,
+  &#39;values_count_168&#39;]}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_dataframe</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dust_dataframe_filename</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_handler_dust</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Dust</span><span class="p">(</span>    
+    <span class="n">dust_dataframe</span><span class="p">,</span> <span class="n">dims_cols_strings</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">,</span> <span class="n">timestamps</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">save_base_filename</span><span class="o">=</span><span class="n">file_basename</span><span class="p">,</span>
+    <span class="n">invalid_col_fill</span><span class="o">=-</span><span class="mi">777</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div>
 </body>
 
 

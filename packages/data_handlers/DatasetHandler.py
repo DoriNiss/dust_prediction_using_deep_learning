@@ -129,9 +129,17 @@ class DatasetHandler:
             for all inputs and targets (separately)
         """
         good_idx = self.get_good_combined_idx() # An idx with full row in self.combined_dataframe
-        for dataset_type in ["input", "target"]:
+        dataset_types = ["input","target"]
+#         if self.cols_target == []:
+#             dataset_types = ["input"]
+#         if self.cols_input == []:
+#             dataset_types = ["target"]
+        for dataset_type in ["input","target"]:
             channels_counter = 0
             cols_list = self.cols_input if dataset_type=="input" else self.cols_target
+            if cols_list==[]:
+                self.shapes[dataset_type] = None
+                continue
             sample_data = self.combined_dataframe[cols_list[0]][good_idx]
             _,h_all,w_all=self.get_shapes_of_data(sample_data)
             channels_from_cols = self.cols_channels_input if dataset_type=="input" else self.cols_channels_target
@@ -150,6 +158,8 @@ class DatasetHandler:
        
     def create_tensor_from_dataset_type(self, dataset_type):
         shape = self.shapes[dataset_type]
+        if shape is None:
+            return None
         N,C,H,W = len(self.combined_dataframe), shape[0], shape[1], shape[2]
         if H==0 and W==0:
             x = torch.zeros([N,C],dtype=torch.float32)
@@ -184,10 +194,10 @@ class DatasetHandler:
         filename_target = dir_path+"/"+base_filename+"_target.pkl"
         filename_timestamps = dir_path+"/"+base_filename+"_timestamps.pkl"
         filename_description = dir_path+"/metadata/"+base_filename+"_descriptions.pkl"
-        torch.save(x_input, filename_input)
-        torch.save(x_target, filename_target)
-        torch.save(timestamps, filename_timestamps)
-        torch.save(self.dataframes_descriptions, filename_description)
+        if x_input is not None: torch.save(x_input, filename_input)
+        if x_target is not None: torch.save(x_target, filename_target)
+        if timestamps is not None: torch.save(timestamps, filename_timestamps)
+        if self.dataframes_descriptions is not None: torch.save(self.dataframes_descriptions, filename_description)
                     
     @staticmethod
     def create_and_save_one_dataset_from_path(dataframes_paths, dataset_arguments, save_as):

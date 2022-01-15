@@ -516,8 +516,23 @@ def get_sift_pca_compressed_simple(t,n_descriptors, n_components_xy, n_component
     t_xy_pca = get_pca_compression(t_xy,n_components_xy) #[N,n_components_xy]
     t_desc_pca = get_pca_compression(t_desc,n_components_descriptors) #[N,n_components_descriptors]
     return torch.cat([t_xy_pca,t_desc_pca],dim=1) #[N,n_components_xy+n_components_descriptors]
-# -
 
+
+# -
+def get_clustered_targets_and_timestamps_from_clusters_idxs(idxs_dict,seq_targets,seq_timestamps,targets_idxs=[0]):
+    """
+        idxs_dict contains the idxs of clustered events.
+        If the clustering was used on a sequential events, use the same sequencing method to get 
+        seq_targets and seq_timestamps to keep the idxs consistent
+        (e.g., use seq_handler.get_batched_dataset_from_original_idxs(events_idxs,inputs,targets,timestamps))
+        targets_idxs are the idxs to be taken, defaults to 0 (usually the dust at the i of the sequence)
+    """
+    clustered_targets = {}
+    clustered_timestamps = {}
+    for cluster_i in idxs_dict.keys():
+        clustered_targets[cluster_i] = [seq_targets[target_i,targets_idxs] for target_i in idxs_dict[cluster_i]]
+        clustered_timestamps[cluster_i] = [seq_timestamps[timestamp_i] for timestamp_i in idxs_dict[cluster_i]]
+    return clustered_targets,clustered_timestamps
 
 
 
