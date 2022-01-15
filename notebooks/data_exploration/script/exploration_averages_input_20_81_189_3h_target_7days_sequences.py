@@ -213,7 +213,16 @@ for c in range(20):
 torch.save(inputs_normalized_reduced_channels,f"{data_dir}/{base_filename}_all_inputs_pixel_normalized_reduced_channels.pkl")
 
 
-
+description_reduced_channels = description.copy()
+description_reduced_channels["input"] = {
+    0: {"short": "avg(SLP,Z@850,500,250)","long":"Averaged Geopotential Height"},
+    1: {"short": "avg(U@850,500,250,u10m)","long":"Averaged Northward Wind (U)"},
+    1: {"short": "avg(V@850,500,250,v10m)","long":"Averaged Eastward Wind (V)"},
+    3: {"short": "avg(PV@325,330,335,340)","long":"Averaged Potential Vorticity (PV)"},
+    4: {"short": "avg(aod550,duaod550,aermssdul,aermssdum)","long":"Averaged AOD"},
+}
+description_reduced_channels_path = f"{data_dir}/metadata/dataset_20_81_189_3h_7days_future_all_reduced_channels_description.pkl"
+torch.save(description_reduced_channels,description_reduced_channels_path)
 
 
 

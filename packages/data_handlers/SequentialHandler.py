@@ -91,14 +91,18 @@ class SequentialHandler:
         """
         return torch.stack([self.get_sequence(x,i,add_dim=add_dim) for i in batch_idxs])
     
+    def get_ramaining_handler_idxs_from_original(self, original_idxs):
+        handler_idxs = [self.translate_original_idx_to_handler(i) for i in original_idxs]
+        handler_idxs = [i for i in handler_idxs if i is not None]
+        return handler_idxs
+    
     def get_batched_sequences_from_original_idxs(self,x,original_idxs,add_dim=True):
         """
             Same as get_batched_sequences, but first translates the wanted original idxs to the corresponding
             idxs of the handler. Useful for contructing sequences of known label, e.g. pulling events' sequences
         """
-        idxs = [self.translate_original_idx_to_handler(i) for i in original_idxs]
-        idxs = [i for i in idxs if i is not None]
-        return self.get_batched_sequences(x,idxs,add_dim=add_dim)
+        handler_idxs = self.get_ramaining_handler_idxs_from_original(original_idxs)
+        return self.get_batched_sequences(x,handler_idxs,add_dim=add_dim)
 
     def get_dataset_from_handler_idx(self,handler_idx,inputs_to_sequence,targets,timestamps,add_dim=True):
         """
@@ -127,8 +131,8 @@ class SequentialHandler:
         return inputs_sequenced,targets[original_idxs],timestamps[original_idxs]
 
     def get_batched_dataset_from_original_idxs(self,original_idxs,inputs_to_sequence,targets,timestamps,add_dim=True):
-        inputs_sequenced = self.get_batched_sequences_from_original_idxs(inputs_to_sequence,original_idxs,add_dim=add_dim)   
-        return inputs_sequenced,targets[original_idxs],timestamps[original_idxs]
+        handler_idxs = self.get_ramaining_handler_idxs_from_original(original_idxs)
+        return self.get_batched_dataset_from_handler_idxs(handler_idxs,inputs_to_sequence,targets,timestamps,add_dim=add_dim)
     
     @staticmethod
     def get_paths_from_years_list(years_list, paths_dir, base_filename, suffix):
