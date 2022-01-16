@@ -4,7 +4,6 @@ import numpy as np
 from tqdm.notebook import tqdm
 from joblib import Parallel, delayed #conda install -c anaconda joblib
 
-# +
 class DatasetHandler_DataframeToTensor_Super:
     
     def __init__(self, dataframe, dims_cols_strings, metadata={}, timestamps=None, save_base_filename=None,
@@ -136,9 +135,6 @@ class DatasetHandler_DataframeToTensor_Super:
     def merge_as_channels(tensors, dim):
         # merge_metadata()...
         raise NotImplemented
-
-   
-# -
 
 
 
