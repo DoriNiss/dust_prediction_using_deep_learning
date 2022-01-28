@@ -25,7 +25,8 @@ class DustToPandasHandler_MultiStations(DustToPandasHandler_Super):
                  stations_num_values_th=200000, station_metadata_cols=None, pm_types=["PM10","PM25"], 
                  stations_date_col_name="date",stations_hour_col_name="Hour",stations_name_col_name="Name",
                  metadata_base_filename=None, csv_filenames=[], invalid_values_flags=None,
-                 only_from_stations_by_names=None, add_value_counts=True): 
+                 only_from_stations_by_names=None, add_value_counts=True, years=None, loaded_files=None,
+            ): 
         '''
             Inherits from DustToPandasHandler_Super
             Used for creating one dataframe from multiple csv files, each contains one type of dust (e.g. PM10),
@@ -45,6 +46,8 @@ class DustToPandasHandler_MultiStations(DustToPandasHandler_Super):
             get_only_from_stations_by_names - take only data from specific stations (to be tested)
             add_value_counts - add a column of values counted during averaging, per lag ["{...}_values_count_{lag}"]
             keep_na - if False, remove rows that have only NA
+            years - if not None, create dataframes only for certain years (useful for when data is too large)
+            loaded_files - if not None, don't load the data as it is already given
         '''
         super().__init__(timezone=timezone, num_hours_to_avg=num_hours_to_avg, lags=lags,
                          delta_hours=delta_hours, saveto=saveto, avg_th=avg_th, origin_start=origin_start,
@@ -56,6 +59,7 @@ class DustToPandasHandler_MultiStations(DustToPandasHandler_Super):
         self.stations_hour_col_name = stations_hour_col_name
         self.stations_name_col_name = stations_name_col_name
         self.metadata_base_filename = metadata_base_filename
+        self.years = years
         self.csv_filenames = csv_filenames
         self.invalid_values_flags = invalid_values_flags or {
             "missing_lag": {"description":"in case na arised after calculating lags, including 0","flag":-999},
@@ -64,9 +68,12 @@ class DustToPandasHandler_MultiStations(DustToPandasHandler_Super):
         }
         self.only_from_stations_by_names = only_from_stations_by_names
         self.add_value_counts = add_value_counts
-        print("Loading .csv data: ...")
-        csv_files = [self.load_csv_file(f) for f in tqdm(csv_filenames)]
-        print("... Done! Creating Pandas DataFrames (times shifted to UTC) from files: ...")
+        if loaded_files is None:
+            print("Loading .csv data: ...")
+            csv_files = [self.load_csv_file(f) for f in tqdm(csv_filenames)]
+        else:
+            csv_files = loaded_files
+        print("Creating Pandas DataFrames (times shifted to UTC) from files: ...")
         dataframes_per_file = [self.build_single_dataframe_for_all_stations_of_one_file(csv_file,pm_type) 
                                for csv_file,pm_type in tqdm(zip(csv_files,pm_types))]
         print("... Done! Details of dataframes per pm type: ...")
@@ -194,6 +201,9 @@ class DustToPandasHandler_MultiStations(DustToPandasHandler_Super):
                 continue
             if row_dust<=0:
                 continue
+            if self.years is not None:
+                if shifted_utc_timestamp.year not in self.years:
+                    continue
             rows_dust.append(row_dust)
             timestamps.append(shifted_utc_timestamp)
         if self.verbose>0: print(f"... ... Done! Result has {len(rows_dust)} rows")   

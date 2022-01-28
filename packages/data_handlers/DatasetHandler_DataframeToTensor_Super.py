@@ -4,11 +4,10 @@ import numpy as np
 from tqdm.notebook import tqdm
 from joblib import Parallel, delayed #conda install -c anaconda joblib
 
-# +
 class DatasetHandler_DataframeToTensor_Super:
     
     def __init__(self, dataframe, dims_cols_strings, metadata={}, timestamps=None, save_base_filename=None,
-                 invalid_col_fill=-777):
+                 invalid_col_fill=-777, save_timestamps=True):
         """
         dataframe - already uploaded, to be converted into a tensor
         timestamps - if None, will use all (unless built yearly)
@@ -25,15 +24,16 @@ class DatasetHandler_DataframeToTensor_Super:
         parallel_cpus - used for parallel creation of yearly tensors. 0 means no parallelism
         """
         self.dims_cols_strings = dims_cols_strings
-        self.timestamps = timestamps or dataframe.index
+        self.timestamps = timestamps if timestamps is not None else dataframe.index
         self.dataframe = dataframe
         self.metadata = metadata
         self.save_base_filename = save_base_filename
         self.invalid_col_fill = invalid_col_fill
+        self.save_timestamps = save_timestamps
         if timestamps is not None: self.sync_dataframe_timestamps()
         self.init_shape()
         self.create_metadata() 
-        print("Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,")
+        print("Done initiation, use self.create_yearly_datasets(years, add_years_to_name=True) to create and save yearly datasets,")
         print("or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.")
         print("To create one tensor from all yearly created datasets, use the static method\n" \
               "load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)")
@@ -82,7 +82,7 @@ class DatasetHandler_DataframeToTensor_Super:
         print(f"{print_prefix}... Done!")
         return tensor
         
-    def create_yearly_datasets(self, years):
+    def create_yearly_datasets(self, years, add_years_to_name=True):
         for year in years:
             timestamps = self.dataframe.index[self.dataframe.index.year==year]
             if timestamps.empty:
@@ -90,7 +90,9 @@ class DatasetHandler_DataframeToTensor_Super:
                 continue
             t = self.get_tensor_from_timestamps(timestamps, print_prefix=f"{year}: ")
             if self.save_base_filename is not None:
-                torch.save(timestamps,f"{self.save_base_filename}_{year}_timestamps.pkl")
+                base_filename = f"{self.save_base_filename}"
+                if add_years_to_name: base_filename+=f"_{year}"
+                if self.save_timestamps: torch.save(timestamps,f"{self.save_base_filename}_{year}_timestamps.pkl")
                 torch.save(t,f"{self.save_base_filename}_{year}_tensor.pkl")
     
     def create_yearly_datasets_parallel(self, years, njobs=3):
@@ -136,9 +138,6 @@ class DatasetHandler_DataframeToTensor_Super:
     def merge_as_channels(tensors, dim):
         # merge_metadata()...
         raise NotImplemented
-
-   
-# -
 
 
 

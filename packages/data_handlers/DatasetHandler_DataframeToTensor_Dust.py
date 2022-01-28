@@ -12,9 +12,10 @@ from data_handlers.DatasetHandler_DataframeToTensor_Super import *
 class DatasetHandler_DataframeToTensor_Dust(DatasetHandler_DataframeToTensor_Super):
     
     def __init__(self, dataframe, dims_cols_strings, metadata={}, timestamps=None, save_base_filename=None,
-                 invalid_col_fill=-777):
+                 invalid_col_fill=-777, save_timestamps=False):
         super().__init__(dataframe, dims_cols_strings, metadata=metadata, timestamps=timestamps, 
-                         save_base_filename=save_base_filename,invalid_col_fill=invalid_col_fill)
+                         save_base_filename=save_base_filename,invalid_col_fill=invalid_col_fill,
+                         save_timestamps=save_timestamps)
                    
     def create_metadata(self):
         def suffix_to_description(suffix_str):
