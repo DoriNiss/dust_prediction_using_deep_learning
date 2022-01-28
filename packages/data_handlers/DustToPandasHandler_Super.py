@@ -62,6 +62,11 @@ class DustToPandasHandler_Super:
         file = open(filename, 'r') 
         return list(csv.reader(file))
     
+    @staticmethod
+    def load_csv_file_without_handler(filename):
+        file = open(filename, 'r') 
+        return list(csv.reader(file))
+
     def get_data(self):
         # To be implemented in child classes
         raise NotImplementedError
