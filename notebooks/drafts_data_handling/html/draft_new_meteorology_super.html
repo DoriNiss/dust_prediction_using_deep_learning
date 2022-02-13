@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dataset_creation_meteorology_20_81_189_old_for_new_dust</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>draft_new_meteorology_super</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14262,16 +14262,9 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> <span class="c1">#conda install -c anaconda joblib</span>
-
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">data_handlers.DatasetHandler_DataframeToTensor_Meteorology</span> <span class="kn">import</span> <span class="o">*</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">MeteorologyToPandasHandler_Super</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 
      </div>
@@ -14285,12 +14278,38 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
-<span class="n">meteorology_dataframe_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframes_20_81_189_3h&quot;</span>
-<span class="n">result_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dataset_input_20_81_189_old_dust_108_2_339&quot;</span>
-<span class="n">file_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/meteorology_20_81_189_old&quot;</span>
-<span class="n">metadata_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframes_20_81_189_3h/metadata/meteorology_dataframes_20_81_189_3h_description.pkl&quot;</span>
-<span class="n">timestamps_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_55520_108_2_339&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meteo_folder</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup&quot;</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;PV310&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;S&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;PV&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;PV340&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;S&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;PV&quot;</span><span class="p">},</span>
+<span class="c1">#     &quot;T310&quot;: {&quot;title&quot;:&quot;&quot;,&quot;size&quot;:[81,189],&quot;hourly_res&quot;:3,&quot;folder_path&quot;:f&quot;{meteo_folder}/era5&quot;,&quot;file_prefix&quot;:&quot;P&quot;,</span>
+<span class="c1">#               &quot;netCDF_name&quot;:&quot;T&quot;},</span>
+<span class="c1">#     &quot;Q310&quot;: {&quot;title&quot;:&quot;&quot;,&quot;size&quot;:[81,189],&quot;hourly_res&quot;:3,&quot;folder_path&quot;:f&quot;{meteo_folder}/era5&quot;,&quot;file_prefix&quot;:&quot;P&quot;,</span>
+<span class="c1">#               &quot;netCDF_name&quot;:&quot;Q&quot;},</span>
+<span class="c1">#     &quot;Z500&quot;: {&quot;title&quot;:&quot;&quot;,&quot;size&quot;:[81,189],&quot;hourly_res&quot;:3,&quot;folder_path&quot;:f&quot;{meteo_folder}/era5/plev&quot;,&quot;file_prefix&quot;:&quot;P&quot;,</span>
+<span class="c1">#               &quot;netCDF_name&quot;:&quot;Z&quot;},</span>
+<span class="c1">#     &quot;Z850&quot;: {&quot;title&quot;:&quot;&quot;,&quot;size&quot;:[81,189],&quot;hourly_res&quot;:3,&quot;folder_path&quot;:f&quot;{meteo_folder}/era5/plev&quot;,&quot;file_prefix&quot;:&quot;P&quot;,</span>
+<span class="c1">#               &quot;netCDF_name&quot;:&quot;Z&quot;},</span>
+    <span class="s2">&quot;PM10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;PM&quot;</span><span class="p">,</span>
+              <span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;pm10&quot;</span><span class="p">},</span>
+<span class="p">}</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>
@@ -14304,8 +14323,9 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">metadata_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">)[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
-<span class="n">metadata_all</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span> <span class="o">=</span> <span class="n">MeteorologyToPandasHandler_Super</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">keep_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_size</span><span class="o">=</span><span class="p">[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="n">result_hourly_res</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14321,75 +14341,75 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{0: {&#39;short&#39;: &#39;SLP&#39;, &#39;long&#39;: &#39;Mean Sea-Level Pressure&#39;},
- 1: {&#39;short&#39;: &#39;Z@850&#39;, &#39;long&#39;: &#39;Geopotential Height at P=850 mBar [m]&#39;},
- 2: {&#39;short&#39;: &#39;Z@500&#39;, &#39;long&#39;: &#39;Geopotential Height at P=500 mBar [m]&#39;},
- 3: {&#39;short&#39;: &#39;Z@250&#39;, &#39;long&#39;: &#39;Geopotential Height at P=250 mBar [m]&#39;},
- 4: {&#39;short&#39;: &#39;U@850&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=850 mBar [m/s]&#39;},
- 5: {&#39;short&#39;: &#39;U@500&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=500 mBar [m/s]&#39;},
- 6: {&#39;short&#39;: &#39;U@250&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=250 mBar [m/s]&#39;},
- 7: {&#39;short&#39;: &#39;V@850&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=850 mBar [m/s]&#39;},
- 8: {&#39;short&#39;: &#39;V@500&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=500 mBar [m/s]&#39;},
- 9: {&#39;short&#39;: &#39;V@250&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=250 mBar [m/s]&#39;},
- 10: {&#39;short&#39;: &#39;PV@325&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=325K [pvu]&#39;},
- 11: {&#39;short&#39;: &#39;PV@330&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=330K [pvu]&#39;},
- 12: {&#39;short&#39;: &#39;PV@335&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=335K [pvu]&#39;},
- 13: {&#39;short&#39;: &#39;PV@340&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=340K [pvu]&#39;},
- 14: {&#39;short&#39;: &#39;aod550&#39;, &#39;long&#39;: &#39;Total Aerosol Optical Depth at 550nm&#39;},
- 15: {&#39;short&#39;: &#39;duaod550&#39;, &#39;long&#39;: &#39;Dust Aerosol Optical Depth at 550nm&#39;},
- 16: {&#39;short&#39;: &#39;aermssdul&#39;,
-  &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (9 - 20 um)&#39;},
- 17: {&#39;short&#39;: &#39;aermssdum&#39;,
-  &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (0.55 - 9 um)&#39;},
- 18: {&#39;short&#39;: &#39;u10&#39;, &#39;long&#39;: &#39;10 Metre U Wind Component [m/s]&#39;},
- 19: {&#39;short&#39;: &#39;v10&#39;, &#39;long&#39;: &#39;10 Metre V Wind Component [m/s]&#39;},
- &#39;lons&#39;: &#39;-44:50&#39;,
- &#39;lats&#39;: &#39;20:60&#39;,
- &#39;general&#39;: &#39;frequency: 3h, all CAMS (cols [14:]) are linearly interpolated between 6h&#39;}</pre>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Initiating paths for 
+DatetimeIndex([&#39;2002-12-30 00:00:00+00:00&#39;, &#39;2002-12-30 03:00:00+00:00&#39;,
+               &#39;2002-12-30 06:00:00+00:00&#39;, &#39;2002-12-30 09:00:00+00:00&#39;,
+               &#39;2002-12-30 12:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=&#39;3H&#39;)
+...
+DatetimeIndex([&#39;2003-01-02 06:00:00+00:00&#39;, &#39;2003-01-02 09:00:00+00:00&#39;,
+               &#39;2003-01-02 12:00:00+00:00&#39;, &#39;2003-01-02 15:00:00+00:00&#39;,
+               &#39;2003-01-02 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=&#39;3H&#39;): ...
+Initializing paths for [&#39;PV310&#39;, &#39;PV340&#39;]: ...
+Initializing paths for [&#39;PM10&#39;]: ...
+... Done initializing paths!
+Initiated interpolation infomation: {&#39;by_time&#39;: [&#39;PM10&#39;], &#39;by_size&#39;: [&#39;PM10&#39;]}
+... Done initializing handler!
+Use self.print_param_info(param) to see available varaiables per parameter
+Use self.print_param_varaiable_info(param,v) to see exact indices per variable
+Use self.set_param_idxs(param, idxs_dict, avg_over_idxs=None) to set the parameter&#39;s indices,
+define idxs_dict with the parameter&#39;s indices, e.g. {&#39;time&#39;:[0],&#39;lev&#39;:[0],&#39;lat&#39;:[0],&#39;lon&#39;:[0]},
+use avg_over_idxs to avg over sepcific idx, e.g. [&#39;lev&#39;].
+Use self.create_yearly_dataframes(base_filename) to load and save yearly data as dataframes
+Use self.create_yearly_dataframes_parallel(base_filename,njobs=1) to do it paralelly
+</pre>
+</div>
 </div>
 
 </div>
 
 </div>
 
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_format_channels_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;SLP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;PV&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])},</span>
-    <span class="s2">&quot;aod550&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">14</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;duaod550&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">15</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;aermssdul&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">16</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;aermssdum&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">17</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;u10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">18</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;v10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">19</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-<span class="p">}</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">params_to_interpolate</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">paths_and_params</span><span class="p">)</span>
 </pre></div>
 
      </div>
 </div>
 </div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>{&#39;by_time&#39;: [&#39;PM10&#39;], &#39;by_size&#39;: [&#39;PM10&#39;]}
+[{&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_00&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_03&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_06&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_09&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_12&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_15&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_18&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_21&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 21:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_00&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_03&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_06&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_09&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_12&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_15&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_18&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_21&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 21:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_00&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_03&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_06&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_09&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_12&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_15&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_18&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_21&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 21:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_00&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_03&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_06&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_09&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_12&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_15&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_18&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 21:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 21:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_00&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_06&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_12&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_18&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 21:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_00&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 00:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 03:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_06&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 06:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 09:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_12&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 12:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 15:00:00+0000&#39;, tz=&#39;UTC&#39;)}, {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_18&#39;, &#39;params&#39;: [&#39;PM10&#39;], &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}]
+</pre>
+</div>
+</div>
+
+</div>
+
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
@@ -14398,8 +14418,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dims_cols_strings</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:[</span><span class="n">c_str</span> <span class="k">for</span> <span class="n">c_str</span> <span class="ow">in</span> <span class="n">old_format_channels_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]}</span>
-<span class="n">dims_cols_strings</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_info</span><span class="p">(</span><span class="s2">&quot;PV310&quot;</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14415,25 +14434,118 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{1: [&#39;SLP&#39;,
-  &#39;Z&#39;,
-  &#39;U&#39;,
-  &#39;V&#39;,
-  &#39;PV&#39;,
-  &#39;aod550&#39;,
-  &#39;duaod550&#39;,
-  &#39;aermssdul&#39;,
-  &#39;aermssdum&#39;,
-  &#39;u10&#39;,
-  &#39;v10&#39;]}</pre>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Sample path: /work/meteogroup/era5/2002/12/S20021230_00
+Full file variables of PV310:
+{&#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 lon(lon)
+    standard_name: longitude
+    long_name: longitude
+    units: degrees_east
+    axis: X
+unlimited dimensions: 
+current shape = (720,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 lat(lat)
+    standard_name: latitude
+    long_name: latitude
+    units: degrees_north
+    axis: Y
+unlimited dimensions: 
+current shape = (361,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 lev(lev)
+    standard_name: hybrid_sigma_pressure
+    long_name: hybrid level at layer midpoints
+    formula: hyam hybm (mlev=hyam+hybm*aps)
+    formula_terms: ap: hyam b: hybm ps: aps
+    units: level
+    positive: down
+unlimited dimensions: 
+current shape = (131,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;lev_2&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 lev_2(lev_2)
+    standard_name: hybrid_sigma_pressure
+    long_name: hybrid level at layer midpoints
+    formula: hyam hybm (mlev=hyam+hybm*aps)
+    formula_terms: ap: hyam b: hybm ps: aps
+    units: level
+    positive: down
+unlimited dimensions: 
+current shape = (1,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 time(time)
+    standard_name: time
+    units: hours since 2002-12-27 00:00:00
+    calendar: proleptic_gregorian
+    axis: T
+unlimited dimensions: time
+current shape = (1,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;hyai&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 hyai(nhyi)
+    long_name: hybrid A coefficient at layer interfaces
+    units: Pa
+unlimited dimensions: 
+current shape = (138,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;hybi&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 hybi(nhyi)
+    long_name: hybrid B coefficient at layer interfaces
+    units: 1
+unlimited dimensions: 
+current shape = (138,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;hyam&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 hyam(nhym)
+    long_name: hybrid A coefficient at layer midpoints
+    units: Pa
+unlimited dimensions: 
+current shape = (137,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;hybm&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float64 hybm(nhym)
+    long_name: hybrid B coefficient at layer midpoints
+    units: 1
+unlimited dimensions: 
+current shape = (137,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;P&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 P(time, lev, lat, lon)
+    long_name: Pressure
+    units: hPa
+    _FillValue: -999.99
+unlimited dimensions: time
+current shape = (1, 131, 361, 720)
+filling on, &#39;TH&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 TH(time, lev, lat, lon)
+    long_name: Potential temperature
+    units: K
+    _FillValue: -999.99
+unlimited dimensions: time
+current shape = (1, 131, 361, 720)
+filling on, &#39;PV&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 PV(time, lev, lat, lon)
+    long_name: Potential vorticity
+    units: pvu
+    _FillValue: -999.99
+unlimited dimensions: time
+current shape = (1, 131, 361, 720)
+filling on, &#39;RH&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 RH(time, lev, lat, lon)
+    long_name: Relative humidity
+    units: %
+    _FillValue: -999.99
+unlimited dimensions: time
+current shape = (1, 131, 361, 720)
+filling on, &#39;THE&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 THE(time, lev, lat, lon)
+    long_name: Equivalent potential temperature
+    units: K
+    _FillValue: -999.99
+unlimited dimensions: time
+current shape = (1, 131, 361, 720)
+filling on}
+</pre>
 </div>
-
 </div>
 
 </div>
@@ -14446,8 +14558,7 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lons</span><span class="p">,</span><span class="n">lats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mf">60.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">44</span><span class="p">,</span><span class="mf">50.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">lats</span><span class="p">)</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;PV310&quot;</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">)</span> 
 </pre></div>
 
      </div>
@@ -14463,15 +14574,251 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(81, 189)</pre>
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Sample path: /work/meteogroup/era5/2002/12/S20021230_00
+Indices values (value  [idx]):
+[&#39;-90.0 [0]&#39;, &#39;-89.5 [1]&#39;, &#39;-89.0 [2]&#39;, &#39;-88.5 [3]&#39;, &#39;-88.0 [4]&#39;, &#39;-87.5 [5]&#39;, &#39;-87.0 [6]&#39;, &#39;-86.5 [7]&#39;, &#39;-86.0 [8]&#39;, &#39;-85.5 [9]&#39;, &#39;-85.0 [10]&#39;, &#39;-84.5 [11]&#39;, &#39;-84.0 [12]&#39;, &#39;-83.5 [13]&#39;, &#39;-83.0 [14]&#39;, &#39;-82.5 [15]&#39;, &#39;-82.0 [16]&#39;, &#39;-81.5 [17]&#39;, &#39;-81.0 [18]&#39;, &#39;-80.5 [19]&#39;, &#39;-80.0 [20]&#39;, &#39;-79.5 [21]&#39;, &#39;-79.0 [22]&#39;, &#39;-78.5 [23]&#39;, &#39;-78.0 [24]&#39;, &#39;-77.5 [25]&#39;, &#39;-77.0 [26]&#39;, &#39;-76.5 [27]&#39;, &#39;-76.0 [28]&#39;, &#39;-75.5 [29]&#39;, &#39;-75.0 [30]&#39;, &#39;-74.5 [31]&#39;, &#39;-74.0 [32]&#39;, &#39;-73.5 [33]&#39;, &#39;-73.0 [34]&#39;, &#39;-72.5 [35]&#39;, &#39;-72.0 [36]&#39;, &#39;-71.5 [37]&#39;, &#39;-71.0 [38]&#39;, &#39;-70.5 [39]&#39;, &#39;-70.0 [40]&#39;, &#39;-69.5 [41]&#39;, &#39;-69.0 [42]&#39;, &#39;-68.5 [43]&#39;, &#39;-68.0 [44]&#39;, &#39;-67.5 [45]&#39;, &#39;-67.0 [46]&#39;, &#39;-66.5 [47]&#39;, &#39;-66.0 [48]&#39;, &#39;-65.5 [49]&#39;, &#39;-65.0 [50]&#39;, &#39;-64.5 [51]&#39;, &#39;-64.0 [52]&#39;, &#39;-63.5 [53]&#39;, &#39;-63.0 [54]&#39;, &#39;-62.5 [55]&#39;, &#39;-62.0 [56]&#39;, &#39;-61.5 [57]&#39;, &#39;-61.0 [58]&#39;, &#39;-60.5 [59]&#39;, &#39;-60.0 [60]&#39;, &#39;-59.5 [61]&#39;, &#39;-59.0 [62]&#39;, &#39;-58.5 [63]&#39;, &#39;-58.0 [64]&#39;, &#39;-57.5 [65]&#39;, &#39;-57.0 [66]&#39;, &#39;-56.5 [67]&#39;, &#39;-56.0 [68]&#39;, &#39;-55.5 [69]&#39;, &#39;-55.0 [70]&#39;, &#39;-54.5 [71]&#39;, &#39;-54.0 [72]&#39;, &#39;-53.5 [73]&#39;, &#39;-53.0 [74]&#39;, &#39;-52.5 [75]&#39;, &#39;-52.0 [76]&#39;, &#39;-51.5 [77]&#39;, &#39;-51.0 [78]&#39;, &#39;-50.5 [79]&#39;, &#39;-50.0 [80]&#39;, &#39;-49.5 [81]&#39;, &#39;-49.0 [82]&#39;, &#39;-48.5 [83]&#39;, &#39;-48.0 [84]&#39;, &#39;-47.5 [85]&#39;, &#39;-47.0 [86]&#39;, &#39;-46.5 [87]&#39;, &#39;-46.0 [88]&#39;, &#39;-45.5 [89]&#39;, &#39;-45.0 [90]&#39;, &#39;-44.5 [91]&#39;, &#39;-44.0 [92]&#39;, &#39;-43.5 [93]&#39;, &#39;-43.0 [94]&#39;, &#39;-42.5 [95]&#39;, &#39;-42.0 [96]&#39;, &#39;-41.5 [97]&#39;, &#39;-41.0 [98]&#39;, &#39;-40.5 [99]&#39;, &#39;-40.0 [100]&#39;, &#39;-39.5 [101]&#39;, &#39;-39.0 [102]&#39;, &#39;-38.5 [103]&#39;, &#39;-38.0 [104]&#39;, &#39;-37.5 [105]&#39;, &#39;-37.0 [106]&#39;, &#39;-36.5 [107]&#39;, &#39;-36.0 [108]&#39;, &#39;-35.5 [109]&#39;, &#39;-35.0 [110]&#39;, &#39;-34.5 [111]&#39;, &#39;-34.0 [112]&#39;, &#39;-33.5 [113]&#39;, &#39;-33.0 [114]&#39;, &#39;-32.5 [115]&#39;, &#39;-32.0 [116]&#39;, &#39;-31.5 [117]&#39;, &#39;-31.0 [118]&#39;, &#39;-30.5 [119]&#39;, &#39;-30.0 [120]&#39;, &#39;-29.5 [121]&#39;, &#39;-29.0 [122]&#39;, &#39;-28.5 [123]&#39;, &#39;-28.0 [124]&#39;, &#39;-27.5 [125]&#39;, &#39;-27.0 [126]&#39;, &#39;-26.5 [127]&#39;, &#39;-26.0 [128]&#39;, &#39;-25.5 [129]&#39;, &#39;-25.0 [130]&#39;, &#39;-24.5 [131]&#39;, &#39;-24.0 [132]&#39;, &#39;-23.5 [133]&#39;, &#39;-23.0 [134]&#39;, &#39;-22.5 [135]&#39;, &#39;-22.0 [136]&#39;, &#39;-21.5 [137]&#39;, &#39;-21.0 [138]&#39;, &#39;-20.5 [139]&#39;, &#39;-20.0 [140]&#39;, &#39;-19.5 [141]&#39;, &#39;-19.0 [142]&#39;, &#39;-18.5 [143]&#39;, &#39;-18.0 [144]&#39;, &#39;-17.5 [145]&#39;, &#39;-17.0 [146]&#39;, &#39;-16.5 [147]&#39;, &#39;-16.0 [148]&#39;, &#39;-15.5 [149]&#39;, &#39;-15.0 [150]&#39;, &#39;-14.5 [151]&#39;, &#39;-14.0 [152]&#39;, &#39;-13.5 [153]&#39;, &#39;-13.0 [154]&#39;, &#39;-12.5 [155]&#39;, &#39;-12.0 [156]&#39;, &#39;-11.5 [157]&#39;, &#39;-11.0 [158]&#39;, &#39;-10.5 [159]&#39;, &#39;-10.0 [160]&#39;, &#39;-9.5 [161]&#39;, &#39;-9.0 [162]&#39;, &#39;-8.5 [163]&#39;, &#39;-8.0 [164]&#39;, &#39;-7.5 [165]&#39;, &#39;-7.0 [166]&#39;, &#39;-6.5 [167]&#39;, &#39;-6.0 [168]&#39;, &#39;-5.5 [169]&#39;, &#39;-5.0 [170]&#39;, &#39;-4.5 [171]&#39;, &#39;-4.0 [172]&#39;, &#39;-3.5 [173]&#39;, &#39;-3.0 [174]&#39;, &#39;-2.5 [175]&#39;, &#39;-2.0 [176]&#39;, &#39;-1.5 [177]&#39;, &#39;-1.0 [178]&#39;, &#39;-0.5 [179]&#39;, &#39;0.0 [180]&#39;, &#39;0.5 [181]&#39;, &#39;1.0 [182]&#39;, &#39;1.5 [183]&#39;, &#39;2.0 [184]&#39;, &#39;2.5 [185]&#39;, &#39;3.0 [186]&#39;, &#39;3.5 [187]&#39;, &#39;4.0 [188]&#39;, &#39;4.5 [189]&#39;, &#39;5.0 [190]&#39;, &#39;5.5 [191]&#39;, &#39;6.0 [192]&#39;, &#39;6.5 [193]&#39;, &#39;7.0 [194]&#39;, &#39;7.5 [195]&#39;, &#39;8.0 [196]&#39;, &#39;8.5 [197]&#39;, &#39;9.0 [198]&#39;, &#39;9.5 [199]&#39;, &#39;10.0 [200]&#39;, &#39;10.5 [201]&#39;, &#39;11.0 [202]&#39;, &#39;11.5 [203]&#39;, &#39;12.0 [204]&#39;, &#39;12.5 [205]&#39;, &#39;13.0 [206]&#39;, &#39;13.5 [207]&#39;, &#39;14.0 [208]&#39;, &#39;14.5 [209]&#39;, &#39;15.0 [210]&#39;, &#39;15.5 [211]&#39;, &#39;16.0 [212]&#39;, &#39;16.5 [213]&#39;, &#39;17.0 [214]&#39;, &#39;17.5 [215]&#39;, &#39;18.0 [216]&#39;, &#39;18.5 [217]&#39;, &#39;19.0 [218]&#39;, &#39;19.5 [219]&#39;, &#39;20.0 [220]&#39;, &#39;20.5 [221]&#39;, &#39;21.0 [222]&#39;, &#39;21.5 [223]&#39;, &#39;22.0 [224]&#39;, &#39;22.5 [225]&#39;, &#39;23.0 [226]&#39;, &#39;23.5 [227]&#39;, &#39;24.0 [228]&#39;, &#39;24.5 [229]&#39;, &#39;25.0 [230]&#39;, &#39;25.5 [231]&#39;, &#39;26.0 [232]&#39;, &#39;26.5 [233]&#39;, &#39;27.0 [234]&#39;, &#39;27.5 [235]&#39;, &#39;28.0 [236]&#39;, &#39;28.5 [237]&#39;, &#39;29.0 [238]&#39;, &#39;29.5 [239]&#39;, &#39;30.0 [240]&#39;, &#39;30.5 [241]&#39;, &#39;31.0 [242]&#39;, &#39;31.5 [243]&#39;, &#39;32.0 [244]&#39;, &#39;32.5 [245]&#39;, &#39;33.0 [246]&#39;, &#39;33.5 [247]&#39;, &#39;34.0 [248]&#39;, &#39;34.5 [249]&#39;, &#39;35.0 [250]&#39;, &#39;35.5 [251]&#39;, &#39;36.0 [252]&#39;, &#39;36.5 [253]&#39;, &#39;37.0 [254]&#39;, &#39;37.5 [255]&#39;, &#39;38.0 [256]&#39;, &#39;38.5 [257]&#39;, &#39;39.0 [258]&#39;, &#39;39.5 [259]&#39;, &#39;40.0 [260]&#39;, &#39;40.5 [261]&#39;, &#39;41.0 [262]&#39;, &#39;41.5 [263]&#39;, &#39;42.0 [264]&#39;, &#39;42.5 [265]&#39;, &#39;43.0 [266]&#39;, &#39;43.5 [267]&#39;, &#39;44.0 [268]&#39;, &#39;44.5 [269]&#39;, &#39;45.0 [270]&#39;, &#39;45.5 [271]&#39;, &#39;46.0 [272]&#39;, &#39;46.5 [273]&#39;, &#39;47.0 [274]&#39;, &#39;47.5 [275]&#39;, &#39;48.0 [276]&#39;, &#39;48.5 [277]&#39;, &#39;49.0 [278]&#39;, &#39;49.5 [279]&#39;, &#39;50.0 [280]&#39;, &#39;50.5 [281]&#39;, &#39;51.0 [282]&#39;, &#39;51.5 [283]&#39;, &#39;52.0 [284]&#39;, &#39;52.5 [285]&#39;, &#39;53.0 [286]&#39;, &#39;53.5 [287]&#39;, &#39;54.0 [288]&#39;, &#39;54.5 [289]&#39;, &#39;55.0 [290]&#39;, &#39;55.5 [291]&#39;, &#39;56.0 [292]&#39;, &#39;56.5 [293]&#39;, &#39;57.0 [294]&#39;, &#39;57.5 [295]&#39;, &#39;58.0 [296]&#39;, &#39;58.5 [297]&#39;, &#39;59.0 [298]&#39;, &#39;59.5 [299]&#39;, &#39;60.0 [300]&#39;, &#39;60.5 [301]&#39;, &#39;61.0 [302]&#39;, &#39;61.5 [303]&#39;, &#39;62.0 [304]&#39;, &#39;62.5 [305]&#39;, &#39;63.0 [306]&#39;, &#39;63.5 [307]&#39;, &#39;64.0 [308]&#39;, &#39;64.5 [309]&#39;, &#39;65.0 [310]&#39;, &#39;65.5 [311]&#39;, &#39;66.0 [312]&#39;, &#39;66.5 [313]&#39;, &#39;67.0 [314]&#39;, &#39;67.5 [315]&#39;, &#39;68.0 [316]&#39;, &#39;68.5 [317]&#39;, &#39;69.0 [318]&#39;, &#39;69.5 [319]&#39;, &#39;70.0 [320]&#39;, &#39;70.5 [321]&#39;, &#39;71.0 [322]&#39;, &#39;71.5 [323]&#39;, &#39;72.0 [324]&#39;, &#39;72.5 [325]&#39;, &#39;73.0 [326]&#39;, &#39;73.5 [327]&#39;, &#39;74.0 [328]&#39;, &#39;74.5 [329]&#39;, &#39;75.0 [330]&#39;, &#39;75.5 [331]&#39;, &#39;76.0 [332]&#39;, &#39;76.5 [333]&#39;, &#39;77.0 [334]&#39;, &#39;77.5 [335]&#39;, &#39;78.0 [336]&#39;, &#39;78.5 [337]&#39;, &#39;79.0 [338]&#39;, &#39;79.5 [339]&#39;, &#39;80.0 [340]&#39;, &#39;80.5 [341]&#39;, &#39;81.0 [342]&#39;, &#39;81.5 [343]&#39;, &#39;82.0 [344]&#39;, &#39;82.5 [345]&#39;, &#39;83.0 [346]&#39;, &#39;83.5 [347]&#39;, &#39;84.0 [348]&#39;, &#39;84.5 [349]&#39;, &#39;85.0 [350]&#39;, &#39;85.5 [351]&#39;, &#39;86.0 [352]&#39;, &#39;86.5 [353]&#39;, &#39;87.0 [354]&#39;, &#39;87.5 [355]&#39;, &#39;88.0 [356]&#39;, &#39;88.5 [357]&#39;, &#39;89.0 [358]&#39;, &#39;89.5 [359]&#39;, &#39;90.0 [360]&#39;]
+</pre>
+</div>
 </div>
 
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lev&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lat&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span><span class="s1">&#39;lon&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">]}</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="s2">&quot;PV310&quot;</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="s2">&quot;PV340&quot;</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Sample path: /work/meteogroup/era5/2002/12/S20021230_00
+The values of each key are set to:
+*** Key: time
+Indices values (value  [idx]):
+[&#39;72.0 [0]&#39;]
+*** Key: lev
+Indices values (value  [idx]):
+[&#39;7.0 [0]&#39;]
+*** Key: lat
+Indices values (value  [idx]):
+[&#39;-90.0 [0]&#39;, &#39;-87.5 [1]&#39;, &#39;-85.0 [2]&#39;]
+*** Key: lon
+Indices values (value  [idx]):
+[&#39;-180.0 [0]&#39;]
+Result shape: [1, 1, 3, 1]
+Sample path: /work/meteogroup/era5/2002/12/S20021230_00
+The values of each key are set to:
+*** Key: time
+Indices values (value  [idx]):
+[&#39;72.0 [0]&#39;]
+*** Key: lev
+Indices values (value  [idx]):
+[&#39;7.0 [0]&#39;]
+*** Key: lat
+Indices values (value  [idx]):
+[&#39;-90.0 [0]&#39;, &#39;-87.5 [1]&#39;, &#39;-85.0 [2]&#39;]
+*** Key: lon
+Indices values (value  [idx]):
+[&#39;-180.0 [0]&#39;]
+Result shape: [1, 1, 3, 1]
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_info</span><span class="p">(</span><span class="s2">&quot;PM10&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Sample path: /work/meteogroup/cams/2003/01/PM20030101_00
+Full file variables of PM10:
+{&#39;longitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 longitude(longitude)
+    units: degrees_east
+    long_name: longitude
+unlimited dimensions: 
+current shape = (360,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;latitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+float32 latitude(latitude)
+    units: degrees_north
+    long_name: latitude
+unlimited dimensions: 
+current shape = (181,)
+filling on, default _FillValue of 9.969209968386869e+36 used, &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+int32 time(time)
+    units: hours since 1900-01-01 00:00:00.0
+    long_name: time
+    calendar: gregorian
+unlimited dimensions: 
+current shape = (1,)
+filling on, default _FillValue of -2147483647 used, &#39;pm10&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+int16 pm10(time, latitude, longitude)
+    scale_factor: 1.4912062042915938e-11
+    add_offset: 4.886086248981836e-07
+    _FillValue: -32767
+    missing_value: -32767
+    units: kg m**-3
+    long_name: Particulate matter d &lt; 10 um
+unlimited dimensions: 
+current shape = (1, 181, 360)
+filling on, &#39;pm2p5&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+int16 pm2p5(time, latitude, longitude)
+    scale_factor: 1.0755476923194034e-11
+    add_offset: 3.5241395686537573e-07
+    _FillValue: -32767
+    missing_value: -32767
+    units: kg m**-3
+    long_name: Particulate matter d &lt; 2.5 um
+unlimited dimensions: 
+current shape = (1, 181, 360)
+filling on, &#39;pm1&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+int16 pm1(time, latitude, longitude)
+    scale_factor: 9.289350764268004e-12
+    add_offset: 3.043748671420054e-07
+    _FillValue: -32767
+    missing_value: -32767
+    units: kg m**-3
+    long_name: Particulate matter d &lt; 1 um
+unlimited dimensions: 
+current shape = (1, 181, 360)
+filling on}
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[9]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;PM10&quot;</span><span class="p">,</span><span class="s2">&quot;latitude&quot;</span><span class="p">)</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Sample path: /work/meteogroup/cams/2003/01/PM20030101_00
+Indices values (value  [idx]):
+[&#39;90.0 [0]&#39;, &#39;89.0 [1]&#39;, &#39;88.0 [2]&#39;, &#39;87.0 [3]&#39;, &#39;86.0 [4]&#39;, &#39;85.0 [5]&#39;, &#39;84.0 [6]&#39;, &#39;83.0 [7]&#39;, &#39;82.0 [8]&#39;, &#39;81.0 [9]&#39;, &#39;80.0 [10]&#39;, &#39;79.0 [11]&#39;, &#39;78.0 [12]&#39;, &#39;77.0 [13]&#39;, &#39;76.0 [14]&#39;, &#39;75.0 [15]&#39;, &#39;74.0 [16]&#39;, &#39;73.0 [17]&#39;, &#39;72.0 [18]&#39;, &#39;71.0 [19]&#39;, &#39;70.0 [20]&#39;, &#39;69.0 [21]&#39;, &#39;68.0 [22]&#39;, &#39;67.0 [23]&#39;, &#39;66.0 [24]&#39;, &#39;65.0 [25]&#39;, &#39;64.0 [26]&#39;, &#39;63.0 [27]&#39;, &#39;62.0 [28]&#39;, &#39;61.0 [29]&#39;, &#39;60.0 [30]&#39;, &#39;59.0 [31]&#39;, &#39;58.0 [32]&#39;, &#39;57.0 [33]&#39;, &#39;56.0 [34]&#39;, &#39;55.0 [35]&#39;, &#39;54.0 [36]&#39;, &#39;53.0 [37]&#39;, &#39;52.0 [38]&#39;, &#39;51.0 [39]&#39;, &#39;50.0 [40]&#39;, &#39;49.0 [41]&#39;, &#39;48.0 [42]&#39;, &#39;47.0 [43]&#39;, &#39;46.0 [44]&#39;, &#39;45.0 [45]&#39;, &#39;44.0 [46]&#39;, &#39;43.0 [47]&#39;, &#39;42.0 [48]&#39;, &#39;41.0 [49]&#39;, &#39;40.0 [50]&#39;, &#39;39.0 [51]&#39;, &#39;38.0 [52]&#39;, &#39;37.0 [53]&#39;, &#39;36.0 [54]&#39;, &#39;35.0 [55]&#39;, &#39;34.0 [56]&#39;, &#39;33.0 [57]&#39;, &#39;32.0 [58]&#39;, &#39;31.0 [59]&#39;, &#39;30.0 [60]&#39;, &#39;29.0 [61]&#39;, &#39;28.0 [62]&#39;, &#39;27.0 [63]&#39;, &#39;26.0 [64]&#39;, &#39;25.0 [65]&#39;, &#39;24.0 [66]&#39;, &#39;23.0 [67]&#39;, &#39;22.0 [68]&#39;, &#39;21.0 [69]&#39;, &#39;20.0 [70]&#39;, &#39;19.0 [71]&#39;, &#39;18.0 [72]&#39;, &#39;17.0 [73]&#39;, &#39;16.0 [74]&#39;, &#39;15.0 [75]&#39;, &#39;14.0 [76]&#39;, &#39;13.0 [77]&#39;, &#39;12.0 [78]&#39;, &#39;11.0 [79]&#39;, &#39;10.0 [80]&#39;, &#39;9.0 [81]&#39;, &#39;8.0 [82]&#39;, &#39;7.0 [83]&#39;, &#39;6.0 [84]&#39;, &#39;5.0 [85]&#39;, &#39;4.0 [86]&#39;, &#39;3.0 [87]&#39;, &#39;2.0 [88]&#39;, &#39;1.0 [89]&#39;, &#39;0.0 [90]&#39;, &#39;-1.0 [91]&#39;, &#39;-2.0 [92]&#39;, &#39;-3.0 [93]&#39;, &#39;-4.0 [94]&#39;, &#39;-5.0 [95]&#39;, &#39;-6.0 [96]&#39;, &#39;-7.0 [97]&#39;, &#39;-8.0 [98]&#39;, &#39;-9.0 [99]&#39;, &#39;-10.0 [100]&#39;, &#39;-11.0 [101]&#39;, &#39;-12.0 [102]&#39;, &#39;-13.0 [103]&#39;, &#39;-14.0 [104]&#39;, &#39;-15.0 [105]&#39;, &#39;-16.0 [106]&#39;, &#39;-17.0 [107]&#39;, &#39;-18.0 [108]&#39;, &#39;-19.0 [109]&#39;, &#39;-20.0 [110]&#39;, &#39;-21.0 [111]&#39;, &#39;-22.0 [112]&#39;, &#39;-23.0 [113]&#39;, &#39;-24.0 [114]&#39;, &#39;-25.0 [115]&#39;, &#39;-26.0 [116]&#39;, &#39;-27.0 [117]&#39;, &#39;-28.0 [118]&#39;, &#39;-29.0 [119]&#39;, &#39;-30.0 [120]&#39;, &#39;-31.0 [121]&#39;, &#39;-32.0 [122]&#39;, &#39;-33.0 [123]&#39;, &#39;-34.0 [124]&#39;, &#39;-35.0 [125]&#39;, &#39;-36.0 [126]&#39;, &#39;-37.0 [127]&#39;, &#39;-38.0 [128]&#39;, &#39;-39.0 [129]&#39;, &#39;-40.0 [130]&#39;, &#39;-41.0 [131]&#39;, &#39;-42.0 [132]&#39;, &#39;-43.0 [133]&#39;, &#39;-44.0 [134]&#39;, &#39;-45.0 [135]&#39;, &#39;-46.0 [136]&#39;, &#39;-47.0 [137]&#39;, &#39;-48.0 [138]&#39;, &#39;-49.0 [139]&#39;, &#39;-50.0 [140]&#39;, &#39;-51.0 [141]&#39;, &#39;-52.0 [142]&#39;, &#39;-53.0 [143]&#39;, &#39;-54.0 [144]&#39;, &#39;-55.0 [145]&#39;, &#39;-56.0 [146]&#39;, &#39;-57.0 [147]&#39;, &#39;-58.0 [148]&#39;, &#39;-59.0 [149]&#39;, &#39;-60.0 [150]&#39;, &#39;-61.0 [151]&#39;, &#39;-62.0 [152]&#39;, &#39;-63.0 [153]&#39;, &#39;-64.0 [154]&#39;, &#39;-65.0 [155]&#39;, &#39;-66.0 [156]&#39;, &#39;-67.0 [157]&#39;, &#39;-68.0 [158]&#39;, &#39;-69.0 [159]&#39;, &#39;-70.0 [160]&#39;, &#39;-71.0 [161]&#39;, &#39;-72.0 [162]&#39;, &#39;-73.0 [163]&#39;, &#39;-74.0 [164]&#39;, &#39;-75.0 [165]&#39;, &#39;-76.0 [166]&#39;, &#39;-77.0 [167]&#39;, &#39;-78.0 [168]&#39;, &#39;-79.0 [169]&#39;, &#39;-80.0 [170]&#39;, &#39;-81.0 [171]&#39;, &#39;-82.0 [172]&#39;, &#39;-83.0 [173]&#39;, &#39;-84.0 [174]&#39;, &#39;-85.0 [175]&#39;, &#39;-86.0 [176]&#39;, &#39;-87.0 [177]&#39;, &#39;-88.0 [178]&#39;, &#39;-89.0 [179]&#39;, &#39;-90.0 [180]&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[10]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;latitude&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span><span class="s1">&#39;longitude&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">]}</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="s2">&quot;PM10&quot;</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>Sample path: /work/meteogroup/cams/2003/01/PM20030101_00
+The values of each key are set to:
+*** Key: time
+Indices values (value  [idx]):
+[&#39;902880 [0]&#39;]
+*** Key: latitude
+Indices values (value  [idx]):
+[&#39;90.0 [0]&#39;, &#39;85.0 [1]&#39;, &#39;80.0 [2]&#39;]
+*** Key: longitude
+Indices values (value  [idx]):
+[&#39;-180.0 [0]&#39;]
+Result shape: [1, 3, 1]
+</pre>
+</div>
 </div>
 
 </div>
@@ -14485,34 +14832,6 @@ a.anchor-link {
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_and_save_year</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">####### YEAR </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
-    <span class="n">meteorology_dataframe_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteorology_dataframe_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframe_20_81_189_3h_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
-    <span class="n">timestamps_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamps_dir</span><span class="si">}</span><span class="s2">/dust_dataset_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_timestamps.pkl&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">meteorology_dataframe_filename</span><span class="p">)</span>
-    <span class="n">file_year_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">timestamps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">timestamps_filename</span><span class="p">)</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Meteorology</span><span class="p">(</span>
-        <span class="n">df</span><span class="p">,</span> <span class="n">dims_cols_strings</span><span class="o">=</span><span class="n">dims_cols_strings</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata_all</span><span class="p">,</span> <span class="n">timestamps</span><span class="o">=</span><span class="n">timestamps</span><span class="p">,</span> 
-        <span class="n">save_base_filename</span><span class="o">=</span><span class="n">file_year_basename</span><span class="p">,</span>
-        <span class="n">invalid_col_fill</span><span class="o">=-</span><span class="mi">777</span><span class="p">,</span> <span class="n">param_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span> <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span> <span class="n">save_timestamps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">old_format_channels_dict</span><span class="o">=</span><span class="n">old_format_channels_dict</span>
-    <span class="p">)</span>
-    <span class="n">handler</span><span class="o">.</span><span class="n">create_yearly_datasets</span><span class="p">([</span><span class="n">year</span><span class="p">])</span>
-    
 </pre></div>
 
      </div>
@@ -14523,14 +14842,234 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">2019</span><span class="p">))</span>
-<span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="mi">100</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">load_and_save_year</span><span class="p">)(</span><span class="n">year</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span>
-<span class="p">)</span>    
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">paths_and_params</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
     
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[11]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>[{&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_00&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_03&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_06&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_09&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_12&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_15&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_18&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021230_21&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 21:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_00&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_03&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_06&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_09&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_12&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_15&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_18&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2002/12/S20021231_21&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 21:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_00&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_03&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_06&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_09&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_12&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_15&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_18&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030101_21&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 21:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_00&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_03&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_06&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_09&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_12&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_15&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/era5/2003/01/S20030102_18&#39;,
+  &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-30 21:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2002-12-31 21:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_00&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_06&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_12&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030101_18&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 18:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-01 21:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_00&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 00:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 03:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_06&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 06:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 09:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_12&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 12:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 15:00:00+0000&#39;, tz=&#39;UTC&#39;)},
+ {&#39;path&#39;: &#39;/work/meteogroup/cams/2003/01/PM20030102_18&#39;,
+  &#39;params&#39;: [&#39;PM10&#39;],
+  &#39;timestamp&#39;: Timestamp(&#39;2003-01-02 18:00:00+0000&#39;, tz=&#39;UTC&#39;)}]</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2002-12-30 00:00:00&quot;</span><span class="p">,</span><span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2002-12-30 18:00:00&quot;</span><span class="p">,</span><span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">idxs</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">get_paths_and_params_idxs</span><span class="p">(</span><span class="n">start</span><span class="p">,</span><span class="n">end</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">idxs</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14550,788 +15089,22 @@ a.anchor-link {
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>[Parallel(n_jobs=1)]: Using backend SequentialBackend with 1 concurrent workers.
-
-
-####### YEAR 2003:
-Syncing timestamps: ...
+<pre>[0, 1, 2, 3, 4, 5, 6, 31, 32, 33, 34, 35, 36, 37]
 </pre>
 </div>
 </div>
 
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="1f833297-3caa-47e1-8c8f-90b6fe912395" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('1f833297-3caa-47e1-8c8f-90b6fe912395');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e36f91c605414773a41c7fb63c451c1d", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2003: Creating tensor for 2003-01-01 00:00:00+00:00 to 2003-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2003: ... Done!
-[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed: 23.0min remaining:    0.0s
-
-
-####### YEAR 2004:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="78b3316b-70ba-4607-9f53-187605c94851" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('78b3316b-70ba-4607-9f53-187605c94851');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "4c479438bf6140b88f097db041b53f3b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2004: Creating tensor for 2004-01-01 00:00:00+00:00 to 2004-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2004: ... Done!
-[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed: 28.8min remaining:    0.0s
-
-
-####### YEAR 2005:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="1e139899-d8cc-47b3-be7e-73b4d0e09438" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('1e139899-d8cc-47b3-be7e-73b4d0e09438');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "68aa6a28b7a14de28c6dfae69ba0b30b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2005: Creating tensor for 2005-01-01 00:00:00+00:00 to 2005-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2005: ... Done!
-[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed: 34.0min remaining:    0.0s
-
-
-####### YEAR 2006:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="ac2ccd16-b60a-45da-b6d3-c61c52ee9c45" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('ac2ccd16-b60a-45da-b6d3-c61c52ee9c45');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d47265559dac4a84bf503854ef036d22", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2006: Creating tensor for 2006-01-01 00:00:00+00:00 to 2006-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2006: ... Done!
-[Parallel(n_jobs=1)]: Done   4 out of   4 | elapsed: 39.3min remaining:    0.0s
-
-
-####### YEAR 2007:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="68e35544-8266-44a4-a845-633429fb51fd" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('68e35544-8266-44a4-a845-633429fb51fd');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f3b844acf5f04b87a61b250f53b3a060", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2007: Creating tensor for 2007-01-01 00:00:00+00:00 to 2007-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2007: ... Done!
-[Parallel(n_jobs=1)]: Done   5 out of   5 | elapsed: 44.8min remaining:    0.0s
-
-
-####### YEAR 2008:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="813b99d0-512d-4c97-87a6-b4d0cb897237" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('813b99d0-512d-4c97-87a6-b4d0cb897237');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f598129a15c04eec8d8552616a397e2f", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2008: Creating tensor for 2008-01-01 00:00:00+00:00 to 2008-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2008: ... Done!
-[Parallel(n_jobs=1)]: Done   6 out of   6 | elapsed: 49.9min remaining:    0.0s
-
-
-####### YEAR 2009:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="30a40f61-fd87-4c2b-a3c8-f4895cd019f1" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('30a40f61-fd87-4c2b-a3c8-f4895cd019f1');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "cf12f8d66a4f4ff19d5f4f75efbc172b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2009: Creating tensor for 2009-01-01 00:00:00+00:00 to 2009-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2009: ... Done!
-[Parallel(n_jobs=1)]: Done   7 out of   7 | elapsed: 55.3min remaining:    0.0s
-
-
-####### YEAR 2010:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="773ec4b8-bf15-4ae0-babf-b398f2d29a6a" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('773ec4b8-bf15-4ae0-babf-b398f2d29a6a');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "77eda3f594d5414098b9896d01013100", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2010: Creating tensor for 2010-01-01 00:00:00+00:00 to 2010-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2010: ... Done!
-[Parallel(n_jobs=1)]: Done   8 out of   8 | elapsed: 60.5min remaining:    0.0s
-
-
-####### YEAR 2011:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="feebe412-b718-46d4-b60e-6dda93789f98" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('feebe412-b718-46d4-b60e-6dda93789f98');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "7ea501e0f52341948c8fc824f626dfcc", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2011: Creating tensor for 2011-01-01 00:00:00+00:00 to 2011-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2011: ... Done!
-[Parallel(n_jobs=1)]: Done   9 out of   9 | elapsed: 65.5min remaining:    0.0s
-
-
-####### YEAR 2012:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="5e79e284-50d8-42a4-bd8d-c315c918d39f" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('5e79e284-50d8-42a4-bd8d-c315c918d39f');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f3601b82b01543b8aa6df4c024facba7", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2012: Creating tensor for 2012-01-01 00:00:00+00:00 to 2012-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2012: ... Done!
-[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed: 70.6min remaining:    0.0s
-
-
-####### YEAR 2013:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="58f0fc8d-7faa-4e37-b783-00017320beef" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('58f0fc8d-7faa-4e37-b783-00017320beef');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2b8e3e2bf7d64a849787c4ef28d1bd92", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2013: Creating tensor for 2013-01-01 00:00:00+00:00 to 2013-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2013: ... Done!
-[Parallel(n_jobs=1)]: Done  11 out of  11 | elapsed: 75.8min remaining:    0.0s
-
-
-####### YEAR 2014:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="ab30f7c8-0e5c-44af-96ff-db0e5140ff05" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('ab30f7c8-0e5c-44af-96ff-db0e5140ff05');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "c6be79a1c13f4718b3990c5ac91dc1b0", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2014: Creating tensor for 2014-01-01 00:00:00+00:00 to 2014-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2014: ... Done!
-[Parallel(n_jobs=1)]: Done  12 out of  12 | elapsed: 80.8min remaining:    0.0s
-
-
-####### YEAR 2015:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="7d3216af-4fa6-42c1-ad8f-23d19beb4966" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('7d3216af-4fa6-42c1-ad8f-23d19beb4966');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5ac87f270baf46a89d00415ad411c8fb", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2015: Creating tensor for 2015-01-01 00:00:00+00:00 to 2015-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2015: ... Done!
-[Parallel(n_jobs=1)]: Done  13 out of  13 | elapsed: 86.2min remaining:    0.0s
-
-
-####### YEAR 2016:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="87ae2b23-3331-4733-b206-f21b3a56381b" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('87ae2b23-3331-4733-b206-f21b3a56381b');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "232cd108ca144a1bb515eaaff450f4be", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2016: Creating tensor for 2016-01-01 00:00:00+00:00 to 2016-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2016: ... Done!
-[Parallel(n_jobs=1)]: Done  14 out of  14 | elapsed: 91.4min remaining:    0.0s
-
-
-####### YEAR 2017:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="b3474c6a-bbf2-4553-9314-801ff6fcac93" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('b3474c6a-bbf2-4553-9314-801ff6fcac93');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8628f1ebdb93439b9267eb3cae4079ed", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2017: Creating tensor for 2017-01-01 00:00:00+00:00 to 2017-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2017: ... Done!
-[Parallel(n_jobs=1)]: Done  15 out of  15 | elapsed: 96.9min remaining:    0.0s
-
-
-####### YEAR 2018:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="7cad1e3c-f7d4-4e63-857e-0f4ecf3ef415" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('7cad1e3c-f7d4-4e63-857e-0f4ecf3ef415');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "45cbe04c443d4c4898f8ec007ff5ab03", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2018: Creating tensor for 2018-01-01 00:00:00+00:00 to 2018-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2018: ... Done!
-[Parallel(n_jobs=1)]: Done  16 out of  16 | elapsed: 102.0min remaining:    0.0s
-[Parallel(n_jobs=1)]: Done  16 out of  16 | elapsed: 102.0min finished
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>[None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None]</pre>
-</div>
-
-</div>
-
 </div>
 
 </div>
 
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[</span><span class="n">handler</span><span class="o">.</span><span class="n">paths_and_params</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">idxs</span><span class="p">]</span>
 </pre></div>
 
      </div>
@@ -15339,18 +15112,96 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 </div>
 </div>
 
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[13]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>[Timestamp(&#39;2002-12-30 00:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 03:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 06:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 09:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 12:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 15:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 18:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 00:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 03:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 06:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 09:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 12:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 15:00:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2002-12-30 18:00:00+0000&#39;, tz=&#39;UTC&#39;)]</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],[</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">],[</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">],[</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">]],[[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">],[</span><span class="mi">40</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">60</span><span class="p">],[</span><span class="mi">70</span><span class="p">,</span><span class="mi">80</span><span class="p">,</span><span class="mi">90</span><span class="p">],[</span><span class="mi">100</span><span class="p">,</span><span class="mi">110</span><span class="p">,</span><span class="mi">120</span><span class="p">]]])</span>
+<span class="n">a</span><span class="p">,</span> <span class="n">a</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[14]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(array([[[  1,   2,   3],
+         [  4,   5,   6],
+         [  7,   8,   9],
+         [ 10,  11,  12]],
+ 
+        [[ 10,  20,  30],
+         [ 40,  50,  60],
+         [ 70,  80,  90],
+         [100, 110, 120]]]),
+ (2, 4, 3))</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># data_dir = &quot;../../data&quot;</span>
-<span class="c1"># meteorology_dataframe_dir = f&quot;{data_dir}/meteorology_dataframes_20_81_189_3h&quot;</span>
-<span class="c1"># result_dir = f&quot;{data_dir}/dataset_input_20_81_189_old_dust_108_2_339&quot;</span>
-<span class="c1"># file_basename = f&quot;{result_dir}/meteorology_20_81_189_old&quot;</span>
-<span class="c1"># metadata_filename = f&quot;{data_dir}/meteorology_dataframes_20_81_189_3h/metadata/meteorology_dataframes_20_81_189_3h_description.pkl&quot;</span>
-<span class="c1"># timestamps_dir = f&quot;{data_dir}/dust_55520_108_2_339&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">idxs_dict_test</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">:[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="mi">2</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]}</span>
 </pre></div>
 
      </div>
@@ -15364,19 +15215,356 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensors_list</span><span class="p">,</span><span class="n">timestamps_lists</span><span class="o">=</span><span class="p">[],[]</span>
-<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
-    <span class="n">tensors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_tensor.pkl&quot;</span><span class="p">))</span>
-    <span class="n">timestamps_lists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_timestamps.pkl&quot;</span><span class="p">))</span>
-<span class="c1">#     timestamps_lists.append(torch.load(f&quot;{timestamps_dir}/dust_dataset_{year}_timestamps.pkl&quot;))</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># idxs = (slice(v for v in values) for values in idxs_dict_test.values())</span>
+<span class="c1"># list(idxs)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">a</span>
+<span class="k">for</span> <span class="n">dim</span> <span class="ow">in</span> <span class="n">idxs_dict_test</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">take</span><span class="p">(</span><span class="n">b</span><span class="p">,</span><span class="n">idxs_dict_test</span><span class="p">[</span><span class="n">dim</span><span class="p">],</span><span class="n">axis</span><span class="o">=</span><span class="n">dim</span><span class="p">)</span>
+<span class="n">b</span><span class="p">,</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
 
-<span class="n">full_tensor</span><span class="p">,</span> <span class="n">full_timestamps</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Meteorology</span><span class="o">.</span><span class="n">merge_by_timestamps</span><span class="p">(</span>
-    <span class="n">tensors_list</span><span class="p">,</span> <span class="n">timestamps_lists</span><span class="p">)</span>
+     </div>
+</div>
+</div>
+</div>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">full_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_timestamps</span><span class="p">))</span>
+<div class="jp-Cell-outputWrapper">
 
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">full_tensor</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_tensor_full.pkl&quot;</span><span class="p">)</span>
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">full_timestamps</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_timestamps_full.pkl&quot;</span><span class="p">)</span>
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[16]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(array([[[ 7,  8],
+         [10, 11]]]),
+ (1, 2, 2))</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[18]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">load_params_from_path</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">paths_and_params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[19]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">params_idxs</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[19]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;PV310&#39;: {&#39;time&#39;: [0], &#39;lev&#39;: [0], &#39;lat&#39;: [0, 5, 10], &#39;lon&#39;: [0]},
+ &#39;PV340&#39;: {&#39;time&#39;: [0], &#39;lev&#39;: [0], &#39;lat&#39;: [0, 5, 10], &#39;lon&#39;: [0]},
+ &#39;PM10&#39;: {&#39;time&#39;: [0], &#39;latitude&#39;: [0, 5, 10], &#39;longitude&#39;: [0]}}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[20]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">alist</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]</span>
+<span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">alist</span><span class="p">))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[20]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>[1, 2, 3]</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[21]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t1</span><span class="p">,</span><span class="n">t2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-01-02&quot;</span><span class="p">)</span>
+<span class="n">d1</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;col1&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="s2">&quot;col2&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="s2">&quot;col3&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">}</span>
+<span class="n">d2</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;col4&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="s2">&quot;col5&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span><span class="s2">&quot;col6&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">}</span>
+<span class="n">d3</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;col4&quot;</span><span class="p">:</span><span class="mi">20</span><span class="p">,</span><span class="s2">&quot;col5&quot;</span><span class="p">:</span><span class="mi">30</span><span class="p">}</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d1</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">t1</span><span class="p">])</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d2</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">t2</span><span class="p">])</span>
+<span class="n">df3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">d3</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">t1</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[22]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_dict</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">df_dict</span><span class="p">[</span><span class="n">t1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">d1</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">df_dict</span><span class="p">[</span><span class="n">t1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+<span class="n">df_dict</span><span class="p">[</span><span class="n">t2</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">d2</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">df_dict</span><span class="p">[</span><span class="n">t2</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+<span class="k">for</span> <span class="n">col</span><span class="p">,</span><span class="n">val</span> <span class="ow">in</span> <span class="n">d3</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">df_dict</span><span class="p">[</span><span class="n">t1</span><span class="p">][</span><span class="n">col</span><span class="p">]</span><span class="o">=</span><span class="n">val</span>
+<span class="n">t3</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-01-03&quot;</span><span class="p">)</span>
+<span class="n">df_dict</span><span class="p">[</span><span class="n">t3</span><span class="p">]</span><span class="o">=</span><span class="p">{}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">df_dict</span><span class="o">.</span><span class="n">values</span><span class="p">(),</span><span class="n">index</span><span class="o">=</span><span class="n">df_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+<span class="n">df</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[22]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>col1</th>
+      <th>col2</th>
+      <th>col3</th>
+      <th>col4</th>
+      <th>col5</th>
+      <th>col6</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2000-01-01</th>
+      <td>1.0</td>
+      <td>2.0</td>
+      <td>3.0</td>
+      <td>20.0</td>
+      <td>30.0</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2000-01-02</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>4.0</td>
+      <td>5.0</td>
+      <td>6.0</td>
+    </tr>
+    <tr>
+      <th>2000-01-03</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[23]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[23]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>DatetimeIndex([&#39;2000-01-01&#39;, &#39;2000-01-02&#39;, &#39;2000-01-03&#39;], dtype=&#39;datetime64[ns]&#39;, freq=None)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[24]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">dates</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[24]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>DatetimeIndex([&#39;2002-12-30 00:00:00+00:00&#39;, &#39;2002-12-30 03:00:00+00:00&#39;,
+               &#39;2002-12-30 06:00:00+00:00&#39;, &#39;2002-12-30 09:00:00+00:00&#39;,
+               &#39;2002-12-30 12:00:00+00:00&#39;, &#39;2002-12-30 15:00:00+00:00&#39;,
+               &#39;2002-12-30 18:00:00+00:00&#39;, &#39;2002-12-30 21:00:00+00:00&#39;,
+               &#39;2002-12-31 00:00:00+00:00&#39;, &#39;2002-12-31 03:00:00+00:00&#39;,
+               &#39;2002-12-31 06:00:00+00:00&#39;, &#39;2002-12-31 09:00:00+00:00&#39;,
+               &#39;2002-12-31 12:00:00+00:00&#39;, &#39;2002-12-31 15:00:00+00:00&#39;,
+               &#39;2002-12-31 18:00:00+00:00&#39;, &#39;2002-12-31 21:00:00+00:00&#39;,
+               &#39;2003-01-01 00:00:00+00:00&#39;, &#39;2003-01-01 03:00:00+00:00&#39;,
+               &#39;2003-01-01 06:00:00+00:00&#39;, &#39;2003-01-01 09:00:00+00:00&#39;,
+               &#39;2003-01-01 12:00:00+00:00&#39;, &#39;2003-01-01 15:00:00+00:00&#39;,
+               &#39;2003-01-01 18:00:00+00:00&#39;, &#39;2003-01-01 21:00:00+00:00&#39;,
+               &#39;2003-01-02 00:00:00+00:00&#39;, &#39;2003-01-02 03:00:00+00:00&#39;,
+               &#39;2003-01-02 06:00:00+00:00&#39;, &#39;2003-01-02 09:00:00+00:00&#39;,
+               &#39;2003-01-02 12:00:00+00:00&#39;, &#39;2003-01-02 15:00:00+00:00&#39;,
+               &#39;2003-01-02 18:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, freq=&#39;3H&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[25]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">create_dataframe</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">dates</span><span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">],</span><span class="n">handler</span><span class="o">.</span><span class="n">dates</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
 </pre></div>
 
      </div>
@@ -15395,8 +15583,30 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
     <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
+
+
+
+
+
+<div id="6083d7da-1732-4b69-aa91-e49b684e7aec" class="jupyter-widgets jp-OutputArea-output ">
+<script type="text/javascript">
+var element = document.getElementById('6083d7da-1732-4b69-aa91-e49b684e7aec');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "eb7e5e3ef34f4c27a70cf6111455e47c", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>torch.Size([46736, 20, 81, 189]) 46736
+<pre>3 0 days 03:00:00
 </pre>
 </div>
 </div>
@@ -15408,10 +15618,10 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[26]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_tensor_full.pkl&quot;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_timestamps_full.pkl&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">params_to_interpolate</span>
 </pre></div>
 
      </div>
@@ -15427,14 +15637,89 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[26]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(&#39;../../data/dataset_input_20_81_189_old_dust_108_2_339/meteorology_20_81_189_old_tensor_full.pkl&#39;,
- &#39;../../data/dataset_input_20_81_189_old_dust_108_2_339/meteorology_20_81_189_old_timestamps_full.pkl&#39;)</pre>
+<pre>{&#39;by_time&#39;: [&#39;PM10&#39;], &#39;by_size&#39;: [&#39;PM10&#39;]}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;PV310&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[30]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(3, 1)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">timestep_pd</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="s2">&quot;3h&quot;</span><span class="p">)</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">time</span><span class="o">+</span><span class="n">timestep_pd</span><span class="o">==</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[28]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>True</pre>
 </div>
 
 </div>
@@ -15449,7 +15734,692 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#46736</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[28]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;PV310&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;PV310&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[28]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>array([[[[    0.   ],
+         [19456.754],
+         [ 9353.26 ]]]], dtype=float32)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[29]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_null_big</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({},</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">&quot;2002-12-31 01:00&quot;</span><span class="p">],</span><span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">df_test_big</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_null_big</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
+<span class="n">df_test_big</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[29]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PV310</th>
+      <th>PV340</th>
+      <th>PM10</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2002-12-31 01:00:00+00:00</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2003-01-02 06:00:00+00:00</th>
+      <td>[[[[-999.99], [-9326.951], [-19925.54]]]]</td>
+      <td>[[[[-999.99], [-9326.951], [-19925.54]]]]</td>
+      <td>[[[2.4301064291525415e-09], [2.829575979150843...</td>
+    </tr>
+    <tr>
+      <th>2003-01-02 09:00:00+00:00</th>
+      <td>[[[[-999.99], [-4041.3557], [-20662.361]]]]</td>
+      <td>[[[[-999.99], [-4041.3557], [-20662.361]]]]</td>
+      <td>[[[2.0036826707146555e-09], [1.414787989575421...</td>
+    </tr>
+    <tr>
+      <th>2003-01-02 12:00:00+00:00</th>
+      <td>[[[[-999.99], [-362.3757], [-13624.43]]]]</td>
+      <td>[[[[-999.99], [-362.3757], [-13624.43]]]]</td>
+      <td>[[[1.5772589122767694e-09], [0.0], [5.50206597...</td>
+    </tr>
+    <tr>
+      <th>2003-01-02 15:00:00+00:00</th>
+      <td>[[[[-999.99], [8878.653], [-2296.8923]]]]</td>
+      <td>[[[[-999.99], [8878.653], [-2296.8923]]]]</td>
+      <td>[[[8.014848347599068e-10], [0.0], [2.751032986...</td>
+    </tr>
+    <tr>
+      <th>2003-01-02 18:00:00+00:00</th>
+      <td>[[[[-999.99], [10129.802], [-10572.279]]]]</td>
+      <td>[[[[-999.99], [10129.802], [-10572.279]]]]</td>
+      <td>[[[2.5710757243044222e-11], [0.0], [0.0]]]</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_test_big</span><span class="p">[</span><span class="s2">&quot;PV310&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">()</span><span class="o">.</span><span class="n">values</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[30]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>array([nan,
+       array([[[[  -999.99 ],
+         [ -9326.951],
+         [-19925.54 ]]]], dtype=float32),
+       array([[[[  -999.99  ],
+         [ -4041.3557],
+         [-20662.361 ]]]], dtype=float32),
+       array([[[[  -999.99  ],
+         [  -362.3757],
+         [-13624.43  ]]]], dtype=float32),
+       array([[[[ -999.99  ],
+         [ 8878.653 ],
+         [-2296.8923]]]], dtype=float32),
+       array([[[[  -999.99 ],
+         [ 10129.802],
+         [-10572.279]]]], dtype=float32)], dtype=object)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_test</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;A&quot;</span><span class="p">:[</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">],</span><span class="s2">&quot;B&quot;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">],</span><span class="s2">&quot;C&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]},</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">&quot;2000-01-01&quot;</span><span class="p">,</span><span class="s2">&quot;2000-01-04&quot;</span><span class="p">],</span><span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">df_null</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({},</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">([</span><span class="s2">&quot;2000-01-02&quot;</span><span class="p">,</span><span class="s2">&quot;2000-01-03&quot;</span><span class="p">],</span><span class="n">utc</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">df_test</span><span class="o">=</span><span class="n">df_test</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">df_null</span><span class="p">,</span><span class="n">how</span><span class="o">=</span><span class="s2">&quot;outer&quot;</span><span class="p">)</span>
+<span class="n">df_test</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[31]:</div>
+
+
+
+<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/html">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2000-01-01 00:00:00+00:00</th>
+      <td>0.0</td>
+      <td>10.0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2000-01-02 00:00:00+00:00</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2000-01-03 00:00:00+00:00</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2000-01-04 00:00:00+00:00</th>
+      <td>10.0</td>
+      <td>20.0</td>
+      <td>2.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_test</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">interpolate</span><span class="p">()</span><span class="c1">#.values#.ravel().tolist()</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-32-3b8d19cc9d08&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>df_test<span class="ansi-blue-fg">[</span>cols<span class="ansi-blue-fg">]</span><span class="ansi-blue-fg">.</span>interpolate<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span><span class="ansi-red-fg">#.values#.ravel().tolist()</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;cols&#39; is not defined</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">interpolate_df_rows_linear</span><span class="p">(</span><span class="n">df</span><span class="p">,</span><span class="n">cols</span><span class="p">):</span>
+    <span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">diff</span> <span class="o">=</span> <span class="p">(</span><span class="n">end</span><span class="o">-</span><span class="n">start</span><span class="p">)</span><span class="o">/</span><span class="nb">len</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">col</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">cols</span><span class="p">):</span>
+        <span class="n">vals</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+        
+        <span class="n">row</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">start</span><span class="o">+</span><span class="n">i</span><span class="o">*</span><span class="n">diff</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cols</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">df_test</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">df_test</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+<span class="n">interpolate_df_rows_linear</span><span class="p">(</span><span class="n">df_test</span><span class="p">,</span><span class="n">cols</span><span class="p">)</span>
+<span class="n">df_test</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_test</span><span class="p">[</span><span class="n">cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="mi">10</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">idxs_dict</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">df_test_big</span><span class="p">[</span><span class="s2">&quot;PV310&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_test_big_values_as_array</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">df_test_big</span><span class="o">.</span><span class="n">values</span><span class="p">])</span>
+<span class="n">df_test_big_values_as_array</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span><span class="n">df_test_big_values_as_array</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">MultiIndex</span><span class="o">.</span><span class="n">from_product</span><span class="p">(</span><span class="n">df_test_big</span><span class="o">.</span><span class="n">index</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">idxs_dict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;timestamp&quot;</span><span class="p">]</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">idxs_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+<span class="n">df_multi</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="n">mi</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">np</span><span class="p">)</span>
+
+
+<span class="c1"># pd.MultiIndex.from_arrays(list(idxs_dict.values()))</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>
