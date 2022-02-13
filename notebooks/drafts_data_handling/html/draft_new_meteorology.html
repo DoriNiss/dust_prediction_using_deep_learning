@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dataset_creation_meteorology_20_81_189_old_for_new_dust</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>draft_new_meteorology</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14262,16 +14262,20 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">glob</span>
+<span class="kn">from</span> <span class="nn">netCDF4</span> <span class="kn">import</span> <span class="n">Dataset</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span>
 <span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+<span class="kn">from</span> <span class="nn">scipy</span> <span class="kn">import</span> <span class="n">interpolate</span>
 <span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> <span class="c1">#conda install -c anaconda joblib</span>
+<span class="kn">import</span> <span class="nn">scipy.ndimage</span>
+<span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span>
 
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">data_handlers.DatasetHandler_DataframeToTensor_Meteorology</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+<span class="c1"># from MeteorologyToPandasHandler import *</span>
 </pre></div>
 
      </div>
@@ -14282,15 +14286,59 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
-<span class="n">meteorology_dataframe_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframes_20_81_189_3h&quot;</span>
-<span class="n">result_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dataset_input_20_81_189_old_dust_108_2_339&quot;</span>
-<span class="n">file_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/meteorology_20_81_189_old&quot;</span>
-<span class="n">metadata_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframes_20_81_189_3h/metadata/meteorology_dataframes_20_81_189_3h_description.pkl&quot;</span>
-<span class="n">timestamps_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_55520_108_2_339&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">Comments from meeting:</span>
+<span class="sd">CAMS</span>
+<span class="sd">A: 60 closest to ground (hybrid modal levels) 3D (daod, aod)</span>
+<span class="sd">PM: (calculated based on daod, aod)</span>
+<span class="sd">D: aod, duaod, tcwv</span>
+
+
+<span class="sd">ERA5</span>
+<span class="sd">model 137 closest to ground to 100 (100 can be 5000m), denser next to ground</span>
+<span class="sd">T,Q specific humidity - 137 to 100 (ERA5)</span>
+<span class="sd">PV - take from S (ERA5)</span>
+
+<span class="sd">precipitation: (not really good)</span>
+<span class="sd">era5_1h_2d - R files</span>
+<span class="sd">L - large scale,</span>
+
+<span class="sd">cloud: (not really good) ???? complicated</span>
+<span class="sd">ERA5: C files - take CLWC, CRWC (maybe ice also to get uncertainty?)</span>
+<span class="sd">relative humidity - s file, specific is better</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Taking:</span>
+<span class="sd">era5:</span>
+<span class="sd">    C: clouds (multiple heights, sum)</span>
+<span class="sd">        CLWC - Specific cloud liquid water content </span>
+<span class="sd">        CIWC - Specific cloud ice water content </span>
+<span class="sd">        CRWC - Specific rain water content</span>
+<span class="sd">    S:  PV - Potential vorticity</span>
+<span class="sd">    P:</span>
+<span class="sd">        T - Air temperature</span>
+<span class="sd">        Q - Specific humidity</span>
+<span class="sd">        SLP - Mean sea-level pressure</span>
+<span class="sd">    plev P:</span>
+<span class="sd">        U,V,Z </span>
+<span class="sd">cams:</span>
+<span class="sd">    A:  aermr06 - Dust Aerosol (0.9 - 20 um) Mixing Ratio </span>
+<span class="sd">    D: </span>
+<span class="sd">        tcwv - Total column water vapour</span>
+<span class="sd">        aod550 - Total Aerosol Optical Depth at 550nm    </span>
+<span class="sd">        duaod550 - Dust Aerosol Optical Depth at 550nm        </span>
+<span class="sd">        u10,v10</span>
+<span class="sd">    PM:</span>
+<span class="sd">        pm10 - Particulate matter d &lt; 10 um</span>
+<span class="sd">        pm2p5 - Particulate matter d &lt; 2.5 um</span>
+
+<span class="sd">~45 channels</span>
+<span class="sd">&quot;&quot;&quot;</span>
 </pre></div>
 
      </div>
@@ -14301,11 +14349,10 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">metadata_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">)[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
-<span class="n">metadata_all</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>ls /work/meteogroup/era5/2020/01
 </pre></div>
 
      </div>
@@ -14321,43 +14368,1775 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>B20200101_00  B20200131_06  P20200103_12  S20200102_18	Z20200102_00
+B20200101_03  B20200131_09  P20200103_15  S20200102_21	Z20200102_03
+B20200101_06  B20200131_12  P20200103_18  S20200103_00	Z20200102_06
+B20200101_09  B20200131_15  P20200103_21  S20200103_03	Z20200102_09
+B20200101_12  B20200131_18  P20200104_00  S20200103_06	Z20200102_12
+B20200101_15  B20200131_21  P20200104_03  S20200103_09	Z20200102_15
+B20200101_18  C20200101_00  P20200104_06  S20200103_12	Z20200102_18
+B20200101_21  C20200101_03  P20200104_09  S20200103_15	Z20200102_21
+B20200102_00  C20200101_06  P20200104_12  S20200103_18	Z20200103_00
+B20200102_03  C20200101_09  P20200104_15  S20200103_21	Z20200103_03
+B20200102_06  C20200101_12  P20200104_18  S20200104_00	Z20200103_06
+B20200102_09  C20200101_15  P20200104_21  S20200104_03	Z20200103_09
+B20200102_12  C20200101_18  P20200105_00  S20200104_06	Z20200103_12
+B20200102_15  C20200101_21  P20200105_03  S20200104_09	Z20200103_15
+B20200102_18  C20200102_00  P20200105_06  S20200104_12	Z20200103_18
+B20200102_21  C20200102_03  P20200105_09  S20200104_15	Z20200103_21
+B20200103_00  C20200102_06  P20200105_12  S20200104_18	Z20200104_00
+B20200103_03  C20200102_09  P20200105_15  S20200104_21	Z20200104_03
+B20200103_06  C20200102_12  P20200105_18  S20200105_00	Z20200104_06
+B20200103_09  C20200102_15  P20200105_21  S20200105_03	Z20200104_09
+B20200103_12  C20200102_18  P20200106_00  S20200105_06	Z20200104_12
+B20200103_15  C20200102_21  P20200106_03  S20200105_09	Z20200104_15
+B20200103_18  C20200103_00  P20200106_06  S20200105_12	Z20200104_18
+B20200103_21  C20200103_03  P20200106_09  S20200105_15	Z20200104_21
+B20200104_00  C20200103_06  P20200106_12  S20200105_18	Z20200105_00
+B20200104_03  C20200103_09  P20200106_15  S20200105_21	Z20200105_03
+B20200104_06  C20200103_12  P20200106_18  S20200106_00	Z20200105_06
+B20200104_09  C20200103_15  P20200106_21  S20200106_03	Z20200105_09
+B20200104_12  C20200103_18  P20200107_00  S20200106_06	Z20200105_12
+B20200104_15  C20200103_21  P20200107_03  S20200106_09	Z20200105_15
+B20200104_18  C20200104_00  P20200107_06  S20200106_12	Z20200105_18
+B20200104_21  C20200104_03  P20200107_09  S20200106_15	Z20200105_21
+B20200105_00  C20200104_06  P20200107_12  S20200106_18	Z20200106_00
+B20200105_03  C20200104_09  P20200107_15  S20200106_21	Z20200106_03
+B20200105_06  C20200104_12  P20200107_18  S20200107_00	Z20200106_06
+B20200105_09  C20200104_15  P20200107_21  S20200107_03	Z20200106_09
+B20200105_12  C20200104_18  P20200108_00  S20200107_06	Z20200106_12
+B20200105_15  C20200104_21  P20200108_03  S20200107_09	Z20200106_15
+B20200105_18  C20200105_00  P20200108_06  S20200107_12	Z20200106_18
+B20200105_21  C20200105_03  P20200108_09  S20200107_15	Z20200106_21
+B20200106_00  C20200105_06  P20200108_12  S20200107_18	Z20200107_00
+B20200106_03  C20200105_09  P20200108_15  S20200107_21	Z20200107_03
+B20200106_06  C20200105_12  P20200108_18  S20200108_00	Z20200107_06
+B20200106_09  C20200105_15  P20200108_21  S20200108_03	Z20200107_09
+B20200106_12  C20200105_18  P20200109_00  S20200108_06	Z20200107_12
+B20200106_15  C20200105_21  P20200109_03  S20200108_09	Z20200107_15
+B20200106_18  C20200106_00  P20200109_06  S20200108_12	Z20200107_18
+B20200106_21  C20200106_03  P20200109_09  S20200108_15	Z20200107_21
+B20200107_00  C20200106_06  P20200109_12  S20200108_18	Z20200108_00
+B20200107_03  C20200106_09  P20200109_15  S20200108_21	Z20200108_03
+B20200107_06  C20200106_12  P20200109_18  S20200109_00	Z20200108_06
+B20200107_09  C20200106_15  P20200109_21  S20200109_03	Z20200108_09
+B20200107_12  C20200106_18  P20200110_00  S20200109_06	Z20200108_12
+B20200107_15  C20200106_21  P20200110_03  S20200109_09	Z20200108_15
+B20200107_18  C20200107_00  P20200110_06  S20200109_12	Z20200108_18
+B20200107_21  C20200107_03  P20200110_09  S20200109_15	Z20200108_21
+B20200108_00  C20200107_06  P20200110_12  S20200109_18	Z20200109_00
+B20200108_03  C20200107_09  P20200110_15  S20200109_21	Z20200109_03
+B20200108_06  C20200107_12  P20200110_18  S20200110_00	Z20200109_06
+B20200108_09  C20200107_15  P20200110_21  S20200110_03	Z20200109_09
+B20200108_12  C20200107_18  P20200111_00  S20200110_06	Z20200109_12
+B20200108_15  C20200107_21  P20200111_03  S20200110_09	Z20200109_15
+B20200108_18  C20200108_00  P20200111_06  S20200110_12	Z20200109_18
+B20200108_21  C20200108_03  P20200111_09  S20200110_15	Z20200109_21
+B20200109_00  C20200108_06  P20200111_12  S20200110_18	Z20200110_00
+B20200109_03  C20200108_09  P20200111_15  S20200110_21	Z20200110_03
+B20200109_06  C20200108_12  P20200111_18  S20200111_00	Z20200110_06
+B20200109_09  C20200108_15  P20200111_21  S20200111_03	Z20200110_09
+B20200109_12  C20200108_18  P20200112_00  S20200111_06	Z20200110_12
+B20200109_15  C20200108_21  P20200112_03  S20200111_09	Z20200110_15
+B20200109_18  C20200109_00  P20200112_06  S20200111_12	Z20200110_18
+B20200109_21  C20200109_03  P20200112_09  S20200111_15	Z20200110_21
+B20200110_00  C20200109_06  P20200112_12  S20200111_18	Z20200111_00
+B20200110_03  C20200109_09  P20200112_15  S20200111_21	Z20200111_03
+B20200110_06  C20200109_12  P20200112_18  S20200112_00	Z20200111_06
+B20200110_09  C20200109_15  P20200112_21  S20200112_03	Z20200111_09
+B20200110_12  C20200109_18  P20200113_00  S20200112_06	Z20200111_12
+B20200110_15  C20200109_21  P20200113_03  S20200112_09	Z20200111_15
+B20200110_18  C20200110_00  P20200113_06  S20200112_12	Z20200111_18
+B20200110_21  C20200110_03  P20200113_09  S20200112_15	Z20200111_21
+B20200111_00  C20200110_06  P20200113_12  S20200112_18	Z20200112_00
+B20200111_03  C20200110_09  P20200113_15  S20200112_21	Z20200112_03
+B20200111_06  C20200110_12  P20200113_18  S20200113_00	Z20200112_06
+B20200111_09  C20200110_15  P20200113_21  S20200113_03	Z20200112_09
+B20200111_12  C20200110_18  P20200114_00  S20200113_06	Z20200112_12
+B20200111_15  C20200110_21  P20200114_03  S20200113_09	Z20200112_15
+B20200111_18  C20200111_00  P20200114_06  S20200113_12	Z20200112_18
+B20200111_21  C20200111_03  P20200114_09  S20200113_15	Z20200112_21
+B20200112_00  C20200111_06  P20200114_12  S20200113_18	Z20200113_00
+B20200112_03  C20200111_09  P20200114_15  S20200113_21	Z20200113_03
+B20200112_06  C20200111_12  P20200114_18  S20200114_00	Z20200113_06
+B20200112_09  C20200111_15  P20200114_21  S20200114_03	Z20200113_09
+B20200112_12  C20200111_18  P20200115_00  S20200114_06	Z20200113_12
+B20200112_15  C20200111_21  P20200115_03  S20200114_09	Z20200113_15
+B20200112_18  C20200112_00  P20200115_06  S20200114_12	Z20200113_18
+B20200112_21  C20200112_03  P20200115_09  S20200114_15	Z20200113_21
+B20200113_00  C20200112_06  P20200115_12  S20200114_18	Z20200114_00
+B20200113_03  C20200112_09  P20200115_15  S20200114_21	Z20200114_03
+B20200113_06  C20200112_12  P20200115_18  S20200115_00	Z20200114_06
+B20200113_09  C20200112_15  P20200115_21  S20200115_03	Z20200114_09
+B20200113_12  C20200112_18  P20200116_00  S20200115_06	Z20200114_12
+B20200113_15  C20200112_21  P20200116_03  S20200115_09	Z20200114_15
+B20200113_18  C20200113_00  P20200116_06  S20200115_12	Z20200114_18
+B20200113_21  C20200113_03  P20200116_09  S20200115_15	Z20200114_21
+B20200114_00  C20200113_06  P20200116_12  S20200115_18	Z20200115_00
+B20200114_03  C20200113_09  P20200116_15  S20200115_21	Z20200115_03
+B20200114_06  C20200113_12  P20200116_18  S20200116_00	Z20200115_06
+B20200114_09  C20200113_15  P20200116_21  S20200116_03	Z20200115_09
+B20200114_12  C20200113_18  P20200117_00  S20200116_06	Z20200115_12
+B20200114_15  C20200113_21  P20200117_03  S20200116_09	Z20200115_15
+B20200114_18  C20200114_00  P20200117_06  S20200116_12	Z20200115_18
+B20200114_21  C20200114_03  P20200117_09  S20200116_15	Z20200115_21
+B20200115_00  C20200114_06  P20200117_12  S20200116_18	Z20200116_00
+B20200115_03  C20200114_09  P20200117_15  S20200116_21	Z20200116_03
+B20200115_06  C20200114_12  P20200117_18  S20200117_00	Z20200116_06
+B20200115_09  C20200114_15  P20200117_21  S20200117_03	Z20200116_09
+B20200115_12  C20200114_18  P20200118_00  S20200117_06	Z20200116_12
+B20200115_15  C20200114_21  P20200118_03  S20200117_09	Z20200116_15
+B20200115_18  C20200115_00  P20200118_06  S20200117_12	Z20200116_18
+B20200115_21  C20200115_03  P20200118_09  S20200117_15	Z20200116_21
+B20200116_00  C20200115_06  P20200118_12  S20200117_18	Z20200117_00
+B20200116_03  C20200115_09  P20200118_15  S20200117_21	Z20200117_03
+B20200116_06  C20200115_12  P20200118_18  S20200118_00	Z20200117_06
+B20200116_09  C20200115_15  P20200118_21  S20200118_03	Z20200117_09
+B20200116_12  C20200115_18  P20200119_00  S20200118_06	Z20200117_12
+B20200116_15  C20200115_21  P20200119_03  S20200118_09	Z20200117_15
+B20200116_18  C20200116_00  P20200119_06  S20200118_12	Z20200117_18
+B20200116_21  C20200116_03  P20200119_09  S20200118_15	Z20200117_21
+B20200117_00  C20200116_06  P20200119_12  S20200118_18	Z20200118_00
+B20200117_03  C20200116_09  P20200119_15  S20200118_21	Z20200118_03
+B20200117_06  C20200116_12  P20200119_18  S20200119_00	Z20200118_06
+B20200117_09  C20200116_15  P20200119_21  S20200119_03	Z20200118_09
+B20200117_12  C20200116_18  P20200120_00  S20200119_06	Z20200118_12
+B20200117_15  C20200116_21  P20200120_03  S20200119_09	Z20200118_15
+B20200117_18  C20200117_00  P20200120_06  S20200119_12	Z20200118_18
+B20200117_21  C20200117_03  P20200120_09  S20200119_15	Z20200118_21
+B20200118_00  C20200117_06  P20200120_12  S20200119_18	Z20200119_00
+B20200118_03  C20200117_09  P20200120_15  S20200119_21	Z20200119_03
+B20200118_06  C20200117_12  P20200120_18  S20200120_00	Z20200119_06
+B20200118_09  C20200117_15  P20200120_21  S20200120_03	Z20200119_09
+B20200118_12  C20200117_18  P20200121_00  S20200120_06	Z20200119_12
+B20200118_15  C20200117_21  P20200121_03  S20200120_09	Z20200119_15
+B20200118_18  C20200122_00  P20200121_06  S20200120_12	Z20200119_18
+B20200118_21  C20200122_03  P20200121_09  S20200120_15	Z20200119_21
+B20200119_00  C20200122_06  P20200121_12  S20200120_18	Z20200120_00
+B20200119_03  C20200122_09  P20200121_15  S20200120_21	Z20200120_03
+B20200119_06  C20200122_12  P20200121_18  S20200121_00	Z20200120_06
+B20200119_09  C20200122_15  P20200121_21  S20200121_03	Z20200120_09
+B20200119_12  C20200122_18  P20200122_00  S20200121_06	Z20200120_12
+B20200119_15  C20200122_21  P20200122_03  S20200121_09	Z20200120_15
+B20200119_18  C20200123_00  P20200122_06  S20200121_12	Z20200120_18
+B20200119_21  C20200123_03  P20200122_09  S20200121_15	Z20200120_21
+B20200120_00  C20200123_06  P20200122_12  S20200121_18	Z20200121_00
+B20200120_03  C20200123_09  P20200122_15  S20200121_21	Z20200121_03
+B20200120_06  C20200123_12  P20200122_18  S20200122_00	Z20200121_06
+B20200120_09  C20200123_15  P20200122_21  S20200122_03	Z20200121_09
+B20200120_12  C20200123_18  P20200123_00  S20200122_06	Z20200121_12
+B20200120_15  C20200123_21  P20200123_03  S20200122_09	Z20200121_15
+B20200120_18  C20200124_00  P20200123_06  S20200122_12	Z20200121_18
+B20200120_21  C20200124_03  P20200123_09  S20200122_15	Z20200121_21
+B20200121_00  C20200124_06  P20200123_12  S20200122_18	Z20200122_00
+B20200121_03  C20200124_09  P20200123_15  S20200122_21	Z20200122_03
+B20200121_06  C20200124_12  P20200123_18  S20200123_00	Z20200122_06
+B20200121_09  C20200124_15  P20200123_21  S20200123_03	Z20200122_09
+B20200121_12  C20200124_18  P20200124_00  S20200123_06	Z20200122_12
+B20200121_15  C20200124_21  P20200124_03  S20200123_09	Z20200122_15
+B20200121_18  C20200125_00  P20200124_06  S20200123_12	Z20200122_18
+B20200121_21  C20200125_03  P20200124_09  S20200123_15	Z20200122_21
+B20200122_00  C20200125_06  P20200124_12  S20200123_18	Z20200123_00
+B20200122_03  C20200125_09  P20200124_15  S20200123_21	Z20200123_03
+B20200122_06  C20200125_12  P20200124_18  S20200124_00	Z20200123_06
+B20200122_09  C20200125_15  P20200124_21  S20200124_03	Z20200123_09
+B20200122_12  C20200125_18  P20200125_00  S20200124_06	Z20200123_12
+B20200122_15  C20200125_21  P20200125_03  S20200124_09	Z20200123_15
+B20200122_18  C20200126_00  P20200125_06  S20200124_12	Z20200123_18
+B20200122_21  C20200126_03  P20200125_09  S20200124_15	Z20200123_21
+B20200123_00  C20200126_06  P20200125_12  S20200124_18	Z20200124_00
+B20200123_03  C20200126_09  P20200125_15  S20200124_21	Z20200124_03
+B20200123_06  C20200126_12  P20200125_18  S20200125_00	Z20200124_06
+B20200123_09  C20200126_15  P20200125_21  S20200125_03	Z20200124_09
+B20200123_12  C20200126_18  P20200126_00  S20200125_06	Z20200124_12
+B20200123_15  C20200126_21  P20200126_03  S20200125_09	Z20200124_15
+B20200123_18  C20200127_00  P20200126_06  S20200125_12	Z20200124_18
+B20200123_21  C20200127_03  P20200126_09  S20200125_15	Z20200124_21
+B20200124_00  C20200127_06  P20200126_12  S20200125_18	Z20200125_00
+B20200124_03  C20200127_09  P20200126_15  S20200125_21	Z20200125_03
+B20200124_06  C20200127_12  P20200126_18  S20200126_00	Z20200125_06
+B20200124_09  C20200127_15  P20200126_21  S20200126_03	Z20200125_09
+B20200124_12  C20200127_18  P20200127_00  S20200126_06	Z20200125_12
+B20200124_15  C20200127_21  P20200127_03  S20200126_09	Z20200125_15
+B20200124_18  C20200128_00  P20200127_06  S20200126_12	Z20200125_18
+B20200124_21  C20200128_03  P20200127_09  S20200126_15	Z20200125_21
+B20200125_00  C20200128_06  P20200127_12  S20200126_18	Z20200126_00
+B20200125_03  C20200128_09  P20200127_15  S20200126_21	Z20200126_03
+B20200125_06  C20200128_12  P20200127_18  S20200127_00	Z20200126_06
+B20200125_09  C20200128_15  P20200127_21  S20200127_03	Z20200126_09
+B20200125_12  C20200128_18  P20200128_00  S20200127_06	Z20200126_12
+B20200125_15  C20200128_21  P20200128_03  S20200127_09	Z20200126_15
+B20200125_18  C20200129_00  P20200128_06  S20200127_12	Z20200126_18
+B20200125_21  C20200129_03  P20200128_09  S20200127_15	Z20200126_21
+B20200126_00  C20200129_06  P20200128_12  S20200127_18	Z20200127_00
+B20200126_03  C20200129_09  P20200128_15  S20200127_21	Z20200127_03
+B20200126_06  C20200129_12  P20200128_18  S20200128_00	Z20200127_06
+B20200126_09  C20200129_15  P20200128_21  S20200128_03	Z20200127_09
+B20200126_12  C20200129_18  P20200129_00  S20200128_06	Z20200127_12
+B20200126_15  C20200129_21  P20200129_03  S20200128_09	Z20200127_15
+B20200126_18  C20200130_00  P20200129_06  S20200128_12	Z20200127_18
+B20200126_21  C20200130_03  P20200129_09  S20200128_15	Z20200127_21
+B20200127_00  C20200130_06  P20200129_12  S20200128_18	Z20200128_00
+B20200127_03  C20200130_09  P20200129_15  S20200128_21	Z20200128_03
+B20200127_06  C20200130_12  P20200129_18  S20200129_00	Z20200128_06
+B20200127_09  C20200130_15  P20200129_21  S20200129_03	Z20200128_09
+B20200127_12  C20200130_18  P20200130_00  S20200129_06	Z20200128_12
+B20200127_15  C20200130_21  P20200130_03  S20200129_09	Z20200128_15
+B20200127_18  C20200131_00  P20200130_06  S20200129_12	Z20200128_18
+B20200127_21  C20200131_03  P20200130_09  S20200129_15	Z20200128_21
+B20200128_00  C20200131_06  P20200130_12  S20200129_18	Z20200129_00
+B20200128_03  C20200131_09  P20200130_15  S20200129_21	Z20200129_03
+B20200128_06  C20200131_12  P20200130_18  S20200130_00	Z20200129_06
+B20200128_09  C20200131_15  P20200130_21  S20200130_03	Z20200129_09
+B20200128_12  C20200131_18  P20200131_00  S20200130_06	Z20200129_12
+B20200128_15  C20200131_21  P20200131_03  S20200130_09	Z20200129_15
+B20200128_18  P20200101_00  P20200131_06  S20200130_12	Z20200129_18
+B20200128_21  P20200101_03  P20200131_09  S20200130_15	Z20200129_21
+B20200129_00  P20200101_06  P20200131_12  S20200130_18	Z20200130_00
+B20200129_03  P20200101_09  P20200131_15  S20200130_21	Z20200130_03
+B20200129_06  P20200101_12  P20200131_18  S20200131_00	Z20200130_06
+B20200129_09  P20200101_15  P20200131_21  S20200131_03	Z20200130_09
+B20200129_12  P20200101_18  S20200101_00  S20200131_06	Z20200130_12
+B20200129_15  P20200101_21  S20200101_03  S20200131_09	Z20200130_15
+B20200129_18  P20200102_00  S20200101_06  S20200131_12	Z20200130_18
+B20200129_21  P20200102_03  S20200101_09  S20200131_15	Z20200130_21
+B20200130_00  P20200102_06  S20200101_12  S20200131_18	Z20200131_00
+B20200130_03  P20200102_09  S20200101_15  S20200131_21	Z20200131_03
+B20200130_06  P20200102_12  S20200101_18  Z20200101_00	Z20200131_06
+B20200130_09  P20200102_15  S20200101_21  Z20200101_03	Z20200131_09
+B20200130_12  P20200102_18  S20200102_00  Z20200101_06	Z20200131_12
+B20200130_15  P20200102_21  S20200102_03  Z20200101_09	Z20200131_15
+B20200130_18  P20200103_00  S20200102_06  Z20200101_12	Z20200131_18
+B20200130_21  P20200103_03  S20200102_09  Z20200101_15	Z20200131_21
+B20200131_00  P20200103_06  S20200102_12  Z20200101_18
+B20200131_03  P20200103_09  S20200102_15  Z20200101_21
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[122]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/era5/2020/01/C20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[122]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{0: {&#39;short&#39;: &#39;SLP&#39;, &#39;long&#39;: &#39;Mean Sea-Level Pressure&#39;},
- 1: {&#39;short&#39;: &#39;Z@850&#39;, &#39;long&#39;: &#39;Geopotential Height at P=850 mBar [m]&#39;},
- 2: {&#39;short&#39;: &#39;Z@500&#39;, &#39;long&#39;: &#39;Geopotential Height at P=500 mBar [m]&#39;},
- 3: {&#39;short&#39;: &#39;Z@250&#39;, &#39;long&#39;: &#39;Geopotential Height at P=250 mBar [m]&#39;},
- 4: {&#39;short&#39;: &#39;U@850&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=850 mBar [m/s]&#39;},
- 5: {&#39;short&#39;: &#39;U@500&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=500 mBar [m/s]&#39;},
- 6: {&#39;short&#39;: &#39;U@250&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=250 mBar [m/s]&#39;},
- 7: {&#39;short&#39;: &#39;V@850&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=850 mBar [m/s]&#39;},
- 8: {&#39;short&#39;: &#39;V@500&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=500 mBar [m/s]&#39;},
- 9: {&#39;short&#39;: &#39;V@250&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=250 mBar [m/s]&#39;},
- 10: {&#39;short&#39;: &#39;PV@325&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=325K [pvu]&#39;},
- 11: {&#39;short&#39;: &#39;PV@330&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=330K [pvu]&#39;},
- 12: {&#39;short&#39;: &#39;PV@335&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=335K [pvu]&#39;},
- 13: {&#39;short&#39;: &#39;PV@340&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=340K [pvu]&#39;},
- 14: {&#39;short&#39;: &#39;aod550&#39;, &#39;long&#39;: &#39;Total Aerosol Optical Depth at 550nm&#39;},
- 15: {&#39;short&#39;: &#39;duaod550&#39;, &#39;long&#39;: &#39;Dust Aerosol Optical Depth at 550nm&#39;},
- 16: {&#39;short&#39;: &#39;aermssdul&#39;,
-  &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (9 - 20 um)&#39;},
- 17: {&#39;short&#39;: &#39;aermssdum&#39;,
-  &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (0.55 - 9 um)&#39;},
- 18: {&#39;short&#39;: &#39;u10&#39;, &#39;long&#39;: &#39;10 Metre U Wind Component [m/s]&#39;},
- 19: {&#39;short&#39;: &#39;v10&#39;, &#39;long&#39;: &#39;10 Metre V Wind Component [m/s]&#39;},
- &#39;lons&#39;: &#39;-44:50&#39;,
- &#39;lats&#39;: &#39;20:60&#39;,
- &#39;general&#39;: &#39;frequency: 3h, all CAMS (cols [14:]) are linearly interpolated between 6h&#39;}</pre>
+<pre>{&#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lon(lon)
+     standard_name: longitude
+     long_name: longitude
+     units: degrees_east
+     axis: X
+ unlimited dimensions: 
+ current shape = (720,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lat(lat)
+     standard_name: latitude
+     long_name: latitude
+     units: degrees_north
+     axis: Y
+ unlimited dimensions: 
+ current shape = (361,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev(lev)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (131,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyai&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyai(nhyi)
+     long_name: hybrid A coefficient at layer interfaces
+     units: Pa
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybi&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybi(nhyi)
+     long_name: hybrid B coefficient at layer interfaces
+     units: 1
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyam&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyam(nhym)
+     long_name: hybrid A coefficient at layer midpoints
+     units: Pa
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybm&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybm(nhym)
+     long_name: hybrid B coefficient at layer midpoints
+     units: 1
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 time(time)
+     standard_name: time
+     units: hours since 2020-1-1 00:00:00
+     calendar: proleptic_gregorian
+     axis: T
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;O3&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 O3(time, lev, lat, lon)
+     long_name: Ozone mass mixing ratio
+     units: kg kg**-1
+     param: 1.128.0
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;CLWC&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 CLWC(time, lev, lat, lon)
+     long_name: Specific cloud liquid water content
+     units: kg kg**-1
+     param: 83.1.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;CIWC&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 CIWC(time, lev, lat, lon)
+     long_name: Specific cloud ice water content
+     units: kg kg**-1
+     param: 84.1.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;CRWC&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 CRWC(time, lev, lat, lon)
+     long_name: Specific rain water content
+     units: kg kg**-1
+     param: 85.1.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;CSWC&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 CSWC(time, lev, lat, lon)
+     long_name: Specific snow water content
+     units: kg kg**-1
+     param: 86.1.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[123]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">values</span> <span class="o">=</span> <span class="n">sample_file</span><span class="p">[</span><span class="s2">&quot;lev&quot;</span><span class="p">][:]</span><span class="o">.</span><span class="n">data</span>
+<span class="nb">print</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">]&quot;</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">value</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">values</span><span class="p">)])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>[&#39;7.0 [0]&#39;, &#39;8.0 [1]&#39;, &#39;9.0 [2]&#39;, &#39;10.0 [3]&#39;, &#39;11.0 [4]&#39;, &#39;12.0 [5]&#39;, &#39;13.0 [6]&#39;, &#39;14.0 [7]&#39;, &#39;15.0 [8]&#39;, &#39;16.0 [9]&#39;, &#39;17.0 [10]&#39;, &#39;18.0 [11]&#39;, &#39;19.0 [12]&#39;, &#39;20.0 [13]&#39;, &#39;21.0 [14]&#39;, &#39;22.0 [15]&#39;, &#39;23.0 [16]&#39;, &#39;24.0 [17]&#39;, &#39;25.0 [18]&#39;, &#39;26.0 [19]&#39;, &#39;27.0 [20]&#39;, &#39;28.0 [21]&#39;, &#39;29.0 [22]&#39;, &#39;30.0 [23]&#39;, &#39;31.0 [24]&#39;, &#39;32.0 [25]&#39;, &#39;33.0 [26]&#39;, &#39;34.0 [27]&#39;, &#39;35.0 [28]&#39;, &#39;36.0 [29]&#39;, &#39;37.0 [30]&#39;, &#39;38.0 [31]&#39;, &#39;39.0 [32]&#39;, &#39;40.0 [33]&#39;, &#39;41.0 [34]&#39;, &#39;42.0 [35]&#39;, &#39;43.0 [36]&#39;, &#39;44.0 [37]&#39;, &#39;45.0 [38]&#39;, &#39;46.0 [39]&#39;, &#39;47.0 [40]&#39;, &#39;48.0 [41]&#39;, &#39;49.0 [42]&#39;, &#39;50.0 [43]&#39;, &#39;51.0 [44]&#39;, &#39;52.0 [45]&#39;, &#39;53.0 [46]&#39;, &#39;54.0 [47]&#39;, &#39;55.0 [48]&#39;, &#39;56.0 [49]&#39;, &#39;57.0 [50]&#39;, &#39;58.0 [51]&#39;, &#39;59.0 [52]&#39;, &#39;60.0 [53]&#39;, &#39;61.0 [54]&#39;, &#39;62.0 [55]&#39;, &#39;63.0 [56]&#39;, &#39;64.0 [57]&#39;, &#39;65.0 [58]&#39;, &#39;66.0 [59]&#39;, &#39;67.0 [60]&#39;, &#39;68.0 [61]&#39;, &#39;69.0 [62]&#39;, &#39;70.0 [63]&#39;, &#39;71.0 [64]&#39;, &#39;72.0 [65]&#39;, &#39;73.0 [66]&#39;, &#39;74.0 [67]&#39;, &#39;75.0 [68]&#39;, &#39;76.0 [69]&#39;, &#39;77.0 [70]&#39;, &#39;78.0 [71]&#39;, &#39;79.0 [72]&#39;, &#39;80.0 [73]&#39;, &#39;81.0 [74]&#39;, &#39;82.0 [75]&#39;, &#39;83.0 [76]&#39;, &#39;84.0 [77]&#39;, &#39;85.0 [78]&#39;, &#39;86.0 [79]&#39;, &#39;87.0 [80]&#39;, &#39;88.0 [81]&#39;, &#39;89.0 [82]&#39;, &#39;90.0 [83]&#39;, &#39;91.0 [84]&#39;, &#39;92.0 [85]&#39;, &#39;93.0 [86]&#39;, &#39;94.0 [87]&#39;, &#39;95.0 [88]&#39;, &#39;96.0 [89]&#39;, &#39;97.0 [90]&#39;, &#39;98.0 [91]&#39;, &#39;99.0 [92]&#39;, &#39;100.0 [93]&#39;, &#39;101.0 [94]&#39;, &#39;102.0 [95]&#39;, &#39;103.0 [96]&#39;, &#39;104.0 [97]&#39;, &#39;105.0 [98]&#39;, &#39;106.0 [99]&#39;, &#39;107.0 [100]&#39;, &#39;108.0 [101]&#39;, &#39;109.0 [102]&#39;, &#39;110.0 [103]&#39;, &#39;111.0 [104]&#39;, &#39;112.0 [105]&#39;, &#39;113.0 [106]&#39;, &#39;114.0 [107]&#39;, &#39;115.0 [108]&#39;, &#39;116.0 [109]&#39;, &#39;117.0 [110]&#39;, &#39;118.0 [111]&#39;, &#39;119.0 [112]&#39;, &#39;120.0 [113]&#39;, &#39;121.0 [114]&#39;, &#39;122.0 [115]&#39;, &#39;123.0 [116]&#39;, &#39;124.0 [117]&#39;, &#39;125.0 [118]&#39;, &#39;126.0 [119]&#39;, &#39;127.0 [120]&#39;, &#39;128.0 [121]&#39;, &#39;129.0 [122]&#39;, &#39;130.0 [123]&#39;, &#39;131.0 [124]&#39;, &#39;132.0 [125]&#39;, &#39;133.0 [126]&#39;, &#39;134.0 [127]&#39;, &#39;135.0 [128]&#39;, &#39;136.0 [129]&#39;, &#39;137.0 [130]&#39;]
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[30]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/era5/2020/01/S20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[30]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lon(lon)
+     standard_name: longitude
+     long_name: longitude
+     units: degrees_east
+     axis: X
+ unlimited dimensions: 
+ current shape = (720,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lat(lat)
+     standard_name: latitude
+     long_name: latitude
+     units: degrees_north
+     axis: Y
+ unlimited dimensions: 
+ current shape = (361,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev(lev)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (131,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev_2&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev_2(lev_2)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 time(time)
+     standard_name: time
+     units: hours since 2020-1-1 00:00:00
+     calendar: proleptic_gregorian
+     axis: T
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyai&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyai(nhyi)
+     long_name: hybrid A coefficient at layer interfaces
+     units: Pa
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybi&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybi(nhyi)
+     long_name: hybrid B coefficient at layer interfaces
+     units: 1
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyam&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyam(nhym)
+     long_name: hybrid A coefficient at layer midpoints
+     units: Pa
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybm&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybm(nhym)
+     long_name: hybrid B coefficient at layer midpoints
+     units: 1
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;P&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 P(time, lev, lat, lon)
+     long_name: Pressure
+     units: hPa
+     _FillValue: -999.99
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on,
+ &#39;TH&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 TH(time, lev, lat, lon)
+     long_name: Potential temperature
+     units: K
+     _FillValue: -999.99
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on,
+ &#39;PV&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 PV(time, lev, lat, lon)
+     long_name: Potential vorticity
+     units: pvu
+     _FillValue: -999.99
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on,
+ &#39;RH&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 RH(time, lev, lat, lon)
+     long_name: Relative humidity
+     units: %
+     _FillValue: -999.99
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on,
+ &#39;THE&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 THE(time, lev, lat, lon)
+     long_name: Equivalent potential temperature
+     units: K
+     _FillValue: -999.99
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[31]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/era5/2020/01/P20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[31]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lon(lon)
+     standard_name: longitude
+     long_name: longitude
+     units: degrees_east
+     axis: X
+ unlimited dimensions: 
+ current shape = (720,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lat(lat)
+     standard_name: latitude
+     long_name: latitude
+     units: degrees_north
+     axis: Y
+ unlimited dimensions: 
+ current shape = (361,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev(lev)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (131,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyai&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyai(nhyi)
+     long_name: hybrid A coefficient at layer interfaces
+     units: Pa
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybi&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybi(nhyi)
+     long_name: hybrid B coefficient at layer interfaces
+     units: 1
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyam&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyam(nhym)
+     long_name: hybrid A coefficient at layer midpoints
+     units: Pa
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybm&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybm(nhym)
+     long_name: hybrid B coefficient at layer midpoints
+     units: 1
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev_2&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev_2(lev_2)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 time(time)
+     standard_name: time
+     units: hours since 2020-1-1 00:00:00
+     calendar: proleptic_gregorian
+     axis: T
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;OMEGA&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 OMEGA(time, lev, lat, lon)
+     standard_name: lagrangian_tendency_of_air_pressure
+     long_name: Vertical velocity
+     units: Pa s**-1
+     param: 8.2.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;T&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 T(time, lev, lat, lon)
+     standard_name: air_temperature
+     long_name: Temperature
+     units: K
+     param: 0.0.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;Q&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 Q(time, lev, lat, lon)
+     standard_name: specific_humidity
+     long_name: Specific humidity
+     units: kg kg**-1
+     param: 0.1.0
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;U&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 U(time, lev, lat, lon)
+     standard_name: eastward_wind
+     long_name: U component of wind
+     units: m s**-1
+     param: 2.128.0
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;V&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 V(time, lev, lat, lon)
+     standard_name: northward_wind
+     long_name: V component of wind
+     units: m s**-1
+     param: 3.128.0
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;PS&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 PS(time, lev_2, lat, lon)
+     long_name: Surface Pressure
+     units: hPa
+     param: 25.3.0
+ unlimited dimensions: time
+ current shape = (1, 1, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;SLP&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 SLP(time, lat, lon)
+     long_name: Mean sea-level pressure
+     units: hPa
+     code: 151
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[32]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/era5/2020/01/Z20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[32]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lon(lon)
+     standard_name: longitude
+     long_name: longitude
+     units: degrees_east
+     axis: X
+ unlimited dimensions: 
+ current shape = (720,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lat(lat)
+     standard_name: latitude
+     long_name: latitude
+     units: degrees_north
+     axis: Y
+ unlimited dimensions: 
+ current shape = (361,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev(lev)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (131,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyai&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyai(nhyi)
+     long_name: hybrid A coefficient at layer interfaces
+     units: Pa
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybi&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybi(nhyi)
+     long_name: hybrid B coefficient at layer interfaces
+     units: 1
+ unlimited dimensions: 
+ current shape = (138,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hyam&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hyam(nhym)
+     long_name: hybrid A coefficient at layer midpoints
+     units: Pa
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;hybm&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 hybm(nhym)
+     long_name: hybrid B coefficient at layer midpoints
+     units: 1
+ unlimited dimensions: 
+ current shape = (137,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev_2&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev_2(lev_2)
+     standard_name: hybrid_sigma_pressure
+     long_name: hybrid level at layer midpoints
+     formula: hyam hybm (mlev=hyam+hybm*aps)
+     formula_terms: ap: hyam b: hybm ps: aps
+     units: level
+     positive: down
+ unlimited dimensions: 
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 time(time)
+     standard_name: time
+     axis: T
+     units: hours since 2020-1-1 00:00:00
+     calendar: proleptic_gregorian
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;Z&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 Z(time, lev, lat, lon)
+     long_name: Geopotential Height
+     standard_name: geopotential geight
+     units: m
+ unlimited dimensions: time
+ current shape = (1, 131, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[36]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/era5/plev/2020/01/P20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[36]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 time(time)
+     standard_name: time
+     long_name: time
+     axis: T
+     calendar: standard
+     units: hours since hours since 2020-1-1 00:00:00
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 lat(lat)
+     units: degrees_north
+     axis: Y
+     long_name: latitude
+     standard_name: latitude
+ unlimited dimensions: 
+ current shape = (361,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 lon(lon)
+     units: degrees_east
+     axis: X
+     long_name: longitude
+     standard_name: longitude
+ unlimited dimensions: 
+ current shape = (720,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 lev(lev)
+     units: mb
+     axis: Z
+ unlimited dimensions: 
+ current shape = (42,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;U&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 U(time, lev, lat, lon)
+     long_name: U component of wind
+     standard_name: eastward_wind
+     units: m s**-1
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;V&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 V(time, lev, lat, lon)
+     long_name: V component of wind
+     standard_name: northward_wind
+     units: m s**-1
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;OMEGA&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 OMEGA(time, lev, lat, lon)
+     long_name: Vertical velocity
+     standard_name: lagrangian_tendency_of_air_pressure
+     units: Pa s**-1
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;RH&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 RH(time, lev, lat, lon)
+     long_name: Relative humidity
+     standard_name: Relative humidity
+     units: %
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;Q&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 Q(time, lev, lat, lon)
+     long_name: Specific humidity
+     standard_name: specific_humidity
+     units: kg kg**-1
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;T&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 T(time, lev, lat, lon)
+     long_name: Temperature
+     standard_name: air_temperature
+     units: K
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;PV&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 PV(time, lev, lat, lon)
+     long_name: Potential vorticity
+     standard_name: Potential vorticity
+     units: pvu
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;Z&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 Z(time, lev, lat, lon)
+     long_name: Geopotential Height
+     standard_name: geopotential geight
+     units: m
+ unlimited dimensions: time
+ current shape = (1, 42, 361, 720)
+ filling on, default _FillValue of 9.969209968386869e+36 used}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[117]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>ls /work/meteogroup/erainterim/plev/2018/01
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>P20180101_00  P20180107_06  P20180113_12  P20180119_18	P20180126_00
+P20180101_06  P20180107_12  P20180113_18  P20180120_00	P20180126_06
+P20180101_12  P20180107_18  P20180114_00  P20180120_06	P20180126_12
+P20180101_18  P20180108_00  P20180114_06  P20180120_12	P20180126_18
+P20180102_00  P20180108_06  P20180114_12  P20180120_18	P20180127_00
+P20180102_06  P20180108_12  P20180114_18  P20180121_00	P20180127_06
+P20180102_12  P20180108_18  P20180115_00  P20180121_06	P20180127_12
+P20180102_18  P20180109_00  P20180115_06  P20180121_12	P20180127_18
+P20180103_00  P20180109_06  P20180115_12  P20180121_18	P20180128_00
+P20180103_06  P20180109_12  P20180115_18  P20180122_00	P20180128_06
+P20180103_12  P20180109_18  P20180116_00  P20180122_06	P20180128_12
+P20180103_18  P20180110_00  P20180116_06  P20180122_12	P20180128_18
+P20180104_00  P20180110_06  P20180116_12  P20180122_18	P20180129_00
+P20180104_06  P20180110_12  P20180116_18  P20180123_00	P20180129_06
+P20180104_12  P20180110_18  P20180117_00  P20180123_06	P20180129_12
+P20180104_18  P20180111_00  P20180117_06  P20180123_12	P20180129_18
+P20180105_00  P20180111_06  P20180117_12  P20180123_18	P20180130_00
+P20180105_06  P20180111_12  P20180117_18  P20180124_00	P20180130_06
+P20180105_12  P20180111_18  P20180118_00  P20180124_06	P20180130_12
+P20180105_18  P20180112_00  P20180118_06  P20180124_12	P20180130_18
+P20180106_00  P20180112_06  P20180118_12  P20180124_18	P20180131_00
+P20180106_06  P20180112_12  P20180118_18  P20180125_00	P20180131_06
+P20180106_12  P20180112_18  P20180119_00  P20180125_06	P20180131_12
+P20180106_18  P20180113_00  P20180119_06  P20180125_12	P20180131_18
+P20180107_00  P20180113_06  P20180119_12  P20180125_18
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[116]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/erainterim/plev/2018/01/P20180101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[116]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;lon&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lon(lon)
+     standard_name: longitude
+     long_name: longitude
+     units: degrees_east
+     axis: X
+ unlimited dimensions: 
+ current shape = (360,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lat&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lat(lat)
+     standard_name: latitude
+     long_name: latitude
+     units: degrees_north
+     axis: Y
+ unlimited dimensions: 
+ current shape = (181,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;lev&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 lev(lev)
+     standard_name: air_pressure
+     long_name: pressure
+     units: Pa
+     positive: up
+     axis: Z
+ unlimited dimensions: 
+ current shape = (37,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float64 time(time)
+     standard_name: time
+     units: hours since 2018-1-1 00:00:00
+     calendar: proleptic_gregorian
+     axis: T
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;PV&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 PV(time, lev, lat, lon)
+     long_name: Potential vorticity
+     units: K m**2 kg**-1 s**-1
+     code: 60
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;Z&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 Z(time, lev, lat, lon)
+     long_name: Geopotential
+     units: m**2 s**-2
+     code: 129
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;T&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 T(time, lev, lat, lon)
+     long_name: Temperature
+     units: K
+     code: 130
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;Q&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 Q(time, lev, lat, lon)
+     long_name: Specific humidity
+     units: kg kg**-1
+     code: 133
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;W&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 W(time, lev, lat, lon)
+     long_name: Vertical velocity
+     units: Pa s**-1
+     code: 135
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;RH&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 RH(time, lev, lat, lon)
+     long_name: Relative humidity
+     units: %
+     code: 157
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;U&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 U(time, lev, lat, lon)
+     long_name: U velocity
+     units: m s**-1
+     code: 131
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;V&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 V(time, lev, lat, lon)
+     long_name: V velocity
+     units: m s**-1
+     code: 132
+     table: 128
+ unlimited dimensions: time
+ current shape = (1, 37, 181, 360)
+ filling on, default _FillValue of 9.969209968386869e+36 used}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[37]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>ls /work/meteogroup/cams/2020/01
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
+
+
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
+<pre>A20200101_00  A20200119_18  D20200107_12  D20200126_06	 PM20200114_00
+A20200101_06  A20200120_00  D20200107_18  D20200126_12	 PM20200114_06
+A20200101_12  A20200120_06  D20200108_00  D20200126_18	 PM20200114_12
+A20200101_18  A20200120_12  D20200108_06  D20200127_00	 PM20200114_18
+A20200102_00  A20200120_18  D20200108_12  D20200127_06	 PM20200115_00
+A20200102_06  A20200121_00  D20200108_18  D20200127_12	 PM20200115_06
+A20200102_12  A20200121_06  D20200109_00  D20200127_18	 PM20200115_12
+A20200102_18  A20200121_12  D20200109_06  D20200128_00	 PM20200115_18
+A20200103_00  A20200121_18  D20200109_12  D20200128_06	 PM20200116_00
+A20200103_06  A20200122_00  D20200109_18  D20200128_12	 PM20200116_06
+A20200103_12  A20200122_06  D20200110_00  D20200128_18	 PM20200116_12
+A20200103_18  A20200122_12  D20200110_06  D20200129_00	 PM20200116_18
+A20200104_00  A20200122_18  D20200110_12  D20200129_06	 PM20200117_00
+A20200104_06  A20200123_00  D20200110_18  D20200129_12	 PM20200117_06
+A20200104_12  A20200123_06  D20200111_00  D20200129_18	 PM20200117_12
+A20200104_18  A20200123_12  D20200111_06  D20200130_00	 PM20200117_18
+A20200105_00  A20200123_18  D20200111_12  D20200130_06	 PM20200118_00
+A20200105_06  A20200124_00  D20200111_18  D20200130_12	 PM20200118_06
+A20200105_12  A20200124_06  D20200112_00  D20200130_18	 PM20200118_12
+A20200105_18  A20200124_12  D20200112_06  D20200131_00	 PM20200118_18
+A20200106_00  A20200124_18  D20200112_12  D20200131_06	 PM20200119_00
+A20200106_06  A20200125_00  D20200112_18  D20200131_12	 PM20200119_06
+A20200106_12  A20200125_06  D20200113_00  D20200131_18	 PM20200119_12
+A20200106_18  A20200125_12  D20200113_06  PM20200101_00  PM20200119_18
+A20200107_00  A20200125_18  D20200113_12  PM20200101_06  PM20200120_00
+A20200107_06  A20200126_00  D20200113_18  PM20200101_12  PM20200120_06
+A20200107_12  A20200126_06  D20200114_00  PM20200101_18  PM20200120_12
+A20200107_18  A20200126_12  D20200114_06  PM20200102_00  PM20200120_18
+A20200108_00  A20200126_18  D20200114_12  PM20200102_06  PM20200121_00
+A20200108_06  A20200127_00  D20200114_18  PM20200102_12  PM20200121_06
+A20200108_12  A20200127_06  D20200115_00  PM20200102_18  PM20200121_12
+A20200108_18  A20200127_12  D20200115_06  PM20200103_00  PM20200121_18
+A20200109_00  A20200127_18  D20200115_12  PM20200103_06  PM20200122_00
+A20200109_06  A20200128_00  D20200115_18  PM20200103_12  PM20200122_06
+A20200109_12  A20200128_06  D20200116_00  PM20200103_18  PM20200122_12
+A20200109_18  A20200128_12  D20200116_06  PM20200104_00  PM20200122_18
+A20200110_00  A20200128_18  D20200116_12  PM20200104_06  PM20200123_00
+A20200110_06  A20200129_00  D20200116_18  PM20200104_12  PM20200123_06
+A20200110_12  A20200129_06  D20200117_00  PM20200104_18  PM20200123_12
+A20200110_18  A20200129_12  D20200117_06  PM20200105_00  PM20200123_18
+A20200111_00  A20200129_18  D20200117_12  PM20200105_06  PM20200124_00
+A20200111_06  A20200130_00  D20200117_18  PM20200105_12  PM20200124_06
+A20200111_12  A20200130_06  D20200118_00  PM20200105_18  PM20200124_12
+A20200111_18  A20200130_12  D20200118_06  PM20200106_00  PM20200124_18
+A20200112_00  A20200130_18  D20200118_12  PM20200106_06  PM20200125_00
+A20200112_06  A20200131_00  D20200118_18  PM20200106_12  PM20200125_06
+A20200112_12  A20200131_06  D20200119_00  PM20200106_18  PM20200125_12
+A20200112_18  A20200131_12  D20200119_06  PM20200107_00  PM20200125_18
+A20200113_00  A20200131_18  D20200119_12  PM20200107_06  PM20200126_00
+A20200113_06  D20200101_00  D20200119_18  PM20200107_12  PM20200126_06
+A20200113_12  D20200101_06  D20200120_00  PM20200107_18  PM20200126_12
+A20200113_18  D20200101_12  D20200120_06  PM20200108_00  PM20200126_18
+A20200114_00  D20200101_18  D20200120_12  PM20200108_06  PM20200127_00
+A20200114_06  D20200102_00  D20200120_18  PM20200108_12  PM20200127_06
+A20200114_12  D20200102_06  D20200121_00  PM20200108_18  PM20200127_12
+A20200114_18  D20200102_12  D20200121_06  PM20200109_00  PM20200127_18
+A20200115_00  D20200102_18  D20200121_12  PM20200109_06  PM20200128_00
+A20200115_06  D20200103_00  D20200121_18  PM20200109_12  PM20200128_06
+A20200115_12  D20200103_06  D20200122_00  PM20200109_18  PM20200128_12
+A20200115_18  D20200103_12  D20200122_06  PM20200110_00  PM20200128_18
+A20200116_00  D20200103_18  D20200122_12  PM20200110_06  PM20200129_00
+A20200116_06  D20200104_00  D20200122_18  PM20200110_12  PM20200129_06
+A20200116_12  D20200104_06  D20200123_00  PM20200110_18  PM20200129_12
+A20200116_18  D20200104_12  D20200123_06  PM20200111_00  PM20200129_18
+A20200117_00  D20200104_18  D20200123_12  PM20200111_06  PM20200130_00
+A20200117_06  D20200105_00  D20200123_18  PM20200111_12  PM20200130_06
+A20200117_12  D20200105_06  D20200124_00  PM20200111_18  PM20200130_12
+A20200117_18  D20200105_12  D20200124_06  PM20200112_00  PM20200130_18
+A20200118_00  D20200105_18  D20200124_12  PM20200112_06  PM20200131_00
+A20200118_06  D20200106_00  D20200124_18  PM20200112_12  PM20200131_06
+A20200118_12  D20200106_06  D20200125_00  PM20200112_18  PM20200131_12
+A20200118_18  D20200106_12  D20200125_06  PM20200113_00  PM20200131_18
+A20200119_00  D20200106_18  D20200125_12  PM20200113_06
+A20200119_06  D20200107_00  D20200125_18  PM20200113_12
+A20200119_12  D20200107_06  D20200126_00  PM20200113_18
+</pre>
+</div>
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[40]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/cams/2003/01/A20030101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[40]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;longitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 longitude(longitude)
+     units: degrees_east
+     long_name: longitude
+ unlimited dimensions: 
+ current shape = (360,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;latitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 latitude(latitude)
+     units: degrees_north
+     long_name: latitude
+ unlimited dimensions: 
+ current shape = (181,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;level&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int32 level(level)
+     long_name: model_level_number
+ unlimited dimensions: 
+ current shape = (60,)
+ filling on, default _FillValue of -2147483647 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int32 time(time)
+     units: hours since 1900-01-01 00:00:00.0
+     long_name: time
+     calendar: gregorian
+ unlimited dimensions: time
+ current shape = (1,)
+ filling on, default _FillValue of -2147483647 used,
+ &#39;aerlg&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aerlg(time, level, latitude, longitude)
+     scale_factor: 4.468045992294749e-12
+     add_offset: 1.4639999498352973e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Aerosol large mode mixing ratio
+ unlimited dimensions: time
+ current shape = (1, 60, 181, 360)
+ filling on,
+ &#39;aermr06&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aermr06(time, level, latitude, longitude)
+     scale_factor: 6.923327266851442e-12
+     add_offset: 2.2684974122565435e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Dust Aerosol (0.9 - 20 um) Mixing Ratio
+ unlimited dimensions: time
+ current shape = (1, 60, 181, 360)
+ filling on,
+ &#39;aermr05&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aermr05(time, level, latitude, longitude)
+     scale_factor: 2.500046778854265e-12
+     add_offset: 8.191653275593883e-08
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Dust Aerosol (0.55 - 0.9 um) Mixing Ratio
+ unlimited dimensions: time
+ current shape = (1, 60, 181, 360)
+ filling on,
+ &#39;aermr04&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aermr04(time, level, latitude, longitude)
+     scale_factor: 1.268841338489485e-12
+     add_offset: 4.157485529694647e-08
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Dust Aerosol (0.03 - 0.55 um) Mixing Ratio
+ unlimited dimensions: time
+ current shape = (1, 60, 181, 360)
+ filling on}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[41]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/cams/2020/01/A20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[41]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;longitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 longitude(longitude)
+     units: degrees_east
+     long_name: longitude
+ unlimited dimensions: 
+ current shape = (360,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;latitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 latitude(latitude)
+     units: degrees_north
+     long_name: latitude
+ unlimited dimensions: 
+ current shape = (181,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;level&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int32 level(level)
+     long_name: model_level_number
+ unlimited dimensions: 
+ current shape = (60,)
+ filling on, default _FillValue of -2147483647 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int32 time(time)
+     units: hours since 1900-01-01 00:00:00.0
+     long_name: time
+     calendar: gregorian
+ unlimited dimensions: 
+ current shape = (1,)
+ filling on, default _FillValue of -2147483647 used,
+ &#39;aermr04&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aermr04(time, level, latitude, longitude)
+     scale_factor: 2.7626341338885043e-12
+     add_offset: 9.052047003099074e-08
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Dust Aerosol (0.03 - 0.55 um) Mixing Ratio
+ unlimited dimensions: 
+ current shape = (1, 60, 181, 360)
+ filling on,
+ &#39;aermr05&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aermr05(time, level, latitude, longitude)
+     scale_factor: 4.548320092674449e-12
+     add_offset: 1.49030256156571e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Dust Aerosol (0.55 - 0.9 um) Mixing Ratio
+ unlimited dimensions: 
+ current shape = (1, 60, 181, 360)
+ filling on,
+ &#39;aermr06&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aermr06(time, level, latitude, longitude)
+     scale_factor: 1.1430662207573705e-11
+     add_offset: 3.7453707789336004e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg kg**-1
+     long_name: Dust Aerosol (0.9 - 20 um) Mixing Ratio
+ unlimited dimensions: 
+ current shape = (1, 60, 181, 360)
+ filling on}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[125]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/cams/2020/01/D20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[125]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;longitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 longitude(longitude)
+     units: degrees_east
+     long_name: longitude
+ unlimited dimensions: 
+ current shape = (360,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;latitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 latitude(latitude)
+     units: degrees_north
+     long_name: latitude
+ unlimited dimensions: 
+ current shape = (181,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int32 time(time)
+     units: hours since 1900-01-01 00:00:00.0
+     long_name: time
+     calendar: gregorian
+ unlimited dimensions: 
+ current shape = (1,)
+ filling on, default _FillValue of -2147483647 used,
+ &#39;u10&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 u10(time, latitude, longitude)
+     scale_factor: 0.0006917584699693284
+     add_offset: 0.8897908395150154
+     _FillValue: -32767
+     missing_value: -32767
+     units: m s**-1
+     long_name: 10 metre U wind component
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;v10&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 v10(time, latitude, longitude)
+     scale_factor: 0.0006708064782247112
+     add_offset: -0.13825959757504985
+     _FillValue: -32767
+     missing_value: -32767
+     units: m s**-1
+     long_name: 10 metre V wind component
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;duaod550&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 duaod550(time, latitude, longitude)
+     scale_factor: 1.1201716734707304e-05
+     add_offset: 0.36703721666171946
+     _FillValue: -32767
+     missing_value: -32767
+     units: ~
+     long_name: Dust Aerosol Optical Depth at 550nm
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;msl&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 msl(time, latitude, longitude)
+     scale_factor: 0.1212137396426228
+     add_offset: 100152.50189313017
+     _FillValue: -32767
+     missing_value: -32767
+     units: Pa
+     long_name: Mean sea level pressure
+     standard_name: air_pressure_at_mean_sea_level
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;aod550&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 aod550(time, latitude, longitude)
+     scale_factor: 5.556658357611478e-05
+     add_offset: 1.822704184956475
+     _FillValue: -32767
+     missing_value: -32767
+     units: ~
+     long_name: Total Aerosol Optical Depth at 550nm
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;tcwv&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 tcwv(time, latitude, longitude)
+     scale_factor: 0.0010595508655944334
+     add_offset: 34.92096947688654
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg m**-2
+     long_name: Total column water vapour
+     standard_name: lwe_thickness_of_atmosphere_mass_content_of_water_vapor
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on}</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[43]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_path</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup/cams/2020/01/PM20200101_00&quot;</span>
+<span class="n">sample_file</span> <span class="o">=</span> <span class="n">Dataset</span><span class="p">(</span><span class="n">sample_path</span><span class="p">)</span>
+<span class="n">sample_file</span><span class="o">.</span><span class="n">variables</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[43]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>{&#39;longitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 longitude(longitude)
+     units: degrees_east
+     long_name: longitude
+ unlimited dimensions: 
+ current shape = (360,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;latitude&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ float32 latitude(latitude)
+     units: degrees_north
+     long_name: latitude
+ unlimited dimensions: 
+ current shape = (181,)
+ filling on, default _FillValue of 9.969209968386869e+36 used,
+ &#39;time&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int32 time(time)
+     units: hours since 1900-01-01 00:00:00.0
+     long_name: time
+     calendar: gregorian
+ unlimited dimensions: 
+ current shape = (1,)
+ filling on, default _FillValue of -2147483647 used,
+ &#39;pm10&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 pm10(time, latitude, longitude)
+     scale_factor: 1.43687660155702e-11
+     add_offset: 4.7080698726617316e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg m**-3
+     long_name: Particulate matter d &lt; 10 um
+     standard_name: mass_concentration_of_pm10_ambient_aerosol_particles_in_air
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;pm2p5&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 pm2p5(time, latitude, longitude)
+     scale_factor: 1.041004470674903e-11
+     add_offset: 3.410955248613387e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg m**-3
+     long_name: Particulate matter d &lt; 2.5 um
+     standard_name: mass_concentration_of_pm2p5_ambient_aerosol_particles_in_air
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on,
+ &#39;pm1&#39;: &lt;class &#39;netCDF4._netCDF4.Variable&#39;&gt;
+ int16 pm1(time, latitude, longitude)
+     scale_factor: 9.088807550305286e-12
+     add_offset: 2.9780386819330296e-07
+     _FillValue: -32767
+     missing_value: -32767
+     units: kg m**-3
+     long_name: Particulate matter d &lt; 1 um
+     standard_name: mass_concentration_of_pm1_ambient_aerosol_particles_in_air
+ unlimited dimensions: 
+ current shape = (1, 181, 360)
+ filling on}</pre>
 </div>
 
 </div>
@@ -14369,37 +16148,269 @@ a.anchor-link {
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_format_channels_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;SLP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;PV&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])},</span>
-    <span class="s2">&quot;aod550&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">14</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;duaod550&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">15</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;aermssdul&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">16</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;aermssdum&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">17</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;u10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">18</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;v10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">19</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[45]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="s2">&quot;2020-12-31 00:00&quot;</span><span class="p">,</span><span class="s2">&quot;2020-12-31 23:00&quot;</span>
+<span class="n">result_hourly_res</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">freq</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_hourly_res</span><span class="si">}</span><span class="s2">h&quot;</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="n">end</span><span class="p">,</span> <span class="n">tz</span><span class="o">=</span><span class="s2">&quot;UTC&quot;</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freq</span><span class="p">),</span> <span class="n">freq</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[45]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(DatetimeIndex([&#39;2020-12-31 00:00:00+00:00&#39;, &#39;2020-12-31 03:00:00+00:00&#39;,
+                &#39;2020-12-31 06:00:00+00:00&#39;, &#39;2020-12-31 09:00:00+00:00&#39;,
+                &#39;2020-12-31 12:00:00+00:00&#39;, &#39;2020-12-31 15:00:00+00:00&#39;,
+                &#39;2020-12-31 18:00:00+00:00&#39;, &#39;2020-12-31 21:00:00+00:00&#39;],
+               dtype=&#39;datetime64[ns, UTC]&#39;, freq=&#39;3H&#39;),
+ &#39;3h&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[49]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">debug</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;2002-12-30 00:00&quot;</span><span class="p">,</span><span class="s2">&quot;2003-01-02 18:00&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">debug</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;2000-01-01 00:00&quot;</span><span class="p">,</span><span class="s2">&quot;2020-12-31 23:00&quot;</span><span class="p">)</span> 
+<span class="n">start</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[49]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>&#39;2000-01-01 00:00&#39;</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[52]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">debug</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="k">if</span> <span class="n">debug</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;2002-12-30 00:00&quot;</span><span class="p">,</span><span class="s2">&quot;2003-01-02 18:00&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span> <span class="n">start</span><span class="p">,</span><span class="n">end</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;2000-01-01 00:00&quot;</span><span class="p">,</span><span class="s2">&quot;2020-12-31 23:00&quot;</span><span class="p">)</span> 
+<span class="n">start</span><span class="p">,</span><span class="n">end</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[52]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>(&#39;2002-12-30 00:00&#39;, &#39;2003-01-02 18:00&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[56]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">a1</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">]</span>
+<span class="n">a2</span> <span class="o">=</span> <span class="n">a1</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">a2</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">a2</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[56]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>[3, 4]</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[88]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">init_params_to_take_from_same_paths</span><span class="p">(</span><span class="n">params_dict</span><span class="p">):</span>
+    <span class="n">params_to_take_from_same_paths</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">params_done</span><span class="p">,</span><span class="n">params_left</span> <span class="o">=</span> <span class="p">[],</span><span class="nb">list</span><span class="p">(</span><span class="n">params_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">params_done</span><span class="p">:</span> <span class="k">continue</span>
+        <span class="n">params_from_same_path</span> <span class="o">=</span> <span class="p">[</span><span class="n">param</span><span class="p">]</span>
+        <span class="n">folder_path</span><span class="p">,</span><span class="n">file_prefix</span> <span class="o">=</span> <span class="n">params_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s2">&quot;folder_path&quot;</span><span class="p">],</span><span class="n">params_dict</span><span class="p">[</span><span class="n">param</span><span class="p">][</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">]</span>
+        <span class="n">params_left</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>        
+        <span class="n">params_done</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">other_param</span> <span class="ow">in</span> <span class="n">params_left</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">folder_path</span><span class="o">==</span><span class="n">params_dict</span><span class="p">[</span><span class="n">other_param</span><span class="p">][</span><span class="s2">&quot;folder_path&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">file_prefix</span><span class="o">==</span><span class="n">params_dict</span><span class="p">[</span><span class="n">other_param</span><span class="p">][</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">]:</span>
+                <span class="n">params_from_same_path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other_param</span><span class="p">)</span>
+                <span class="n">params_left</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">other_param</span><span class="p">)</span>        
+                <span class="n">params_done</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">other_param</span><span class="p">)</span>
+        <span class="n">params_to_take_from_same_paths</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+            <span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="n">folder_path</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="n">file_prefix</span><span class="p">,</span><span class="s2">&quot;params&quot;</span><span class="p">:</span><span class="n">params_from_same_path</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">params_to_take_from_same_paths</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[89]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">params</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;PV310&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="s2">&quot;era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;S&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;PV340&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="s2">&quot;era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;S&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;T310&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="s2">&quot;era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;Q310&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="s2">&quot;era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;Z500&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="s2">&quot;era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;Z850&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="s2">&quot;era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">}</span>
 <span class="p">}</span>
-</pre></div>
 
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dims_cols_strings</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:[</span><span class="n">c_str</span> <span class="k">for</span> <span class="n">c_str</span> <span class="ow">in</span> <span class="n">old_format_channels_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]}</span>
-<span class="n">dims_cols_strings</span>
+<span class="n">init_params_to_take_from_same_paths</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
 </pre></div>
 
      </div>
@@ -14415,908 +16426,15 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[89]:</div>
 
 
 
 
 <div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{1: [&#39;SLP&#39;,
-  &#39;Z&#39;,
-  &#39;U&#39;,
-  &#39;V&#39;,
-  &#39;PV&#39;,
-  &#39;aod550&#39;,
-  &#39;duaod550&#39;,
-  &#39;aermssdul&#39;,
-  &#39;aermssdum&#39;,
-  &#39;u10&#39;,
-  &#39;v10&#39;]}</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lons</span><span class="p">,</span><span class="n">lats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mf">60.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">44</span><span class="p">,</span><span class="mf">50.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">lats</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(81, 189)</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_and_save_year</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">####### YEAR </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
-    <span class="n">meteorology_dataframe_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteorology_dataframe_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframe_20_81_189_3h_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
-    <span class="n">timestamps_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamps_dir</span><span class="si">}</span><span class="s2">/dust_dataset_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_timestamps.pkl&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">meteorology_dataframe_filename</span><span class="p">)</span>
-    <span class="n">file_year_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">timestamps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">timestamps_filename</span><span class="p">)</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Meteorology</span><span class="p">(</span>
-        <span class="n">df</span><span class="p">,</span> <span class="n">dims_cols_strings</span><span class="o">=</span><span class="n">dims_cols_strings</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata_all</span><span class="p">,</span> <span class="n">timestamps</span><span class="o">=</span><span class="n">timestamps</span><span class="p">,</span> 
-        <span class="n">save_base_filename</span><span class="o">=</span><span class="n">file_year_basename</span><span class="p">,</span>
-        <span class="n">invalid_col_fill</span><span class="o">=-</span><span class="mi">777</span><span class="p">,</span> <span class="n">param_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span> <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span> <span class="n">save_timestamps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">old_format_channels_dict</span><span class="o">=</span><span class="n">old_format_channels_dict</span>
-    <span class="p">)</span>
-    <span class="n">handler</span><span class="o">.</span><span class="n">create_yearly_datasets</span><span class="p">([</span><span class="n">year</span><span class="p">])</span>
-    
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">2019</span><span class="p">))</span>
-<span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="mi">100</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">load_and_save_year</span><span class="p">)(</span><span class="n">year</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span>
-<span class="p">)</span>    
-    
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>[Parallel(n_jobs=1)]: Using backend SequentialBackend with 1 concurrent workers.
-
-
-####### YEAR 2003:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="1f833297-3caa-47e1-8c8f-90b6fe912395" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('1f833297-3caa-47e1-8c8f-90b6fe912395');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e36f91c605414773a41c7fb63c451c1d", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2003: Creating tensor for 2003-01-01 00:00:00+00:00 to 2003-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2003: ... Done!
-[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed: 23.0min remaining:    0.0s
-
-
-####### YEAR 2004:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="78b3316b-70ba-4607-9f53-187605c94851" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('78b3316b-70ba-4607-9f53-187605c94851');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "4c479438bf6140b88f097db041b53f3b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2004: Creating tensor for 2004-01-01 00:00:00+00:00 to 2004-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2004: ... Done!
-[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed: 28.8min remaining:    0.0s
-
-
-####### YEAR 2005:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="1e139899-d8cc-47b3-be7e-73b4d0e09438" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('1e139899-d8cc-47b3-be7e-73b4d0e09438');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "68aa6a28b7a14de28c6dfae69ba0b30b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2005: Creating tensor for 2005-01-01 00:00:00+00:00 to 2005-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2005: ... Done!
-[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed: 34.0min remaining:    0.0s
-
-
-####### YEAR 2006:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="ac2ccd16-b60a-45da-b6d3-c61c52ee9c45" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('ac2ccd16-b60a-45da-b6d3-c61c52ee9c45');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d47265559dac4a84bf503854ef036d22", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2006: Creating tensor for 2006-01-01 00:00:00+00:00 to 2006-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2006: ... Done!
-[Parallel(n_jobs=1)]: Done   4 out of   4 | elapsed: 39.3min remaining:    0.0s
-
-
-####### YEAR 2007:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="68e35544-8266-44a4-a845-633429fb51fd" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('68e35544-8266-44a4-a845-633429fb51fd');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f3b844acf5f04b87a61b250f53b3a060", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2007: Creating tensor for 2007-01-01 00:00:00+00:00 to 2007-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2007: ... Done!
-[Parallel(n_jobs=1)]: Done   5 out of   5 | elapsed: 44.8min remaining:    0.0s
-
-
-####### YEAR 2008:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="813b99d0-512d-4c97-87a6-b4d0cb897237" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('813b99d0-512d-4c97-87a6-b4d0cb897237');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f598129a15c04eec8d8552616a397e2f", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2008: Creating tensor for 2008-01-01 00:00:00+00:00 to 2008-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2008: ... Done!
-[Parallel(n_jobs=1)]: Done   6 out of   6 | elapsed: 49.9min remaining:    0.0s
-
-
-####### YEAR 2009:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="30a40f61-fd87-4c2b-a3c8-f4895cd019f1" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('30a40f61-fd87-4c2b-a3c8-f4895cd019f1');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "cf12f8d66a4f4ff19d5f4f75efbc172b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2009: Creating tensor for 2009-01-01 00:00:00+00:00 to 2009-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2009: ... Done!
-[Parallel(n_jobs=1)]: Done   7 out of   7 | elapsed: 55.3min remaining:    0.0s
-
-
-####### YEAR 2010:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="773ec4b8-bf15-4ae0-babf-b398f2d29a6a" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('773ec4b8-bf15-4ae0-babf-b398f2d29a6a');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "77eda3f594d5414098b9896d01013100", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2010: Creating tensor for 2010-01-01 00:00:00+00:00 to 2010-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2010: ... Done!
-[Parallel(n_jobs=1)]: Done   8 out of   8 | elapsed: 60.5min remaining:    0.0s
-
-
-####### YEAR 2011:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="feebe412-b718-46d4-b60e-6dda93789f98" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('feebe412-b718-46d4-b60e-6dda93789f98');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "7ea501e0f52341948c8fc824f626dfcc", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2011: Creating tensor for 2011-01-01 00:00:00+00:00 to 2011-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2011: ... Done!
-[Parallel(n_jobs=1)]: Done   9 out of   9 | elapsed: 65.5min remaining:    0.0s
-
-
-####### YEAR 2012:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="5e79e284-50d8-42a4-bd8d-c315c918d39f" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('5e79e284-50d8-42a4-bd8d-c315c918d39f');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f3601b82b01543b8aa6df4c024facba7", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2012: Creating tensor for 2012-01-01 00:00:00+00:00 to 2012-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2012: ... Done!
-[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed: 70.6min remaining:    0.0s
-
-
-####### YEAR 2013:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="58f0fc8d-7faa-4e37-b783-00017320beef" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('58f0fc8d-7faa-4e37-b783-00017320beef');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2b8e3e2bf7d64a849787c4ef28d1bd92", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2013: Creating tensor for 2013-01-01 00:00:00+00:00 to 2013-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2013: ... Done!
-[Parallel(n_jobs=1)]: Done  11 out of  11 | elapsed: 75.8min remaining:    0.0s
-
-
-####### YEAR 2014:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="ab30f7c8-0e5c-44af-96ff-db0e5140ff05" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('ab30f7c8-0e5c-44af-96ff-db0e5140ff05');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "c6be79a1c13f4718b3990c5ac91dc1b0", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2014: Creating tensor for 2014-01-01 00:00:00+00:00 to 2014-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2014: ... Done!
-[Parallel(n_jobs=1)]: Done  12 out of  12 | elapsed: 80.8min remaining:    0.0s
-
-
-####### YEAR 2015:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="7d3216af-4fa6-42c1-ad8f-23d19beb4966" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('7d3216af-4fa6-42c1-ad8f-23d19beb4966');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5ac87f270baf46a89d00415ad411c8fb", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2015: Creating tensor for 2015-01-01 00:00:00+00:00 to 2015-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2015: ... Done!
-[Parallel(n_jobs=1)]: Done  13 out of  13 | elapsed: 86.2min remaining:    0.0s
-
-
-####### YEAR 2016:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="87ae2b23-3331-4733-b206-f21b3a56381b" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('87ae2b23-3331-4733-b206-f21b3a56381b');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "232cd108ca144a1bb515eaaff450f4be", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2016: Creating tensor for 2016-01-01 00:00:00+00:00 to 2016-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2016: ... Done!
-[Parallel(n_jobs=1)]: Done  14 out of  14 | elapsed: 91.4min remaining:    0.0s
-
-
-####### YEAR 2017:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="b3474c6a-bbf2-4553-9314-801ff6fcac93" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('b3474c6a-bbf2-4553-9314-801ff6fcac93');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8628f1ebdb93439b9267eb3cae4079ed", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2017: Creating tensor for 2017-01-01 00:00:00+00:00 to 2017-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2017: ... Done!
-[Parallel(n_jobs=1)]: Done  15 out of  15 | elapsed: 96.9min remaining:    0.0s
-
-
-####### YEAR 2018:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="7cad1e3c-f7d4-4e63-857e-0f4ecf3ef415" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('7cad1e3c-f7d4-4e63-857e-0f4ecf3ef415');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "45cbe04c443d4c4898f8ec007ff5ab03", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2018: Creating tensor for 2018-01-01 00:00:00+00:00 to 2018-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2018: ... Done!
-[Parallel(n_jobs=1)]: Done  16 out of  16 | elapsed: 102.0min remaining:    0.0s
-[Parallel(n_jobs=1)]: Done  16 out of  16 | elapsed: 102.0min finished
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>[None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None]</pre>
+<pre>[{&#39;folder_path&#39;: &#39;era5&#39;, &#39;file_prefix&#39;: &#39;S&#39;, &#39;params&#39;: [&#39;PV310&#39;, &#39;PV340&#39;]},
+ {&#39;folder_path&#39;: &#39;era5&#39;, &#39;file_prefix&#39;: &#39;P&#39;, &#39;params&#39;: [&#39;T310&#39;, &#39;Q310&#39;]},
+ {&#39;folder_path&#39;: &#39;era5/plev&#39;, &#39;file_prefix&#39;: &#39;P&#39;, &#39;params&#39;: [&#39;Z500&#39;, &#39;Z850&#39;]}]</pre>
 </div>
 
 </div>
@@ -15345,102 +16463,12 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># data_dir = &quot;../../data&quot;</span>
-<span class="c1"># meteorology_dataframe_dir = f&quot;{data_dir}/meteorology_dataframes_20_81_189_3h&quot;</span>
-<span class="c1"># result_dir = f&quot;{data_dir}/dataset_input_20_81_189_old_dust_108_2_339&quot;</span>
-<span class="c1"># file_basename = f&quot;{result_dir}/meteorology_20_81_189_old&quot;</span>
-<span class="c1"># metadata_filename = f&quot;{data_dir}/meteorology_dataframes_20_81_189_3h/metadata/meteorology_dataframes_20_81_189_3h_description.pkl&quot;</span>
-<span class="c1"># timestamps_dir = f&quot;{data_dir}/dust_55520_108_2_339&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensors_list</span><span class="p">,</span><span class="n">timestamps_lists</span><span class="o">=</span><span class="p">[],[]</span>
-<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
-    <span class="n">tensors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_tensor.pkl&quot;</span><span class="p">))</span>
-    <span class="n">timestamps_lists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_timestamps.pkl&quot;</span><span class="p">))</span>
-<span class="c1">#     timestamps_lists.append(torch.load(f&quot;{timestamps_dir}/dust_dataset_{year}_timestamps.pkl&quot;))</span>
-
-<span class="n">full_tensor</span><span class="p">,</span> <span class="n">full_timestamps</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Meteorology</span><span class="o">.</span><span class="n">merge_by_timestamps</span><span class="p">(</span>
-    <span class="n">tensors_list</span><span class="p">,</span> <span class="n">timestamps_lists</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">full_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_timestamps</span><span class="p">))</span>
-
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">full_tensor</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_tensor_full.pkl&quot;</span><span class="p">)</span>
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">full_timestamps</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_timestamps_full.pkl&quot;</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>torch.Size([46736, 20, 81, 189]) 46736
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_tensor_full.pkl&quot;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_timestamps_full.pkl&quot;</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(&#39;../../data/dataset_input_20_81_189_old_dust_108_2_339/meteorology_20_81_189_old_tensor_full.pkl&#39;,
- &#39;../../data/dataset_input_20_81_189_old_dust_108_2_339/meteorology_20_81_189_old_timestamps_full.pkl&#39;)</pre>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -15449,7 +16477,77 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#46736</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>

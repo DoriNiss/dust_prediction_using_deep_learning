@@ -3,7 +3,7 @@
 <head><meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>dataset_creation_meteorology_20_81_189_old_for_new_dust</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+<title>meteorology_dataframes_creation_62_81_189_batches_2008to2016</title><script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 
 
 
@@ -14256,56 +14256,15 @@ a.anchor-link {
     </script>
     <!-- End of mathjax configuration --></head>
 <body class="jp-Notebook" data-jp-theme-light="true" data-jp-theme-name="JupyterLab Light">
-<div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">torch</span>
-<span class="kn">import</span> <span class="nn">csv</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> <span class="c1">#conda install -c anaconda joblib</span>
-
-<span class="kn">import</span> <span class="nn">sys</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/&#39;</span><span class="p">)</span>
-<span class="kn">from</span> <span class="nn">data_handlers.DatasetHandler_DataframeToTensor_Meteorology</span> <span class="kn">import</span> <span class="o">*</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[2]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
-<span class="n">meteorology_dataframe_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframes_20_81_189_3h&quot;</span>
-<span class="n">result_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dataset_input_20_81_189_old_dust_108_2_339&quot;</span>
-<span class="n">file_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/meteorology_20_81_189_old&quot;</span>
-<span class="n">metadata_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframes_20_81_189_3h/metadata/meteorology_dataframes_20_81_189_3h_description.pkl&quot;</span>
-<span class="n">timestamps_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_55520_108_2_339&quot;</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[3]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">metadata_all</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">metadata_filename</span><span class="p">)[</span><span class="s2">&quot;input&quot;</span><span class="p">]</span>
-<span class="n">metadata_all</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">MeteorologyToPandasHandler_Super</span> <span class="kn">import</span> <span class="o">*</span>
 </pre></div>
 
      </div>
@@ -14321,157 +14280,48 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[3]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 
 
+<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="application/vnd.jupyter.stderr">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">AttributeError</span>                            Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-3-216c27bbeb3a&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      1</span> <span class="ansi-green-fg">import</span> sys
+<span class="ansi-green-intense-fg ansi-bold">      2</span> sys<span class="ansi-blue-fg">.</span>path<span class="ansi-blue-fg">.</span>insert<span class="ansi-blue-fg">(</span><span class="ansi-cyan-fg">0</span><span class="ansi-blue-fg">,</span> <span class="ansi-blue-fg">&#39;../../packages/data_handlers&#39;</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-fg">----&gt; 3</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">from</span> MeteorologyToPandasHandler_Super <span class="ansi-green-fg">import</span> <span class="ansi-blue-fg">*</span>
 
+<span class="ansi-green-fg">/gpfs01/work/dorini/projects/dust_prediction_using_deep_learning/notebooks/data_handling/../../packages/data_handlers/MeteorologyToPandasHandler_Super.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      2</span> <span class="ansi-green-fg">from</span> netCDF4 <span class="ansi-green-fg">import</span> Dataset
+<span class="ansi-green-intense-fg ansi-bold">      3</span> <span class="ansi-green-fg">import</span> numpy <span class="ansi-green-fg">as</span> np
+<span class="ansi-green-fg">----&gt; 4</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> pandas <span class="ansi-green-fg">as</span> pd
+<span class="ansi-green-intense-fg ansi-bold">      5</span> <span class="ansi-green-fg">from</span> tqdm<span class="ansi-blue-fg">.</span>notebook <span class="ansi-green-fg">import</span> tqdm
+<span class="ansi-green-intense-fg ansi-bold">      6</span> <span class="ansi-green-fg">import</span> torch
 
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{0: {&#39;short&#39;: &#39;SLP&#39;, &#39;long&#39;: &#39;Mean Sea-Level Pressure&#39;},
- 1: {&#39;short&#39;: &#39;Z@850&#39;, &#39;long&#39;: &#39;Geopotential Height at P=850 mBar [m]&#39;},
- 2: {&#39;short&#39;: &#39;Z@500&#39;, &#39;long&#39;: &#39;Geopotential Height at P=500 mBar [m]&#39;},
- 3: {&#39;short&#39;: &#39;Z@250&#39;, &#39;long&#39;: &#39;Geopotential Height at P=250 mBar [m]&#39;},
- 4: {&#39;short&#39;: &#39;U@850&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=850 mBar [m/s]&#39;},
- 5: {&#39;short&#39;: &#39;U@500&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=500 mBar [m/s]&#39;},
- 6: {&#39;short&#39;: &#39;U@250&#39;,
-  &#39;long&#39;: &#39;U Component (Eastward) of Wind at P=250 mBar [m/s]&#39;},
- 7: {&#39;short&#39;: &#39;V@850&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=850 mBar [m/s]&#39;},
- 8: {&#39;short&#39;: &#39;V@500&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=500 mBar [m/s]&#39;},
- 9: {&#39;short&#39;: &#39;V@250&#39;,
-  &#39;long&#39;: &#39;V Component (Northward) of Wind at P=250 mBar [m/s]&#39;},
- 10: {&#39;short&#39;: &#39;PV@325&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=325K [pvu]&#39;},
- 11: {&#39;short&#39;: &#39;PV@330&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=330K [pvu]&#39;},
- 12: {&#39;short&#39;: &#39;PV@335&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=335K [pvu]&#39;},
- 13: {&#39;short&#39;: &#39;PV@340&#39;, &#39;long&#39;: &#39;Potential Vorticity at T=340K [pvu]&#39;},
- 14: {&#39;short&#39;: &#39;aod550&#39;, &#39;long&#39;: &#39;Total Aerosol Optical Depth at 550nm&#39;},
- 15: {&#39;short&#39;: &#39;duaod550&#39;, &#39;long&#39;: &#39;Dust Aerosol Optical Depth at 550nm&#39;},
- 16: {&#39;short&#39;: &#39;aermssdul&#39;,
-  &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (9 - 20 um)&#39;},
- 17: {&#39;short&#39;: &#39;aermssdum&#39;,
-  &#39;long&#39;: &#39;Vertically Integrated Mass of Dust Aerosol (0.55 - 9 um)&#39;},
- 18: {&#39;short&#39;: &#39;u10&#39;, &#39;long&#39;: &#39;10 Metre U Wind Component [m/s]&#39;},
- 19: {&#39;short&#39;: &#39;v10&#39;, &#39;long&#39;: &#39;10 Metre V Wind Component [m/s]&#39;},
- &#39;lons&#39;: &#39;-44:50&#39;,
- &#39;lats&#39;: &#39;20:60&#39;,
- &#39;general&#39;: &#39;frequency: 3h, all CAMS (cols [14:]) are linearly interpolated between 6h&#39;}</pre>
+<span class="ansi-green-fg">/work/dorini/anaconda3/envs/venv01/lib/python3.8/site-packages/pandas/__init__.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">    177</span> 
+<span class="ansi-green-intense-fg ansi-bold">    178</span> <span class="ansi-green-fg">from</span> pandas<span class="ansi-blue-fg">.</span>util<span class="ansi-blue-fg">.</span>_tester <span class="ansi-green-fg">import</span> test
+<span class="ansi-green-fg">--&gt; 179</span><span class="ansi-red-fg"> </span><span class="ansi-green-fg">import</span> pandas<span class="ansi-blue-fg">.</span>testing
+<span class="ansi-green-intense-fg ansi-bold">    180</span> <span class="ansi-green-fg">import</span> pandas<span class="ansi-blue-fg">.</span>arrays
+<span class="ansi-green-intense-fg ansi-bold">    181</span> 
+
+<span class="ansi-green-fg">/work/dorini/anaconda3/envs/venv01/lib/python3.8/site-packages/pandas/testing.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">      3</span> &#34;&#34;&#34;
+<span class="ansi-green-intense-fg ansi-bold">      4</span> 
+<span class="ansi-green-fg">----&gt; 5</span><span class="ansi-red-fg"> from pandas._testing import (
+</span><span class="ansi-green-intense-fg ansi-bold">      6</span>     assert_extension_array_equal<span class="ansi-blue-fg">,</span>
+<span class="ansi-green-intense-fg ansi-bold">      7</span>     assert_frame_equal<span class="ansi-blue-fg">,</span>
+
+<span class="ansi-green-fg">/work/dorini/anaconda3/envs/venv01/lib/python3.8/site-packages/pandas/_testing.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">   3052</span> 
+<span class="ansi-green-intense-fg ansi-bold">   3053</span> 
+<span class="ansi-green-fg">-&gt; 3054</span><span class="ansi-red-fg"> </span>cython_table <span class="ansi-blue-fg">=</span> pd<span class="ansi-blue-fg">.</span>core<span class="ansi-blue-fg">.</span>base<span class="ansi-blue-fg">.</span>SelectionMixin<span class="ansi-blue-fg">.</span>_cython_table<span class="ansi-blue-fg">.</span>items<span class="ansi-blue-fg">(</span><span class="ansi-blue-fg">)</span>
+<span class="ansi-green-intense-fg ansi-bold">   3055</span> 
+<span class="ansi-green-intense-fg ansi-bold">   3056</span> 
+
+<span class="ansi-red-fg">AttributeError</span>: partially initialized module &#39;pandas&#39; has no attribute &#39;core&#39; (most likely due to a circular import)</pre>
 </div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[4]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">old_format_channels_dict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;SLP&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;U&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;V&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">7</span><span class="p">,</span><span class="mi">8</span><span class="p">,</span><span class="mi">9</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">])},</span>
-    <span class="s2">&quot;PV&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">12</span><span class="p">,</span><span class="mi">13</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">])},</span>
-    <span class="s2">&quot;aod550&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">14</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;duaod550&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">15</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;aermssdul&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">16</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;aermssdum&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">17</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;u10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">18</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-    <span class="s2">&quot;v10&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;tensor_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">19</span><span class="p">]),</span> <span class="s2">&quot;df_channels&quot;</span><span class="p">:</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">])},</span>
-<span class="p">}</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[5]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dims_cols_strings</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:[</span><span class="n">c_str</span> <span class="k">for</span> <span class="n">c_str</span> <span class="ow">in</span> <span class="n">old_format_channels_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">()]}</span>
-<span class="n">dims_cols_strings</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[5]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>{1: [&#39;SLP&#39;,
-  &#39;Z&#39;,
-  &#39;U&#39;,
-  &#39;V&#39;,
-  &#39;PV&#39;,
-  &#39;aod550&#39;,
-  &#39;duaod550&#39;,
-  &#39;aermssdul&#39;,
-  &#39;aermssdum&#39;,
-  &#39;u10&#39;,
-  &#39;v10&#39;]}</pre>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lons</span><span class="p">,</span><span class="n">lats</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span><span class="mf">60.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">),</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="o">-</span><span class="mi">44</span><span class="p">,</span><span class="mf">50.5</span><span class="p">,</span><span class="mf">0.5</span><span class="p">)</span>
-<span class="nb">len</span><span class="p">(</span><span class="n">lons</span><span class="p">),</span><span class="nb">len</span><span class="p">(</span><span class="n">lats</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(81, 189)</pre>
-</div>
-
 </div>
 
 </div>
@@ -14484,845 +14334,76 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span> 
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">meteo_folder</span> <span class="o">=</span> <span class="s2">&quot;/work/meteogroup&quot;</span>
+
+<span class="n">params</span> <span class="o">=</span> <span class="p">{}</span>
+
+<span class="n">params</span><span class="p">[</span><span class="s2">&quot;SLP&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span>
+                 <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Mean Sea-Level Pressure [hPa]&quot;</span><span class="p">}</span>
+
+<span class="n">plevs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">900</span><span class="p">,</span><span class="mi">850</span><span class="p">,</span><span class="mi">700</span><span class="p">,</span><span class="mi">500</span><span class="p">,</span><span class="mi">250</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">plev</span> <span class="ow">in</span> <span class="n">plevs</span><span class="p">:</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Z</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;Z&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Geopotential Height at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa [m]&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;U</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;U&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Eastward Wind at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa [m/s]&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;V</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Northward Wind at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa [m/s]&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;W</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/erainterim/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;V&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Vertical Wind at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa [m/s]&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;Q</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;Q&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Specific Humidity at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;T</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span>  <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;T&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Air Temperature at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;PV</span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5/plev&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;P&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;PV&quot;</span><span class="p">,</span>
+                           <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Potential Vorticity at </span><span class="si">{</span><span class="n">plev</span><span class="si">}</span><span class="s2">hPa [pvu]&quot;</span><span class="p">}</span>
+<span class="c1"># clouds:</span>
+<span class="n">clouds_model_levs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">80</span><span class="p">,</span><span class="mi">90</span><span class="p">,</span><span class="mi">100</span><span class="p">,</span><span class="mi">110</span><span class="p">]</span> <span class="c1"># up to 131</span>
+<span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="n">clouds_model_levs</span><span class="p">:</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CLWC</span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;CLWC&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+                            <span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Specific Cloud Liquid Water Content at Model Level </span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CIWC</span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;CIWC&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+                            <span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Specific Cloud Ice Water Content at Model Level </span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CRWC</span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;CRWC&quot;</span><span class="p">,</span>
+                            <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span>
+                            <span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Specific Rain Water Content at Model Level </span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CLWC_avg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;CLWC&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Mean Specific Cloud Liquid Water Content&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CIWC_avg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;CIWC&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Mean Specific Cloud Ice Water Content&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CRWC_avg&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/era5&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;C&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;CRWC&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">3</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Mean Specific Rain Water Content&quot;</span><span class="p">}</span>
+
+<span class="c1"># cams:</span>
+<span class="n">cams_model_levs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="mi">50</span><span class="p">]</span> <span class="c1"># up to 60</span>
+<span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="n">cams_model_levs</span><span class="p">:</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;aermr06_</span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;A&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;aermr06&quot;</span><span class="p">,</span>
+                                <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span>
+                                <span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Dust Aerosol (0.9 - 20 um) Mixing Ratio at Model Level </span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;tcwv&quot;</span><span class="p">]</span> <span class="o">=</span>     <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;tcwv&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Total Column Water Vapour&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;aod550&quot;</span><span class="p">]</span> <span class="o">=</span>   <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;aod550&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Total Aerosol Optical Depth at 550nm&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;duaod550&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;duaod550&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Dust Aerosol Optical Depth at 550nm&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;u10&quot;</span><span class="p">]</span>      <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;u10&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Eastward Wind at 10m [m/s]&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;v10&quot;</span><span class="p">]</span>      <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;D&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;v10&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Northward Wind at 10m [m/s]&quot;</span><span class="p">}</span>
+
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;pm10&quot;</span><span class="p">]</span>     <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;PM&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;pm10&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Calculated Particulate Matter, d &lt; 10 um&quot;</span><span class="p">}</span>
+<span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;pm2p5&quot;</span><span class="p">]</span>    <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;folder_path&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteo_folder</span><span class="si">}</span><span class="s2">/cams&quot;</span><span class="p">,</span><span class="s2">&quot;file_prefix&quot;</span><span class="p">:</span><span class="s2">&quot;PM&quot;</span><span class="p">,</span><span class="s2">&quot;netCDF_name&quot;</span><span class="p">:</span><span class="s2">&quot;pm2p5&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;size&quot;</span><span class="p">:[</span><span class="mi">41</span><span class="p">,</span><span class="mi">95</span><span class="p">],</span><span class="s2">&quot;hourly_res&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="s2">&quot;title&quot;</span><span class="p">:</span><span class="sa">f</span><span class="s2">&quot;Calculated Particulate Matter, d &lt; 2.5 um&quot;</span><span class="p">}</span>
+
+<span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">keys</span><span class="p">())),</span><span class="n">params</span>
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[14]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_and_save_year</span><span class="p">(</span><span class="n">year</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">####### YEAR </span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
-    <span class="n">meteorology_dataframe_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">meteorology_dataframe_dir</span><span class="si">}</span><span class="s2">/meteorology_dataframe_20_81_189_3h_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
-    <span class="n">timestamps_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">timestamps_dir</span><span class="si">}</span><span class="s2">/dust_dataset_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_timestamps.pkl&quot;</span>
-    <span class="n">df</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">meteorology_dataframe_filename</span><span class="p">)</span>
-    <span class="n">file_year_basename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="n">timestamps</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">timestamps_filename</span><span class="p">)</span>
-    <span class="n">handler</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Meteorology</span><span class="p">(</span>
-        <span class="n">df</span><span class="p">,</span> <span class="n">dims_cols_strings</span><span class="o">=</span><span class="n">dims_cols_strings</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="n">metadata_all</span><span class="p">,</span> <span class="n">timestamps</span><span class="o">=</span><span class="n">timestamps</span><span class="p">,</span> 
-        <span class="n">save_base_filename</span><span class="o">=</span><span class="n">file_year_basename</span><span class="p">,</span>
-        <span class="n">invalid_col_fill</span><span class="o">=-</span><span class="mi">777</span><span class="p">,</span> <span class="n">param_shape</span><span class="o">=</span><span class="p">[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span> <span class="n">lons</span><span class="o">=</span><span class="n">lons</span><span class="p">,</span> <span class="n">lats</span><span class="o">=</span><span class="n">lats</span><span class="p">,</span> <span class="n">save_timestamps</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-        <span class="n">old_format_channels_dict</span><span class="o">=</span><span class="n">old_format_channels_dict</span>
-    <span class="p">)</span>
-    <span class="n">handler</span><span class="o">.</span><span class="n">create_yearly_datasets</span><span class="p">([</span><span class="n">year</span><span class="p">])</span>
-    
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2003</span><span class="p">,</span><span class="mi">2019</span><span class="p">))</span>
-<span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">verbose</span><span class="o">=</span><span class="mi">100</span><span class="p">)(</span><span class="n">delayed</span><span class="p">(</span><span class="n">load_and_save_year</span><span class="p">)(</span><span class="n">year</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span>
-<span class="p">)</span>    
-    
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>[Parallel(n_jobs=1)]: Using backend SequentialBackend with 1 concurrent workers.
-
-
-####### YEAR 2003:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="1f833297-3caa-47e1-8c8f-90b6fe912395" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('1f833297-3caa-47e1-8c8f-90b6fe912395');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "e36f91c605414773a41c7fb63c451c1d", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2003: Creating tensor for 2003-01-01 00:00:00+00:00 to 2003-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2003: ... Done!
-[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed: 23.0min remaining:    0.0s
-
-
-####### YEAR 2004:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="78b3316b-70ba-4607-9f53-187605c94851" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('78b3316b-70ba-4607-9f53-187605c94851');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "4c479438bf6140b88f097db041b53f3b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2004: Creating tensor for 2004-01-01 00:00:00+00:00 to 2004-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2004: ... Done!
-[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed: 28.8min remaining:    0.0s
-
-
-####### YEAR 2005:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="1e139899-d8cc-47b3-be7e-73b4d0e09438" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('1e139899-d8cc-47b3-be7e-73b4d0e09438');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "68aa6a28b7a14de28c6dfae69ba0b30b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2005: Creating tensor for 2005-01-01 00:00:00+00:00 to 2005-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2005: ... Done!
-[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed: 34.0min remaining:    0.0s
-
-
-####### YEAR 2006:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="ac2ccd16-b60a-45da-b6d3-c61c52ee9c45" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('ac2ccd16-b60a-45da-b6d3-c61c52ee9c45');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "d47265559dac4a84bf503854ef036d22", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2006: Creating tensor for 2006-01-01 00:00:00+00:00 to 2006-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2006: ... Done!
-[Parallel(n_jobs=1)]: Done   4 out of   4 | elapsed: 39.3min remaining:    0.0s
-
-
-####### YEAR 2007:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="68e35544-8266-44a4-a845-633429fb51fd" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('68e35544-8266-44a4-a845-633429fb51fd');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f3b844acf5f04b87a61b250f53b3a060", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2007: Creating tensor for 2007-01-01 00:00:00+00:00 to 2007-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2007: ... Done!
-[Parallel(n_jobs=1)]: Done   5 out of   5 | elapsed: 44.8min remaining:    0.0s
-
-
-####### YEAR 2008:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="813b99d0-512d-4c97-87a6-b4d0cb897237" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('813b99d0-512d-4c97-87a6-b4d0cb897237');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f598129a15c04eec8d8552616a397e2f", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2008: Creating tensor for 2008-01-01 00:00:00+00:00 to 2008-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2008: ... Done!
-[Parallel(n_jobs=1)]: Done   6 out of   6 | elapsed: 49.9min remaining:    0.0s
-
-
-####### YEAR 2009:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="30a40f61-fd87-4c2b-a3c8-f4895cd019f1" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('30a40f61-fd87-4c2b-a3c8-f4895cd019f1');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "cf12f8d66a4f4ff19d5f4f75efbc172b", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2009: Creating tensor for 2009-01-01 00:00:00+00:00 to 2009-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2009: ... Done!
-[Parallel(n_jobs=1)]: Done   7 out of   7 | elapsed: 55.3min remaining:    0.0s
-
-
-####### YEAR 2010:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="773ec4b8-bf15-4ae0-babf-b398f2d29a6a" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('773ec4b8-bf15-4ae0-babf-b398f2d29a6a');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "77eda3f594d5414098b9896d01013100", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2010: Creating tensor for 2010-01-01 00:00:00+00:00 to 2010-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2010: ... Done!
-[Parallel(n_jobs=1)]: Done   8 out of   8 | elapsed: 60.5min remaining:    0.0s
-
-
-####### YEAR 2011:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="feebe412-b718-46d4-b60e-6dda93789f98" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('feebe412-b718-46d4-b60e-6dda93789f98');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "7ea501e0f52341948c8fc824f626dfcc", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2011: Creating tensor for 2011-01-01 00:00:00+00:00 to 2011-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2011: ... Done!
-[Parallel(n_jobs=1)]: Done   9 out of   9 | elapsed: 65.5min remaining:    0.0s
-
-
-####### YEAR 2012:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="5e79e284-50d8-42a4-bd8d-c315c918d39f" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('5e79e284-50d8-42a4-bd8d-c315c918d39f');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "f3601b82b01543b8aa6df4c024facba7", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2012: Creating tensor for 2012-01-01 00:00:00+00:00 to 2012-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2012: ... Done!
-[Parallel(n_jobs=1)]: Done  10 out of  10 | elapsed: 70.6min remaining:    0.0s
-
-
-####### YEAR 2013:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="58f0fc8d-7faa-4e37-b783-00017320beef" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('58f0fc8d-7faa-4e37-b783-00017320beef');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "2b8e3e2bf7d64a849787c4ef28d1bd92", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2013: Creating tensor for 2013-01-01 00:00:00+00:00 to 2013-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2013: ... Done!
-[Parallel(n_jobs=1)]: Done  11 out of  11 | elapsed: 75.8min remaining:    0.0s
-
-
-####### YEAR 2014:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="ab30f7c8-0e5c-44af-96ff-db0e5140ff05" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('ab30f7c8-0e5c-44af-96ff-db0e5140ff05');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "c6be79a1c13f4718b3990c5ac91dc1b0", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2014: Creating tensor for 2014-01-01 00:00:00+00:00 to 2014-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2014: ... Done!
-[Parallel(n_jobs=1)]: Done  12 out of  12 | elapsed: 80.8min remaining:    0.0s
-
-
-####### YEAR 2015:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="7d3216af-4fa6-42c1-ad8f-23d19beb4966" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('7d3216af-4fa6-42c1-ad8f-23d19beb4966');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "5ac87f270baf46a89d00415ad411c8fb", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2015: Creating tensor for 2015-01-01 00:00:00+00:00 to 2015-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2015: ... Done!
-[Parallel(n_jobs=1)]: Done  13 out of  13 | elapsed: 86.2min remaining:    0.0s
-
-
-####### YEAR 2016:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="87ae2b23-3331-4733-b206-f21b3a56381b" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('87ae2b23-3331-4733-b206-f21b3a56381b');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "232cd108ca144a1bb515eaaff450f4be", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2928, current length: 2927
-Initiated full shape: [2927, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2016: Creating tensor for 2016-01-01 00:00:00+00:00 to 2016-12-31 18:00:00+00:00, with the shape torch.Size([2927, 20, 81, 189]): ...
-2016: ... Done!
-[Parallel(n_jobs=1)]: Done  14 out of  14 | elapsed: 91.4min remaining:    0.0s
-
-
-####### YEAR 2017:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="b3474c6a-bbf2-4553-9314-801ff6fcac93" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('b3474c6a-bbf2-4553-9314-801ff6fcac93');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "8628f1ebdb93439b9267eb3cae4079ed", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2017: Creating tensor for 2017-01-01 00:00:00+00:00 to 2017-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2017: ... Done!
-[Parallel(n_jobs=1)]: Done  15 out of  15 | elapsed: 96.9min remaining:    0.0s
-
-
-####### YEAR 2018:
-Syncing timestamps: ...
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-
-
-
-
-
-<div id="7cad1e3c-f7d4-4e63-857e-0f4ecf3ef415" class="jupyter-widgets jp-OutputArea-output ">
-<script type="text/javascript">
-var element = document.getElementById('7cad1e3c-f7d4-4e63-857e-0f4ecf3ef415');
-</script>
-<script type="application/vnd.jupyter.widget-view+json">
-{"model_id": "45cbe04c443d4c4898f8ec007ff5ab03", "version_major": 2, "version_minor": 0}
-</script>
-</div>
-
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>... Done! Synced timestamps: original length: 2920, current length: 2919
-Initiated full shape: [2919, 20, 81, 189]
-Done initiation, use self.create_yearly_datasets(years) to create and save yearly datasets,
-or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.
-To create one tensor from all yearly created datasets, use the static method
-load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)
-2018: Creating tensor for 2018-01-01 00:00:00+00:00 to 2018-12-31 18:00:00+00:00, with the shape torch.Size([2919, 20, 81, 189]): ...
-2018: ... Done!
-[Parallel(n_jobs=1)]: Done  16 out of  16 | elapsed: 102.0min remaining:    0.0s
-[Parallel(n_jobs=1)]: Done  16 out of  16 | elapsed: 102.0min finished
-</pre>
-</div>
-</div>
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[15]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>[None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None,
- None]</pre>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -15345,102 +14426,12 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># data_dir = &quot;../../data&quot;</span>
-<span class="c1"># meteorology_dataframe_dir = f&quot;{data_dir}/meteorology_dataframes_20_81_189_3h&quot;</span>
-<span class="c1"># result_dir = f&quot;{data_dir}/dataset_input_20_81_189_old_dust_108_2_339&quot;</span>
-<span class="c1"># file_basename = f&quot;{result_dir}/meteorology_20_81_189_old&quot;</span>
-<span class="c1"># metadata_filename = f&quot;{data_dir}/meteorology_dataframes_20_81_189_3h/metadata/meteorology_dataframes_20_81_189_3h_description.pkl&quot;</span>
-<span class="c1"># timestamps_dir = f&quot;{data_dir}/dust_55520_108_2_339&quot;</span>
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>
 </div>
 </div>
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensors_list</span><span class="p">,</span><span class="n">timestamps_lists</span><span class="o">=</span><span class="p">[],[]</span>
-<span class="k">for</span> <span class="n">year</span> <span class="ow">in</span> <span class="n">years</span><span class="p">:</span>
-    <span class="n">tensors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_tensor.pkl&quot;</span><span class="p">))</span>
-    <span class="n">timestamps_lists</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">year</span><span class="si">}</span><span class="s2">_timestamps.pkl&quot;</span><span class="p">))</span>
-<span class="c1">#     timestamps_lists.append(torch.load(f&quot;{timestamps_dir}/dust_dataset_{year}_timestamps.pkl&quot;))</span>
-
-<span class="n">full_tensor</span><span class="p">,</span> <span class="n">full_timestamps</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Meteorology</span><span class="o">.</span><span class="n">merge_by_timestamps</span><span class="p">(</span>
-    <span class="n">tensors_list</span><span class="p">,</span> <span class="n">timestamps_lists</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">full_tensor</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">full_timestamps</span><span class="p">))</span>
-
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">full_tensor</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_tensor_full.pkl&quot;</span><span class="p">)</span>
-<span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">full_timestamps</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_timestamps_full.pkl&quot;</span><span class="p">)</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-
-
-<div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>torch.Size([46736, 20, 81, 189]) 46736
-</pre>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
-<div class="jp-Cell-inputWrapper">
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[17]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-     <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_tensor_full.pkl&quot;</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">file_basename</span><span class="si">}</span><span class="s2">_timestamps_full.pkl&quot;</span>
-</pre></div>
-
-     </div>
-</div>
-</div>
-</div>
-
-<div class="jp-Cell-outputWrapper">
-
-
-<div class="jp-OutputArea jp-Cell-outputArea">
-
-<div class="jp-OutputArea-child">
-
-    
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[17]:</div>
-
-
-
-
-<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
-<pre>(&#39;../../data/dataset_input_20_81_189_old_dust_108_2_339/meteorology_20_81_189_old_tensor_full.pkl&#39;,
- &#39;../../data/dataset_input_20_81_189_old_dust_108_2_339/meteorology_20_81_189_old_timestamps_full.pkl&#39;)</pre>
-</div>
-
-</div>
-
-</div>
-
 </div>
 
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
@@ -15449,7 +14440,907 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
-<div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#46736</span>
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span> <span class="o">=</span> <span class="n">MeteorologyToPandasHandler_Super</span><span class="p">(</span>
+    <span class="n">params</span><span class="p">,</span> <span class="n">dates</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">result_size</span><span class="o">=</span><span class="p">[</span><span class="mi">81</span><span class="p">,</span><span class="mi">189</span><span class="p">],</span><span class="n">result_hourly_res</span><span class="o">=</span><span class="mi">3</span>
+<span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># IDXS</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_info</span><span class="p">(</span><span class="s2">&quot;SLP&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;SLP&quot;</span><span class="p">,</span><span class="s2">&quot;lon&quot;</span><span class="p">)</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">281</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">296</span><span class="p">,</span><span class="mi">485</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;SLP&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_info</span><span class="p">(</span><span class="s2">&quot;Z850&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;Z850&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;Z850&quot;</span><span class="p">,</span><span class="s2">&quot;lev&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;Z850&quot;</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;Z850&quot;</span><span class="p">,</span><span class="s2">&quot;lon&quot;</span><span class="p">)</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plevs</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lev_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span>
+<span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">281</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">296</span><span class="p">,</span><span class="mi">485</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Z&#39;</span><span class="p">,</span><span class="s1">&#39;U&#39;</span><span class="p">,</span><span class="s1">&#39;V&#39;</span><span class="p">,</span><span class="s1">&#39;Q&#39;</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="s1">&#39;PV&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">plev</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plevs</span><span class="p">):</span>
+        <span class="n">param</span><span class="p">,</span><span class="n">plev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}{</span><span class="n">plev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">lev_idxs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lev&#39;</span><span class="p">:[</span><span class="n">plev</span><span class="p">],</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># handler.print_param_info(&quot;W850&quot;)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;W850&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;W850&quot;</span><span class="p">,</span><span class="s2">&quot;lev&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;W850&quot;</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;W850&quot;</span><span class="p">,</span><span class="s2">&quot;lon&quot;</span><span class="p">)</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">plevs</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lev_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">,</span><span class="mi">11</span><span class="p">,</span><span class="mi">15</span><span class="p">,</span><span class="mi">20</span><span class="p">]</span>
+<span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">141</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">148</span><span class="p">,</span><span class="mi">243</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;W&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">lev</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">plevs</span><span class="p">):</span>
+        <span class="n">param</span><span class="p">,</span><span class="n">lev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">lev_idxs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lev&#39;</span><span class="p">:[</span><span class="n">lev</span><span class="p">],</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_info</span><span class="p">(</span><span class="s2">&quot;CLWC80&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;CLWC80&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;CLWC80&quot;</span><span class="p">,</span><span class="s2">&quot;lev&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;CLWC80&quot;</span><span class="p">,</span><span class="s2">&quot;lat&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;CLWC80&quot;</span><span class="p">,</span><span class="s2">&quot;lon&quot;</span><span class="p">)</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clouds_model_levs</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lev_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">73</span><span class="p">,</span><span class="mi">83</span><span class="p">,</span><span class="mi">93</span><span class="p">,</span><span class="mi">103</span><span class="p">]</span> 
+<span class="n">lev_idxs_avgs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">131</span><span class="p">))</span>
+<span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span><span class="mi">281</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">296</span><span class="p">,</span><span class="mi">485</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CLWC&#39;</span><span class="p">,</span><span class="s1">&#39;CIWC&#39;</span><span class="p">,</span><span class="s1">&#39;CRWC&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">lev</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">clouds_model_levs</span><span class="p">):</span>
+        <span class="n">param</span><span class="p">,</span><span class="n">lev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">lev_idxs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lev&#39;</span><span class="p">:[</span><span class="n">lev</span><span class="p">],</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">param</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}</span><span class="s2">_avg&quot;</span>
+        <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;lev&#39;</span><span class="p">:</span><span class="n">lev_idxs_avgs</span><span class="p">,</span><span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="s2">&quot;lev&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">print_param_info</span><span class="p">(</span><span class="s2">&quot;aermr06_20&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aermr06_20&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aermr06_20&quot;</span><span class="p">,</span><span class="s2">&quot;level&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aermr06_20&quot;</span><span class="p">,</span><span class="s2">&quot;latitude&quot;</span><span class="p">)</span> 
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aermr06_20&quot;</span><span class="p">,</span><span class="s2">&quot;longitude&quot;</span><span class="p">)</span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cams_model_levs</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lev_idxs</span> <span class="o">=</span> <span class="p">[</span><span class="mi">19</span><span class="p">,</span><span class="mi">29</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="mi">49</span><span class="p">]</span>
+<span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">148</span><span class="p">,</span><span class="mi">243</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;aermr06&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span><span class="n">lev</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">cams_model_levs</span><span class="p">):</span>
+        <span class="n">param</span><span class="p">,</span><span class="n">lev</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span><span class="n">lev_idxs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;level&#39;</span><span class="p">:[</span><span class="n">lev</span><span class="p">],</span><span class="s1">&#39;latitude&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;longitude&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># handler.print_param_info(&quot;tcwv&quot;)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aod550&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aod550&quot;</span><span class="p">,</span><span class="s2">&quot;latitude&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;aod550&quot;</span><span class="p">,</span><span class="s2">&quot;longitude&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">148</span><span class="p">,</span><span class="mi">243</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;aod550&#39;</span><span class="p">,</span><span class="s1">&#39;duaod550&#39;</span><span class="p">,</span><span class="s1">&#39;tcwv&#39;</span><span class="p">,</span><span class="s1">&#39;u10&#39;</span><span class="p">,</span><span class="s1">&#39;v10&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;latitude&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;longitude&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># handler.print_param_info(&quot;pm10&quot;)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;pm10&quot;</span><span class="p">,</span><span class="s2">&quot;time&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;pm10&quot;</span><span class="p">,</span><span class="s2">&quot;latitude&quot;</span><span class="p">)</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">print_param_varaiable_info</span><span class="p">(</span><span class="s2">&quot;pm10&quot;</span><span class="p">,</span><span class="s2">&quot;longitude&quot;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">lats</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span><span class="mi">39</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="c1"># 10 to 50</span>
+<span class="n">lons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">148</span><span class="p">,</span><span class="mi">243</span><span class="p">))</span> <span class="c1"># -32 to 62</span>
+<span class="n">params_basenames</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pm10&#39;</span><span class="p">,</span><span class="s1">&#39;pm2p5&#39;</span><span class="p">]</span>
+<span class="k">for</span> <span class="n">param_basename</span> <span class="ow">in</span> <span class="n">params_basenames</span><span class="p">:</span>
+    <span class="n">param</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">param_basename</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">idxs_dict</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;time&#39;</span><span class="p">:[</span><span class="mi">0</span><span class="p">],</span><span class="s1">&#39;latitude&#39;</span><span class="p">:</span><span class="n">lats</span><span class="p">,</span><span class="s1">&#39;longitude&#39;</span><span class="p">:</span><span class="n">lons</span><span class="p">}</span>
+    <span class="n">handler</span><span class="o">.</span><span class="n">set_param_idxs</span><span class="p">(</span><span class="n">param</span><span class="p">,</span> <span class="n">idxs_dict</span><span class="p">,</span> <span class="n">avg_over_idxs</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">params_idxs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">years</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2008</span><span class="p">,</span><span class="mi">2016</span><span class="p">))</span>
+<span class="n">base_filename</span> <span class="o">=</span> <span class="s2">&quot;../../data/meteorology_dataframes_62_81_189/meteorology_df&quot;</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">create_yearly_dataframes_parallel_batches</span><span class="p">(</span><span class="n">base_filename</span><span class="p">,</span><span class="n">years</span><span class="o">=</span><span class="n">years</span><span class="p">,</span><span class="n">add_year_to_name</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span><span class="n">njobs</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+                                                  <span class="n">batch_size</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[1]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># years = [2018,2019]</span>
+<span class="c1"># base_filename = &quot;../../data/meteorology_dataframes_62_81_189/meteorology_df&quot;</span>
+<span class="c1"># handler.create_yearly_dataframes_parallel(base_filename,years=years,add_year_to_name=True,njobs=2)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_df</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">base_filename_debug</span><span class="si">}</span><span class="s1">_2020.pkl&#39;</span><span class="p">)</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_df</span><span class="p">[:</span><span class="mi">5</span><span class="p">]</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_df</span><span class="p">[</span><span class="s2">&quot;pm10&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_df</span><span class="o">.</span><span class="n">columns</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">lev</span> <span class="ow">in</span> <span class="n">clouds_model_levs</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sample_df</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;CIWC</span><span class="si">{</span><span class="n">lev</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">][</span><span class="mi">200</span><span class="p">][</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">sample_df</span><span class="p">[</span><span class="s2">&quot;CIWC_avg&quot;</span><span class="p">][</span><span class="mi">200</span><span class="p">][</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">])</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_df</span><span class="p">[</span><span class="s2">&quot;CRWC_avg&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[&nbsp;]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span> 
 </pre></div>
 
      </div>

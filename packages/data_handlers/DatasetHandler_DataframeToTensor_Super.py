@@ -7,7 +7,7 @@ from joblib import Parallel, delayed #conda install -c anaconda joblib
 class DatasetHandler_DataframeToTensor_Super:
     
     def __init__(self, dataframe, dims_cols_strings, metadata={}, timestamps=None, save_base_filename=None,
-                 invalid_col_fill=-777, save_timestamps=True):
+                 invalid_col_fill=-777, save_timestamps=True, verbose=1):
         """
         dataframe - already uploaded, to be converted into a tensor
         timestamps - if None, will use all (unless built yearly)
@@ -27,19 +27,21 @@ class DatasetHandler_DataframeToTensor_Super:
         self.timestamps = timestamps if timestamps is not None else dataframe.index
         self.dataframe = dataframe
         self.metadata = metadata
+        self.verbose = verbose
         self.save_base_filename = save_base_filename
         self.invalid_col_fill = invalid_col_fill
         self.save_timestamps = save_timestamps
         if timestamps is not None: self.sync_dataframe_timestamps()
         self.init_shape()
         self.create_metadata() 
-        print("Done initiation, use self.create_yearly_datasets(years, add_years_to_name=True) to create and save yearly datasets,")
-        print("or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.")
-        print("To create one tensor from all yearly created datasets, use the static method\n" \
-              "load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)")
-        
+        if self.verbose>0: 
+            print("Done initiation, use self.create_yearly_datasets(years, add_years_to_name=True) to create and save yearly datasets,")
+            print("or self.create_yearly_datasets_parallel(years,njobs=3) to create and save yearly datasets paralelly.")
+            print("To create one tensor from all yearly created datasets, use the static method\n" \
+                  "load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,metadata=None)")
+
     def sync_dataframe_timestamps(self):
-        print("Syncing timestamps: ...")
+        if verbose>0: print("Syncing timestamps: ...")
         existing_new_timestamps = []
         full_length = len(self.timestamps)
         for t in tqdm(self.timestamps):
@@ -50,12 +52,12 @@ class DatasetHandler_DataframeToTensor_Super:
                 continue
         self.timestamps = pd.to_datetime(existing_new_timestamps)
         self.dataframe = self.dataframe.loc[self.timestamps]
-        print(f"... Done! Synced timestamps: original length: {full_length}, current length: {len(self.timestamps)}")
+        if self.verbose>0: print(f"... Done! Synced timestamps: original length: {full_length}, current length: {len(self.timestamps)}")
         
     def init_shape(self):
         num_dims = len(self.dims_cols_strings.keys())+1
         self.shape = [len(self.timestamps)]+[len(self.dims_cols_strings[i]) for i in range(1,num_dims)]
-        print(f"Initiated full shape: {self.shape}")
+        if self.verbose>0: print(f"Initiated full shape: {self.shape}")
             
     def create_metadata(self):
         """ Will be implemented specifically for each dataset type (e.g.  dust, meteorology...)"""
@@ -65,7 +67,7 @@ class DatasetHandler_DataframeToTensor_Super:
         """ Will be overidden by meteorology dataset creation handler"""
         tensor = torch.zeros([len(timestamps)]+[i for i in self.shape[1:]])
         df = self.dataframe.loc[timestamps]
-        print(f"{print_prefix}Creating tensor for {timestamps[0]} to {timestamps[-1]}, with the shape {tensor.shape}: ...")
+        if self.verbose>0: print(f"{print_prefix}Creating tensor for {timestamps[0]} to {timestamps[-1]}, with the shape {tensor.shape}: ...")
         last_dim = list(self.dims_cols_strings.keys())[-1]
         def recursively_populate_tensor_from_col(t,dim,col_name_so_far):
             if dim>=last_dim:
@@ -79,7 +81,7 @@ class DatasetHandler_DataframeToTensor_Super:
             for col_idx,col_str in enumerate(self.dims_cols_strings[dim]):
                 recursively_populate_tensor_from_col(t[:,col_idx],dim+1,col_name_so_far+f"{col_str}_")
         recursively_populate_tensor_from_col(tensor,1,"")
-        print(f"{print_prefix}... Done!")
+        if self.verbose>0: print(f"{print_prefix}... Done!")
         return tensor
         
     def create_yearly_datasets(self, years, add_years_to_name=True):
@@ -98,6 +100,16 @@ class DatasetHandler_DataframeToTensor_Super:
     def create_yearly_datasets_parallel(self, years, njobs=3):
         Parallel(n_jobs=njobs,verbose=100)(delayed(self.create_yearly_datasets)([year]) for year in years)      
     
+    def get_dataset_from_timestamps(self, timestamps, suffix=None):
+        if timestamps.empty:
+            print(f"Found no rows for timestamps, aborting...")
+            return
+        t = self.get_tensor_from_timestamps(timestamps, print_prefix=f"...{suffix}: ")
+        filename = f"{self.save_base_filename}"
+        if suffix is not None: filename+=f"_{suffix}"
+        filename_t,filename_timestamps = f"{filename}_tensor.pkl",f"{filename}_timestamps.pkl"
+        return t,timestamps,filename_t,filename_timestamps
+
     @staticmethod
     def save_dataset(t, timestamps, base_filename):
         torch.save(timestamps,f"{base_filename}_timestamps.pkl")
