@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Untitled</title>
+<title>draft_new_dust_MOEP_2019_2020_module</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13079,6 +13079,2252 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">DustToPandasHandler_MultiStations_MOEP_hebrew</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
+<span class="n">dust_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_2019_2020&quot;</span>
+<span class="n">dust_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_raw_2019to2020_pm10_pm25.csv&quot;</span>
+<span class="n">dust_filename_debug</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_raw_2019to2020_pm10_pm25_debug.csv&quot;</span>
+<span class="n">base_stations_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/base_stations.pkl&quot;</span>
+
+
+<span class="n">dust_pm10_older_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/data_pm10_all_stations.csv&quot;</span>
+<span class="n">dust_df_metadata_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/metadata/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d_metadata_all.pkl&quot;</span>
+
+<span class="c1"># dust_pm25_filename = f&quot;{data_dir}/data_pm25_all_stations.csv&quot;</span>
+<span class="c1"># result_filename = f&quot;{data_dir}/dust_multistations/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d&quot;</span>
+<span class="c1"># metadata_base_filename = f&quot;{data_dir}/dust_multistations/metadata/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d_metadata&quot;</span>
+<span class="c1"># debug_result_filename = f&quot;{data_dir}/dust_multistations/debug_dataframe.pkl&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">base_stations_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/base_stations.pkl&quot;</span>
+<span class="n">base_stations_list</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_stations_filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span> <span class="o">=</span> <span class="n">DustToPandasHandler_MultiStations_MOEP_hebrew</span><span class="p">(</span>
+    <span class="n">timezone</span><span class="o">=</span><span class="s2">&quot;Asia/Jerusalem&quot;</span><span class="p">,</span> <span class="n">num_hours_to_avg</span><span class="o">=</span><span class="s2">&quot;3h&quot;</span><span class="p">,</span><span class="n">lags</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">24</span><span class="p">,</span><span class="mi">24</span><span class="p">,</span><span class="mi">48</span><span class="p">,</span><span class="mi">72</span><span class="p">],</span>
+    <span class="n">delta_hours</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">saveto</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">avg_th</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">origin_start</span><span class="o">=</span><span class="s2">&quot;2019-01-01 00:00:00+00:00&quot;</span><span class="p">,</span>
+    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">data_csv_filename</span><span class="o">=</span><span class="n">dust_filename_debug</span><span class="p">,</span> <span class="n">loaded_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stations_num_values_th</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+    <span class="n">pm_csv_titles_to_base_titles_translation</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PM10&quot;</span><span class="p">:</span><span class="s2">&quot;PM10&quot;</span><span class="p">,</span><span class="s2">&quot;PM2.5&quot;</span><span class="p">:</span><span class="s2">&quot;PM25&quot;</span><span class="p">},</span>
+    <span class="n">base_stations</span><span class="o">=</span><span class="n">base_stations_list</span><span class="p">,</span> <span class="n">hebrew_station_titles_row</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">pm_types_titles_row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">invalid_values_flags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">only_from_stations_by_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_value_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span><span class="n">invalid_rows_idxs</span><span class="o">=</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+    <span class="n">timestamp_format_day_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Loading .csv data: ...
+Initiated handler! Number of rows in csv file: 18, number of cols: 105
+Use self.create_and_save_batched_dataframes(base_filename,batch_size=None,num_jobs=2) to create and save dataframes (batch_size=None means one batch for all file, so no parallelism)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">base_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/debug&quot;</span>
+<span class="n">handler</span><span class="o">.</span><span class="n">create_and_save_batched_dataframes</span><span class="p">(</span><span class="n">base_filename</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>here                            MAVKIIM_PM10_0  MAVKIIM_PM10_values_count_0  \
+2018-12-31 21:00:00+00:00       27.366667                          3.0   
+2019-01-01 00:00:00+00:00       21.683333                          6.0   
+2019-01-01 03:00:00+00:00       14.650000                          6.0   
+
+                           MAVKIIM_PM25_0  MAVKIIM_PM25_values_count_0  \
+2018-12-31 21:00:00+00:00          -999.0                          0.0   
+2019-01-01 00:00:00+00:00          -999.0                          0.0   
+2019-01-01 03:00:00+00:00          -999.0                          0.0   
+
+                           YAD_RAMBAM_2_PM10_0  \
+2018-12-31 21:00:00+00:00                34.60   
+2019-01-01 00:00:00+00:00                24.55   
+2019-01-01 03:00:00+00:00                21.75   
+
+                           YAD_RAMBAM_2_PM10_values_count_0  \
+2018-12-31 21:00:00+00:00                               3.0   
+2019-01-01 00:00:00+00:00                               6.0   
+2019-01-01 03:00:00+00:00                               6.0   
+
+                           YAD_RAMBAM_2_PM25_0  \
+2018-12-31 21:00:00+00:00               -777.0   
+2019-01-01 00:00:00+00:00               -777.0   
+2019-01-01 03:00:00+00:00               -777.0   
+
+                           YAD_RAMBAM_2_PM25_values_count_0  KVISH9_PM10_0  \
+2018-12-31 21:00:00+00:00                               0.0         -777.0   
+2019-01-01 00:00:00+00:00                               0.0         -777.0   
+2019-01-01 03:00:00+00:00                               0.0         -777.0   
+
+                           KVISH9_PM10_values_count_0  ...  \
+2018-12-31 21:00:00+00:00                         0.0  ...   
+2019-01-01 00:00:00+00:00                         0.0  ...   
+2019-01-01 03:00:00+00:00                         0.0  ...   
+
+                           UM_EL_KUTUF_PM25_72  UM_EL_KUTUF_PM25_delta_0  \
+2018-12-31 21:00:00+00:00               -999.0                    -999.0   
+2019-01-01 00:00:00+00:00               -999.0                       0.0   
+2019-01-01 03:00:00+00:00               -999.0                       0.0   
+
+                           UM_EL_KUTUF_PM25_delta_m24  \
+2018-12-31 21:00:00+00:00                      -999.0   
+2019-01-01 00:00:00+00:00                      -999.0   
+2019-01-01 03:00:00+00:00                      -999.0   
+
+                           UM_EL_KUTUF_PM25_delta_24  \
+2018-12-31 21:00:00+00:00                     -999.0   
+2019-01-01 00:00:00+00:00                     -999.0   
+2019-01-01 03:00:00+00:00                     -999.0   
+
+                           UM_EL_KUTUF_PM25_delta_48  \
+2018-12-31 21:00:00+00:00                     -999.0   
+2019-01-01 00:00:00+00:00                     -999.0   
+2019-01-01 03:00:00+00:00                     -999.0   
+
+                           UM_EL_KUTUF_PM25_delta_72  \
+2018-12-31 21:00:00+00:00                     -999.0   
+2019-01-01 00:00:00+00:00                     -999.0   
+2019-01-01 03:00:00+00:00                     -999.0   
+
+                           UM_EL_KUTUF_PM25_values_count_m24  \
+2018-12-31 21:00:00+00:00                                0.0   
+2019-01-01 00:00:00+00:00                                0.0   
+2019-01-01 03:00:00+00:00                                0.0   
+
+                           UM_EL_KUTUF_PM25_values_count_24  \
+2018-12-31 21:00:00+00:00                               0.0   
+2019-01-01 00:00:00+00:00                               0.0   
+2019-01-01 03:00:00+00:00                               0.0   
+
+                           UM_EL_KUTUF_PM25_values_count_48  \
+2018-12-31 21:00:00+00:00                               0.0   
+2019-01-01 00:00:00+00:00                               0.0   
+2019-01-01 03:00:00+00:00                               0.0   
+
+                           UM_EL_KUTUF_PM25_values_count_72  
+2018-12-31 21:00:00+00:00                               0.0  
+2019-01-01 00:00:00+00:00                               0.0  
+2019-01-01 03:00:00+00:00                               0.0  
+
+[3 rows x 3240 columns] ../../data/dust_MOEP_2019_2020/debug 0 18 None
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">handler</span><span class="o">.</span><span class="n">create_dataframe_from_rows</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">17</span><span class="p">)</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MAVKIIM_PM10_0</th>
+      <th>MAVKIIM_PM10_values_count_0</th>
+      <th>MAVKIIM_PM25_0</th>
+      <th>MAVKIIM_PM25_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM10_0</th>
+      <th>YAD_RAMBAM_2_PM10_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM25_0</th>
+      <th>YAD_RAMBAM_2_PM25_values_count_0</th>
+      <th>KVISH9_PM10_0</th>
+      <th>KVISH9_PM10_values_count_0</th>
+      <th>...</th>
+      <th>UM_EL_KUTUF_PM25_72</th>
+      <th>UM_EL_KUTUF_PM25_delta_0</th>
+      <th>UM_EL_KUTUF_PM25_delta_m24</th>
+      <th>UM_EL_KUTUF_PM25_delta_24</th>
+      <th>UM_EL_KUTUF_PM25_delta_48</th>
+      <th>UM_EL_KUTUF_PM25_delta_72</th>
+      <th>UM_EL_KUTUF_PM25_values_count_m24</th>
+      <th>UM_EL_KUTUF_PM25_values_count_24</th>
+      <th>UM_EL_KUTUF_PM25_values_count_48</th>
+      <th>UM_EL_KUTUF_PM25_values_count_72</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2018-12-31 21:00:00+00:00</th>
+      <td>27.366667</td>
+      <td>3.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>34.60</td>
+      <td>3.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>21.683333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>24.55</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 03:00:00+00:00</th>
+      <td>14.160000</td>
+      <td>5.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>21.50</td>
+      <td>5.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 3240 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;MAVKIIM_PM25_values_count_48&quot;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>2018-12-31 21:00:00+00:00    0.0
+2019-01-01 00:00:00+00:00    0.0
+2019-01-01 03:00:00+00:00    0.0
+Freq: 3H, Name: MAVKIIM_PM25_values_count_48, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">num_rows</span> <span class="o">=</span> <span class="mi">49</span>
+<span class="n">batch_size</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="k">for</span> <span class="n">num_batch</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_rows</span><span class="o">//</span><span class="n">batch_size</span><span class="p">):</span>
+    <span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span> <span class="o">=</span> <span class="n">num_batch</span><span class="o">*</span><span class="n">batch_size</span><span class="p">,(</span><span class="n">num_batch</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">batch_size</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">last_row</span> <span class="o">!=</span> <span class="n">num_rows</span><span class="p">:</span>
+    <span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span> <span class="o">=</span> <span class="n">last_row</span><span class="p">,</span><span class="n">num_rows</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>0 10
+10 20
+20 30
+30 40
+40 49
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[52]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">calc_first_and_last_row_from_batch_num</span><span class="p">(</span><span class="n">batch_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">num_batch</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">num_rows</span> <span class="o">=</span> <span class="mi">50</span> <span class="c1">#len(self.csv_file)</span>
+    <span class="k">if</span> <span class="n">batch_size</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="n">num_rows</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span> <span class="o">=</span> <span class="n">num_batch</span><span class="o">*</span><span class="n">batch_size</span><span class="p">,</span><span class="nb">min</span><span class="p">((</span><span class="n">num_batch</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">batch_size</span><span class="p">,</span><span class="n">num_rows</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">first_row</span> <span class="o">&gt;=</span> <span class="n">num_rows</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span><span class="kc">None</span>
+<span class="c1">#     if first_row &gt;= num_rows//batch_size or last_row &gt;= num_rows:</span>
+<span class="c1">#         first_row,last_row = batch_size*num_rows//batch_size,num_rows</span>
+    <span class="k">return</span> <span class="n">first_row</span><span class="p">,</span><span class="n">last_row</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[53]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">7</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">calc_first_and_last_row_from_batch_num</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="n">i</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>(0, 10)
+(10, 20)
+(20, 30)
+(30, 40)
+(40, 50)
+(None, None)
+(None, None)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">invalid_values_mask</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="c1">#df==invalid_lag_value or </span>
+<span class="n">lags_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">if</span> <span class="s2">&quot;values_count&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+<span class="n">values_counts_cols</span> <span class="o">=</span> <span class="p">[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span> <span class="k">if</span> <span class="s2">&quot;values_count&quot;</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]</span>
+<span class="n">df_na</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">invalid_values_mask</span><span class="p">][</span><span class="n">lags_cols</span><span class="p">]</span>
+<span class="n">df_na</span> <span class="o">=</span> <span class="n">df_na</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="o">-</span><span class="mi">999</span><span class="p">)</span>
+<span class="n">df_na</span>
+<span class="n">df</span><span class="p">[</span><span class="n">invalid_values_mask</span><span class="p">][</span><span class="n">lags_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_na</span>
+<span class="n">df</span><span class="p">[</span><span class="n">invalid_values_mask</span><span class="p">][</span><span class="n">lags_cols</span><span class="p">]</span>
+<span class="c1"># df[invalid_values_mask][values_counts_cols] = 0</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AFULA_PM10_0</th>
+      <th>AMIEL_PM10_0</th>
+      <th>AMIEL_PM25_0</th>
+      <th>ARIEL_PM10_0</th>
+      <th>BAR_ILAN_PM25_0</th>
+      <th>BEER_SHEVA_PM10_0</th>
+      <th>BEER_SHEVA_PM25_0</th>
+      <th>BEIT_SHEMESH_PM10_0</th>
+      <th>WEST_GALIL_PM10_0</th>
+      <th>EFRATA_PM10_0</th>
+      <th>...</th>
+      <th>KIRYAT_HAIM_PM10_delta_72</th>
+      <th>KIRYAT_HAIM_PM25_m24</th>
+      <th>KIRYAT_HAIM_PM25_24</th>
+      <th>KIRYAT_HAIM_PM25_48</th>
+      <th>KIRYAT_HAIM_PM25_72</th>
+      <th>KIRYAT_HAIM_PM25_delta_0</th>
+      <th>KIRYAT_HAIM_PM25_delta_m24</th>
+      <th>KIRYAT_HAIM_PM25_delta_24</th>
+      <th>KIRYAT_HAIM_PM25_delta_48</th>
+      <th>KIRYAT_HAIM_PM25_delta_72</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2018-12-31 21:00:00+00:00</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 03:00:00+00:00</th>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 1050 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">lags_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">lags_cols</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span><span class="o">-</span><span class="mi">999</span><span class="p">,</span><span class="n">df</span><span class="p">[</span><span class="n">lags_cols</span><span class="p">])</span>
+<span class="n">df</span><span class="p">[</span><span class="n">values_counts_cols</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">values_counts_cols</span><span class="p">]</span><span class="o">.</span><span class="n">isna</span><span class="p">(),</span><span class="mi">0</span><span class="p">,</span><span class="n">df</span><span class="p">[</span><span class="n">values_counts_cols</span><span class="p">])</span>
+<span class="n">df</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[16]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AFULA_PM10_0</th>
+      <th>AMIEL_PM10_0</th>
+      <th>AMIEL_PM25_0</th>
+      <th>ARIEL_PM10_0</th>
+      <th>BAR_ILAN_PM25_0</th>
+      <th>BEER_SHEVA_PM10_0</th>
+      <th>BEER_SHEVA_PM25_0</th>
+      <th>BEIT_SHEMESH_PM10_0</th>
+      <th>WEST_GALIL_PM10_0</th>
+      <th>EFRATA_PM10_0</th>
+      <th>...</th>
+      <th>KIRYAT_HAIM_PM25_72</th>
+      <th>KIRYAT_HAIM_PM25_delta_0</th>
+      <th>KIRYAT_HAIM_PM25_delta_m24</th>
+      <th>KIRYAT_HAIM_PM25_delta_24</th>
+      <th>KIRYAT_HAIM_PM25_delta_48</th>
+      <th>KIRYAT_HAIM_PM25_delta_72</th>
+      <th>KIRYAT_HAIM_PM25_values_count_m24</th>
+      <th>KIRYAT_HAIM_PM25_values_count_24</th>
+      <th>KIRYAT_HAIM_PM25_values_count_48</th>
+      <th>KIRYAT_HAIM_PM25_values_count_72</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2018-12-31 21:00:00+00:00</th>
+      <td>33.433333</td>
+      <td>69.333333</td>
+      <td>-999.0</td>
+      <td>15.566667</td>
+      <td>16.266667</td>
+      <td>10.666667</td>
+      <td>4.833333</td>
+      <td>-999.0</td>
+      <td>16.033333</td>
+      <td>12.666667</td>
+      <td>...</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>43.933333</td>
+      <td>44.666667</td>
+      <td>-999.0</td>
+      <td>11.066667</td>
+      <td>18.450000</td>
+      <td>12.850000</td>
+      <td>8.366667</td>
+      <td>-999.0</td>
+      <td>12.550000</td>
+      <td>15.533333</td>
+      <td>...</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 03:00:00+00:00</th>
+      <td>23.720000</td>
+      <td>36.120000</td>
+      <td>-999.0</td>
+      <td>14.280000</td>
+      <td>8.980000</td>
+      <td>20.666667</td>
+      <td>12.900000</td>
+      <td>-999.0</td>
+      <td>15.560000</td>
+      <td>17.780000</td>
+      <td>...</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 1575 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;AMIEL_PM25_24&quot;</span><span class="p">],</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;AMIEL_PM25_values_count_24&quot;</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[18]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(2018-12-31 21:00:00+00:00   -999.0
+ 2019-01-01 00:00:00+00:00   -999.0
+ 2019-01-01 03:00:00+00:00   -999.0
+ Freq: 3H, Name: AMIEL_PM25_24, dtype: float64,
+ 2018-12-31 21:00:00+00:00    0.0
+ 2019-01-01 00:00:00+00:00    0.0
+ 2019-01-01 03:00:00+00:00    0.0
+ Freq: 3H, Name: AMIEL_PM25_values_count_24, dtype: float64)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[13]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">mask1</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="n">col</span> <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">columns</span> <span class="k">if</span> <span class="s2">&quot;values_count&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">col</span><span class="p">]]</span><span class="o">==-</span><span class="mi">999</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">np</span><span class="o">.</span><span class="n">nan</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[5]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>nan</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">calculate_averages_for_dataframe</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[6]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>AFULA_PM10_0</th>
+      <th>AMIEL_PM10_0</th>
+      <th>AMIEL_PM25_0</th>
+      <th>ARIEL_PM10_0</th>
+      <th>BAR_ILAN_PM25_0</th>
+      <th>BEER_SHEVA_PM10_0</th>
+      <th>BEER_SHEVA_PM25_0</th>
+      <th>BEIT_SHEMESH_PM10_0</th>
+      <th>WEST_GALIL_PM10_0</th>
+      <th>EFRATA_PM10_0</th>
+      <th>...</th>
+      <th>BEIT_RIVKA_PM25_values_count_values_count_0</th>
+      <th>HADAR_PM25_values_count_values_count_0</th>
+      <th>HEFZIBA_PM25_values_count_values_count_0</th>
+      <th>TAHANA_MERKAZIT_PM10_values_count_values_count_0</th>
+      <th>TAHANA_MERKAZIT_PM25_values_count_values_count_0</th>
+      <th>BARTAA_PM10_values_count_values_count_0</th>
+      <th>BARKAI_PM10_values_count_values_count_0</th>
+      <th>BARKAI_PM25_values_count_values_count_0</th>
+      <th>KIRYAT_HAIM_PM10_values_count_values_count_0</th>
+      <th>KIRYAT_HAIM_PM25_values_count_values_count_0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2018-12-31 21:00:00+00:00</th>
+      <td>33.433333</td>
+      <td>69.333333</td>
+      <td>-999.0</td>
+      <td>15.566667</td>
+      <td>16.266667</td>
+      <td>10.666667</td>
+      <td>4.833333</td>
+      <td>-999.0</td>
+      <td>16.033333</td>
+      <td>12.666667</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>43.933333</td>
+      <td>44.666667</td>
+      <td>-999.0</td>
+      <td>11.066667</td>
+      <td>18.450000</td>
+      <td>12.850000</td>
+      <td>8.366667</td>
+      <td>-999.0</td>
+      <td>12.550000</td>
+      <td>15.533333</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 03:00:00+00:00</th>
+      <td>23.720000</td>
+      <td>36.120000</td>
+      <td>-999.0</td>
+      <td>14.280000</td>
+      <td>8.980000</td>
+      <td>20.666667</td>
+      <td>12.900000</td>
+      <td>-999.0</td>
+      <td>15.560000</td>
+      <td>17.780000</td>
+      <td>...</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+<p>3 rows × 420 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ts1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-01-01 00:00&quot;</span><span class="p">)</span>
+<span class="n">ts1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Timestamp(&#39;2000-01-01 00:00:00&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">ts1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="s2">&quot;30min&quot;</span><span class="p">)</span><span class="o">==</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s2">&quot;2000-01-01 01:00&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[8]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">[(</span><span class="n">row_idx</span><span class="p">,</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="k">for</span> <span class="n">row_idx</span><span class="p">,</span><span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">handler</span><span class="o">.</span><span class="n">csv_file</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[(0, &#39;תאריך ושעה&#39;),
+ (1, &#39;&#39;),
+ (2, &#39;&#39;),
+ (3, &#39;00:30 01/01/2019&#39;),
+ (4, &#39;01:00 01/01/2019&#39;),
+ (5, &#39;01:30 01/01/2019&#39;),
+ (6, &#39;02:00 01/01/2019&#39;),
+ (7, &#39;02:30 01/01/2019&#39;),
+ (8, &#39;03:00 01/01/2019&#39;),
+ (9, &#39;03:30 01/01/2019&#39;),
+ (10, &#39;04:00 01/01/2019&#39;),
+ (11, &#39;04:30 01/01/2019&#39;),
+ (12, &#39;05:00 01/01/2019&#39;),
+ (13, &#39;05:30 01/01/2019&#39;),
+ (14, &#39;06:00 01/01/2019&#39;),
+ (15, &#39;06:30 01/01/2019&#39;),
+ (16, &#39;07:00 01/01/2019&#39;),
+ (17, &#39;07:30 01/01/2019&#39;)]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># handler.csv_row_to_timestamp(52)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s2">&quot;A&quot;</span><span class="p">:[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">],</span><span class="s2">&quot;B&quot;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span><span class="mi">20</span><span class="p">,</span><span class="mi">30</span><span class="p">]},</span>
+    <span class="n">index</span><span class="o">=</span><span class="p">[</span><span class="n">handler</span><span class="o">.</span><span class="n">csv_row_to_timestamp</span><span class="p">(</span><span class="mi">6</span><span class="p">),</span><span class="n">handler</span><span class="o">.</span><span class="n">csv_row_to_timestamp</span><span class="p">(</span><span class="mi">7</span><span class="p">),</span><span class="n">handler</span><span class="o">.</span><span class="n">csv_row_to_timestamp</span><span class="p">(</span><span class="mi">8</span><span class="p">)])</span>
+<span class="n">df1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[11]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>1</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:30:00+00:00</th>
+      <td>2</td>
+      <td>20</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 01:00:00+00:00</th>
+      <td>3</td>
+      <td>30</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span><span class="p">[</span><span class="s2">&quot;C&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span><span class="mi">200</span><span class="p">,</span><span class="mi">300</span><span class="p">]</span>
+<span class="n">df1</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[12]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>1</td>
+      <td>10</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:30:00+00:00</th>
+      <td>2</td>
+      <td>20</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 01:00:00+00:00</th>
+      <td>3</td>
+      <td>30</td>
+      <td>300</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df1</span><span class="p">[[</span><span class="s2">&quot;B&quot;</span><span class="p">,</span><span class="s2">&quot;C&quot;</span><span class="p">]]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[16]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>B</th>
+      <th>C</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>10</td>
+      <td>100</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 00:30:00+00:00</th>
+      <td>20</td>
+      <td>200</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 01:00:00+00:00</th>
+      <td>30</td>
+      <td>300</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[12]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">t2</span><span class="p">,</span><span class="n">t1</span><span class="o">+</span><span class="mi">2</span><span class="o">*</span><span class="n">pd</span><span class="o">.</span><span class="n">Timedelta</span><span class="p">(</span><span class="s2">&quot;30min&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[12]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(Timestamp(&#39;2019-01-31 22:30:00+0000&#39;, tz=&#39;UTC&#39;),
+ Timestamp(&#39;2019-01-01 22:30:00+0000&#39;, tz=&#39;UTC&#39;))</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[18]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">csv_row_to_timestamp</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[18]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Timestamp(&#39;2018-12-31 22:30:00+0000&#39;, tz=&#39;UTC&#39;)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">csv_row_to_timestamp</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="ow">is</span> <span class="n">pd</span><span class="o">.</span><span class="n">NaT</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>False</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[1]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_csv_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_debug_csv</span> <span class="o">=</span> <span class="n">load_csv_file</span><span class="p">(</span><span class="n">dust_filename_debug</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_text output_error">
+<pre>
+<span class="ansi-red-fg">---------------------------------------------------------------------------</span>
+<span class="ansi-red-fg">NameError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-fg">&lt;ipython-input-2-12afa6c0f612&gt;</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-fg">----&gt; 1</span><span class="ansi-red-fg"> </span>dust_debug_csv <span class="ansi-blue-fg">=</span> load_csv_file<span class="ansi-blue-fg">(</span>dust_filename_debug<span class="ansi-blue-fg">)</span>
+
+<span class="ansi-red-fg">NameError</span>: name &#39;dust_filename_debug&#39; is not defined</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">len</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_older</span> <span class="o">=</span> <span class="n">load_csv_file</span><span class="p">(</span><span class="n">dust_pm10_older_filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_older</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dust_older</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_df_metadata</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dust_df_metadata_filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM10&quot;</span><span class="p">]),</span><span class="nb">len</span><span class="p">(</span><span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM25&quot;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_df_metadata</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">row_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">row_idx</span><span class="p">],</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">row_idx</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM10&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">continue</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, x: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;X_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, y: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Y_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, PM10&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM25&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">continue</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, x: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;X_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, y: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Y_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, PM2.5&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>

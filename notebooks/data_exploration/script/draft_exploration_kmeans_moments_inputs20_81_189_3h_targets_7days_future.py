@@ -521,20 +521,20 @@ clusters,_,idxs_dict = get_kmeans_clusters_dict(t_flat,
 print("Resulting shapes:")
 for i in range(num_clusters):
     print(f"{i}:{clusters[i].shape}")
-    
+
 
 clusters_sequence_avg = {}
 for i in range(num_clusters):
     clusters_sequence_avg[i] = clusters[i].mean(0)
     print(f"{i}:{clusters_sequence_avg[i].shape}, averaged from tensors of shape {clusters[i].shape}")
-    
+
 # Normalization:
 for i in range(num_clusters):
     means = clusters_sequence_avg[i].mean([0,2,3])
     stds = clusters_sequence_avg[i].std([0,2,3])
     clusters_sequence_avg[i] = (clusters_sequence_avg[i]-means[None,:,None,None])/stds[None,:,None,None]
     print(f"{i}:,{clusters_sequence_avg[i].shape}")
-    
+
 channels_titles = [description["input"][i]["short"] for i in range(20)]
 titles = [f"{-i} Days Earlier, C{cluster}" for cluster in range(num_clusters) for i in range(-5,1)]
 title_base = f"Average Normalized Events Anonamlies Progression, {num_clusters} Clusters"
@@ -600,7 +600,7 @@ for cluster_label in range(num_clusters):
     for m in range(1,13):
         num_events.append(clusters_months_counters[cluster_label][m])
     clusters_num_events_plots[cluster_label] = np.array(num_events)
-    
+
 plt.figure()
 for cluster_label in range(num_clusters):
     plt.plot(np.arange(1,13),clusters_num_events_plots[cluster_label],label=f"{cluster_label}")

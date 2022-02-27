@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Untitled</title>
+<title>draft_new_dust_MOEP_2019_2020-Copy1</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13079,6 +13079,2262 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[2]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">DustToPandasHandler_MultiStations</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[22]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
+<span class="n">dust_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_2019_2020&quot;</span>
+<span class="n">dust_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_raw_2019to2020_pm10_pm25.csv&quot;</span>
+<span class="n">dust_filename_debug</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_raw_2019to2020_pm10_pm25_debug.csv&quot;</span>
+
+<span class="n">dust_pm10_older_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/data_pm10_all_stations.csv&quot;</span>
+<span class="n">dust_df_metadata_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/metadata/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d_metadata_all.pkl&quot;</span>
+
+<span class="c1"># dust_pm25_filename = f&quot;{data_dir}/data_pm25_all_stations.csv&quot;</span>
+<span class="c1"># result_filename = f&quot;{data_dir}/dust_multistations/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d&quot;</span>
+<span class="c1"># metadata_base_filename = f&quot;{data_dir}/dust_multistations/metadata/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d_metadata&quot;</span>
+<span class="c1"># debug_result_filename = f&quot;{data_dir}/dust_multistations/debug_dataframe.pkl&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">load_csv_file</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+    <span class="n">file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> 
+    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">csv</span><span class="o">.</span><span class="n">reader</span><span class="p">(</span><span class="n">file</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_debug_csv</span> <span class="o">=</span> <span class="n">load_csv_file</span><span class="p">(</span><span class="n">dust_filename_debug</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="nb">len</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[11]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(153, 153)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[21]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[21]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&#39;תאריך ושעה&#39;,
+ &#39;עפולה, עפולה&#39;,
+ &#39;תל אביב-יפו, רחוב לחי&#39;,
+ &#39;&#39;,
+ &#39;אריאל, אריאל&#39;,
+ &#39;ירושלים, רחוב בר אילן&#39;,
+ &#39;באר שבע, שכונה ו&#39;,
+ &#39;&#39;,
+ &#39;בית שמש, בית שמש&#39;,
+ &#39;כרמיאל, גליל מערבי&#39;,
+ &#39;ירושלים, בקעה&#39;,
+ &#39;&#39;,
+ &#39;אלון שבות, גוש עציון&#39;,
+ &#39;&#39;,
+ &#39;חולון, חולון&#39;,
+ &#39;תל אביב-יפו, רחוב יהודה המכבי&#39;,
+ &#39;רחובות, רחובות&#39;,
+ &#34;בני ברק, רחוב ז&#39;בוטינסקי&#34;,
+ &#39;בני ברק, כביש 4&#39;,
+ &#39;ירושלים, כיכר ספרא&#39;,
+ &#39;תל אביב-יפו, אוניברסיטה&#39;,
+ &#39;נתניה, ניידת -1&#39;,
+ &#39;&#39;,
+ &#39;אשדוד, ניידת -  2&#39;,
+ &#39;פתח תקווה, רחוב גיסין&#39;,
+ &#39;רמת גן, יד לבנים&#39;,
+ &#39;&#39;,
+ &#39;תל אביב-יפו, הצפון החדש&#39;,
+ &#39;תל אביב-יפו, שיכון ל&#39;,
+ &#39;ניר גלים, ניר גלים 1&#39;,
+ &#39;מודיעין, מודיעין&#39;,
+ &#39;יבנה, יבנה&#39;,
+ &#39;חיפה, פארק הכרמל&#39;,
+ &#39;בת הדר, בת הדר&#39;,
+ &#39;תל אביב-יפו, לב תל אביב&#39;,
+ &#39;חדרה, תחנת הכוח אורות רבין&#39;,
+ &#39;חיפה, נווה שאנן&#39;,
+ &#39;&#39;,
+ &#39;נשר, נשר&#39;,
+ &#39;&#39;,
+ &#39;קריית אתא, מרכז העיר&#39;,
+ &#39;&#39;,
+ &#39;קריית ים, קריית ים&#39;,
+ &#34;חיפה, צ&#39;ק פוסט&#34;,
+ &#39;&#39;,
+ &#39;קריית אתא, קריית בנימין&#39;,
+ &#39;&#39;,
+ &#39;חדרה, בית אליעזר&#39;,
+ &#39;פרדס חנה, פרדס חנה&#39;,
+ &#39;אליכין, אליכין&#39;,
+ &#39;אום אל פאחם, כביש 65&#39;,
+ &#39;&#39;,
+ &#39;אשדוד, אזור תעשייה קלה&#39;,
+ &#39;גן יבנה, גן יבנה&#39;,
+ &#39;גדרה, גדרה&#39;,
+ &#39;יד בנימין, יד בנימין&#39;,
+ &#39;אשקלון, גן הורדים&#39;,
+ &#39;קריית גת, קריית גת&#39;,
+ &#39;קריית מלאכי, קריית מלאכי&#39;,
+ &#39;שדרות, שדרות&#39;,
+ &#39;גברעם, גברעם&#39;,
+ &#39;שדה יואב, שדה יואב&#39;,
+ &#39;ניר ישראל, ניר ישראל&#39;,
+ &#39;כרמיה, כרמיה&#39;,
+ &#39;ארז, ארז&#39;,
+ &#39;חיפה, אחוזה&#39;,
+ &#39;&#39;,
+ &#39;קיריית טבעון, קריית טבעון&#39;,
+ &#39;&#39;,
+ &#39;ראשון לציון, רחוב הרצל&#39;,
+ &#39;מועצה אזורית חוף הכרמל, טורבינת הגז קיסריה&#39;,
+ &#39;רעננה, רחוב אחוזה&#39;,
+ &#39;ערד, נגב מזרחי&#39;,
+ &#39;&#39;,
+ &#39;אשקלון, שמשון&#39;,
+ &#39;תל אביב-יפו, רחוב יפת&#39;,
+ &#39;סדום, לוט&#39;,
+ &#39;סדום, נחל אשלים&#39;,
+ &#39;נאות הכיכר, נאות הכיכר&#39;,
+ &#39;חיפה, עצמאות חיפה&#39;,
+ &#39;&#39;,
+ &#39;ירושלים, רוממה&#39;,
+ &#39;אילת, שכונת שחמון&#39;,
+ &#39;מבקיעים, מבקיעים&#39;,
+ &#39;&#39;,
+ &#39;אום אל קוטוף, אום אל קוטוף&#39;,
+ &#39;ירושלים, רציף 10 תחנה מרכזית&#39;,
+ &#39;נתניה, קריית השרון&#39;,
+ &#39;&#39;,
+ &#39;קריית אתא, ניידת - 4&#39;,
+ &#39;כפר מסריק, כפר מסריק החדשה&#39;,
+ &#39;ירושלים, אזור תעשייה עטרות&#39;,
+ &#39;כפר מנחם, שכונת ההרחבה&#39;,
+ &#39;בנימינה, ניידת - 2 רכבת ישראל&#39;,
+ &#39;חיפה, ניידת - 6&#39;,
+ &#39;יד רמב&#34;ם, יד רמב&#34;ם החדשה&#39;,
+ &#39;תל אביב-יפו, ניידת - 5&#39;,
+ &#39;מועצה אזורית חוף הכרמל, כפר הנוער שפיה&#39;,
+ &#39;&#39;,
+ &#39;תל אביב-יפו, תחנת רכבת השלום&#39;,
+ &#39;חולון, תחנת רכבת וולפסון&#39;,
+ &#39;בני עטרות, בני עטרות&#39;,
+ &#39;בני דרום, בני דרום&#39;,
+ &#39;בית חשמונאי, בית חשמונאי&#39;,
+ &#39;&#39;,
+ &#39;אור יהודה, אור יהודה&#39;,
+ &#39;כפר סבא, כפר סבא&#39;,
+ &#39;קציר, קציר&#39;,
+ &#39;קריית ביאליק, דרום&#39;,
+ &#39;&#39;,
+ &#39;קריית מוצקין, נווה גנים&#39;,
+ &#39;&#39;,
+ &#39;אשדוד, רובע ט&#34;ו החדשה&#39;,
+ &#39;תל אביב-יפו, תחנת רכבת ההגנה&#39;,
+ &#39;חולון, תחנת רכבת קוממיות&#39;,
+ &#39;גליל עליון, מכללת תל חי&#39;,
+ &#39;חיפה, הרצל - בלפור&#39;,
+ &#39;יבנה, ניידת - 7&#39;,
+ &#39;קטורה, קטורה&#39;,
+ &#39;חדרה, חפציבה&#39;,
+ &#39;אשדוד, שדרות ירושלים&#39;,
+ &#39;תל אביב-יפו, רחוב לוינסקי&#39;,
+ &#39;&#39;,
+ &#39;ברטעה, ברטעה&#39;,
+ &#39;אשלים, אשלים&#39;,
+ &#39;אשדוד, פארק לכיש&#39;,
+ &#39;מצפה נטופה, מצפה נטופה&#39;,
+ &#39;&#39;,
+ &#39;טורעאן, טורעאן החדשה&#39;,
+ &#39;&#39;,
+ &#39;בת שלמה, קרון איגוד שרון-כרמל 2&#39;,
+ &#39;קיסריה, מוזיאון ראלי&#39;,
+ &#39;ברקאי, ברקאי החדשה&#39;,
+ &#39;&#39;,
+ &#39;ירושלים, רחוב דבורה הנביאה&#39;,
+ &#39;אלעד, אלעד&#39;,
+ &#39;אביגדור, אביגדור&#39;,
+ &#39;תימורים, תימורים&#39;,
+ &#39;נחשולים, נחשולים&#39;,
+ &#39;חיפה, קרית חיים - מערבית&#39;,
+ &#39;&#39;,
+ &#39;איבטין, איבטין&#39;,
+ &#39;חריש, חריש&#39;,
+ &#39;ירושלים, מלכי ישראל&#39;,
+ &#39;אלעד, רובע א&#39;,
+ &#39;&#39;,
+ &#39;רמלה, שכונת האמנים&#39;,
+ &#39;&#39;,
+ &#39;רמת השרון, איילון&#39;,
+ &#39;כסייפה, כסייפה&#39;,
+ &#39;&#39;,
+ &#39;פלוגות, פלוגות&#39;,
+ &#39;קריית גת, רובע הבנים&#39;]</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_older</span> <span class="o">=</span> <span class="n">load_csv_file</span><span class="p">(</span><span class="n">dust_pm10_older_filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[20]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_older</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">dust_older</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[20]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>([&#39;&#39;,
+  &#39;Name&#39;,
+  &#39;Code&#39;,
+  &#39;AREA&#39;,
+  &#39;Type&#39;,
+  &#39;X_ITM&#39;,
+  &#39;Y_ITM&#39;,
+  &#39;date_time&#39;,
+  &#39;PM10&#39;,
+  &#39;index&#39;,
+  &#39;Year&#39;,
+  &#39;Month&#39;,
+  &#39;Day&#39;,
+  &#39;Hour&#39;,
+  &#39;date&#39;,
+  &#39;date_hour&#39;],
+ [&#39;1&#39;,
+  &#39;AFULA&#39;,
+  &#39;AFU&#39;,
+  &#39;EMZ&#39;,
+  &#39;Gener&#39;,
+  &#39;227646&#39;,
+  &#39;723263&#39;,
+  &#39;1-1-2000 0.5&#39;,
+  &#39;NA&#39;,
+  &#39;1&#39;,
+  &#39;2000&#39;,
+  &#39;1&#39;,
+  &#39;1&#39;,
+  &#39;0.5&#39;,
+  &#39;2000-01-01&#39;,
+  &#39;2000-01-01 01:00:00&#39;])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[23]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_df_metadata</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">dust_df_metadata_filename</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[25]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM10&quot;</span><span class="p">]),</span><span class="nb">len</span><span class="p">(</span><span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM25&quot;</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[25]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(65, 70)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[28]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">dust_df_metadata</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[28]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;PM10&#39;: [{&#39;Name&#39;: &#39;AFULA&#39;,
+   &#39;Code&#39;: &#39;AFU&#39;,
+   &#39;X_ITM&#39;: &#39;227646&#39;,
+   &#39;Y_ITM&#39;: &#39;723263&#39;,
+   &#39;first_csv_idx&#39;: 1,
+   &#39;last_csv_idx&#39;: 333119},
+  {&#39;Name&#39;: &#39;AMIEL&#39;,
+   &#39;Code&#39;: &#39;AMI&#39;,
+   &#39;X_ITM&#39;: &#39;180611&#39;,
+   &#39;Y_ITM&#39;: &#39;661648&#39;,
+   &#39;first_csv_idx&#39;: 333119,
+   &#39;last_csv_idx&#39;: 666237},
+  {&#39;Name&#39;: &#39;ARAD_MUNICIPALITY&#39;,
+   &#39;Code&#39;: &#39;ARD&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 666237,
+   &#39;last_csv_idx&#39;: 999355},
+  {&#39;Name&#39;: &#39;ARIEL&#39;,
+   &#39;Code&#39;: &#39;ARI&#39;,
+   &#39;X_ITM&#39;: &#39;219954&#39;,
+   &#39;Y_ITM&#39;: &#39;667860&#39;,
+   &#39;first_csv_idx&#39;: 999355,
+   &#39;last_csv_idx&#39;: 1332473},
+  {&#39;Name&#39;: &#39;ASHKELON&#39;,
+   &#39;Code&#39;: &#39;ASK&#39;,
+   &#39;X_ITM&#39;: &#39;159329&#39;,
+   &#39;Y_ITM&#39;: &#39;618777&#39;,
+   &#39;first_csv_idx&#39;: 1332473,
+   &#39;last_csv_idx&#39;: 1665591},
+  {&#39;Name&#39;: &#39;ASHKELON_SOUTH&#39;,
+   &#39;Code&#39;: &#39;ASS&#39;,
+   &#39;X_ITM&#39;: &#39;157590&#39;,
+   &#39;Y_ITM&#39;: &#39;618195&#39;,
+   &#39;first_csv_idx&#39;: 1665591,
+   &#39;last_csv_idx&#39;: 1998709},
+  {&#39;Name&#39;: &#39;ATZMAUT_B&#39;,
+   &#39;Code&#39;: &#39;AZB&#39;,
+   &#39;X_ITM&#39;: &#39;200549&#39;,
+   &#39;Y_ITM&#39;: &#39;746930&#39;,
+   &#39;first_csv_idx&#39;: 1998709,
+   &#39;last_csv_idx&#39;: 2331827},
+  {&#39;Name&#39;: &#39;BARTAA&#39;,
+   &#39;Code&#39;: &#39;BAT&#39;,
+   &#39;X_ITM&#39;: &#39;208316&#39;,
+   &#39;Y_ITM&#39;: &#39;709212&#39;,
+   &#39;first_csv_idx&#39;: 2331827,
+   &#39;last_csv_idx&#39;: 2664945},
+  {&#39;Name&#39;: &#39;BAR_ILAN&#39;,
+   &#39;Code&#39;: &#39;BIL&#39;,
+   &#39;X_ITM&#39;: &#39;220935&#39;,
+   &#39;Y_ITM&#39;: &#39;633613&#39;,
+   &#39;first_csv_idx&#39;: 2664945,
+   &#39;last_csv_idx&#39;: 2998063},
+  {&#39;Name&#39;: &#39;BAT_HADAR&#39;,
+   &#39;Code&#39;: &#39;BHD&#39;,
+   &#39;X_ITM&#39;: &#39;161744&#39;,
+   &#39;Y_ITM&#39;: &#39;617399&#39;,
+   &#39;first_csv_idx&#39;: 2998063,
+   &#39;last_csv_idx&#39;: 3331181},
+  {&#39;Name&#39;: &#39;BEER_SHEVA&#39;,
+   &#39;Code&#39;: &#39;BSV&#39;,
+   &#39;X_ITM&#39;: &#39;179228&#39;,
+   &#39;Y_ITM&#39;: &#39;574024&#39;,
+   &#39;first_csv_idx&#39;: 3331181,
+   &#39;last_csv_idx&#39;: 3664299},
+  {&#39;Name&#39;: &#39;BEGIN&#39;,
+   &#39;Code&#39;: &#39;BEG&#39;,
+   &#39;X_ITM&#39;: &#39;208901&#39;,
+   &#39;Y_ITM&#39;: &#39;751058&#39;,
+   &#39;first_csv_idx&#39;: 3664299,
+   &#39;last_csv_idx&#39;: 3997417},
+  {&#39;Name&#39;: &#39;BEIT_HASHMONAY&#39;,
+   &#39;Code&#39;: &#39;BHS&#39;,
+   &#39;X_ITM&#39;: &#39;192082&#39;,
+   &#39;Y_ITM&#39;: &#39;644094&#39;,
+   &#39;first_csv_idx&#39;: 3997417,
+   &#39;last_csv_idx&#39;: 4330535},
+  {&#39;Name&#39;: &#39;BEIT_SHEMESH&#39;,
+   &#39;Code&#39;: &#39;BSH&#39;,
+   &#39;X_ITM&#39;: &#39;199379&#39;,
+   &#39;Y_ITM&#39;: &#39;628733&#39;,
+   &#39;first_csv_idx&#39;: 4330535,
+   &#39;last_csv_idx&#39;: 4663653},
+  {&#39;Name&#39;: &#39;CARMELIA&#39;,
+   &#39;Code&#39;: &#39;CAR&#39;,
+   &#39;X_ITM&#39;: &#39;197620&#39;,
+   &#39;Y_ITM&#39;: &#39;744760&#39;,
+   &#39;first_csv_idx&#39;: 4663653,
+   &#39;last_csv_idx&#39;: 4996771},
+  {&#39;Name&#39;: &#39;CARMEL_ZARFATI&#39;,
+   &#39;Code&#39;: &#39;CAZ&#39;,
+   &#39;X_ITM&#39;: &#39;198159&#39;,
+   &#39;Y_ITM&#39;: &#39;747329&#39;,
+   &#39;first_csv_idx&#39;: 4996771,
+   &#39;last_csv_idx&#39;: 5329889},
+  {&#39;Name&#39;: &#39;CARMIYA&#39;,
+   &#39;Code&#39;: &#39;CRM&#39;,
+   &#39;X_ITM&#39;: &#39;156479&#39;,
+   &#39;Y_ITM&#39;: &#39;612687&#39;,
+   &#39;first_csv_idx&#39;: 5329889,
+   &#39;last_csv_idx&#39;: 5663007},
+  {&#39;Name&#39;: &#39;CEASARIA&#39;,
+   &#39;Code&#39;: &#39;CSA&#39;,
+   &#39;X_ITM&#39;: &#39;194160&#39;,
+   &#39;Y_ITM&#39;: &#39;711743&#39;,
+   &#39;first_csv_idx&#39;: 5663007,
+   &#39;last_csv_idx&#39;: 5996125},
+  {&#39;Name&#39;: &#39;EAST_NEGEV&#39;,
+   &#39;Code&#39;: &#39;ENV&#39;,
+   &#39;X_ITM&#39;: &#39;220513&#39;,
+   &#39;Y_ITM&#39;: &#39;573107&#39;,
+   &#39;first_csv_idx&#39;: 5996125,
+   &#39;last_csv_idx&#39;: 6329243},
+  {&#39;Name&#39;: &#39;EFRATA&#39;,
+   &#39;Code&#39;: &#39;EFR&#39;,
+   &#39;X_ITM&#39;: &#39;220763&#39;,
+   &#39;Y_ITM&#39;: &#39;629391&#39;,
+   &#39;first_csv_idx&#39;: 6329243,
+   &#39;last_csv_idx&#39;: 6662361},
+  {&#39;Name&#39;: &#39;EHAD_HAAM&#39;,
+   &#39;Code&#39;: &#39;EHA&#39;,
+   &#39;X_ITM&#39;: &#39;188084&#39;,
+   &#39;Y_ITM&#39;: &#39;667486&#39;,
+   &#39;first_csv_idx&#39;: 6662361,
+   &#39;last_csv_idx&#39;: 6995479},
+  {&#39;Name&#39;: &#39;EILAT6&#39;,
+   &#39;Code&#39;: &#39;EI6&#39;,
+   &#39;X_ITM&#39;: &#39;192932&#39;,
+   &#39;Y_ITM&#39;: &#39;384325&#39;,
+   &#39;first_csv_idx&#39;: 6995479,
+   &#39;last_csv_idx&#39;: 7328597},
+  {&#39;Name&#39;: &#39;EILAT_IEC&#39;,
+   &#39;Code&#39;: &#39;IEC&#39;,
+   &#39;X_ITM&#39;: &#39;194714&#39;,
+   &#39;Y_ITM&#39;: &#39;385170&#39;,
+   &#39;first_csv_idx&#39;: 7328597,
+   &#39;last_csv_idx&#39;: 7661715},
+  {&#39;Name&#39;: &#39;EREZ&#39;,
+   &#39;Code&#39;: &#39;ERE&#39;,
+   &#39;X_ITM&#39;: &#39;158731&#39;,
+   &#39;Y_ITM&#39;: &#39;607995&#39;,
+   &#39;first_csv_idx&#39;: 7661715,
+   &#39;last_csv_idx&#39;: 7994833},
+  {&#39;Name&#39;: &#39;EVEN_AMI&#39;,
+   &#39;Code&#39;: &#39;EVN&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 7994833,
+   &#39;last_csv_idx&#39;: 8327951},
+  {&#39;Name&#39;: &#39;GIMZO&#39;,
+   &#39;Code&#39;: &#39;GIM&#39;,
+   &#39;X_ITM&#39;: &#39;194757&#39;,
+   &#39;Y_ITM&#39;: &#39;648078&#39;,
+   &#39;first_csv_idx&#39;: 8327951,
+   &#39;last_csv_idx&#39;: 8661069},
+  {&#39;Name&#39;: &#39;GIVATAIM&#39;,
+   &#39;Code&#39;: &#39;GIV&#39;,
+   &#39;X_ITM&#39;: &#39;182301&#39;,
+   &#39;Y_ITM&#39;: &#39;664067&#39;,
+   &#39;first_csv_idx&#39;: 8661069,
+   &#39;last_csv_idx&#39;: 8994187},
+  {&#39;Name&#39;: &#39;GUSH_EZION&#39;,
+   &#39;Code&#39;: &#39;GTZ&#39;,
+   &#39;X_ITM&#39;: &#39;211946&#39;,
+   &#39;Y_ITM&#39;: &#39;618052&#39;,
+   &#39;first_csv_idx&#39;: 8994187,
+   &#39;last_csv_idx&#39;: 9327305},
+  {&#39;Name&#39;: &#39;HADERA_B&#39;,
+   &#39;Code&#39;: &#39;HAB&#39;,
+   &#39;X_ITM&#39;: &#39;192141&#39;,
+   &#39;Y_ITM&#39;: &#39;706027&#39;,
+   &#39;first_csv_idx&#39;: 9327305,
+   &#39;last_csv_idx&#39;: 9660423},
+  {&#39;Name&#39;: &#39;HAKFAR_HAYAROK&#39;,
+   &#39;Code&#39;: &#39;KFY&#39;,
+   &#39;X_ITM&#39;: &#39;184410&#39;,
+   &#39;Y_ITM&#39;: &#39;617120&#39;,
+   &#39;first_csv_idx&#39;: 9660423,
+   &#39;last_csv_idx&#39;: 9993541},
+  {&#39;Name&#39;: &#39;HEFZIBA&#39;,
+   &#39;Code&#39;: &#39;HEF&#39;,
+   &#39;X_ITM&#39;: &#39;190692&#39;,
+   &#39;Y_ITM&#39;: &#39;707199&#39;,
+   &#39;first_csv_idx&#39;: 9993541,
+   &#39;last_csv_idx&#39;: 10326659},
+  {&#39;Name&#39;: &#39;IGUD&#39;,
+   &#39;Code&#39;: &#39;IGU&#39;,
+   &#39;X_ITM&#39;: &#39;204108&#39;,
+   &#39;Y_ITM&#39;: &#39;743853&#39;,
+   &#39;first_csv_idx&#39;: 10326659,
+   &#39;last_csv_idx&#39;: 10659777},
+  {&#39;Name&#39;: &#39;IZRAELIA&#39;,
+   &#39;Code&#39;: &#39;IZR&#39;,
+   &#39;X_ITM&#39;: &#39;201240&#39;,
+   &#39;Y_ITM&#39;: &#39;743960&#39;,
+   &#39;first_csv_idx&#39;: 10659777,
+   &#39;last_csv_idx&#39;: 10992895},
+  {&#39;Name&#39;: &#39;KARMEY_YOSSEF&#39;,
+   &#39;Code&#39;: &#39;KRY&#39;,
+   &#39;X_ITM&#39;: &#39;192484&#39;,
+   &#39;Y_ITM&#39;: &#39;639345&#39;,
+   &#39;first_csv_idx&#39;: 10992895,
+   &#39;last_csv_idx&#39;: 11326013},
+  {&#39;Name&#39;: &#39;KAZIR_NEW&#39;,
+   &#39;Code&#39;: &#39;KAN&#39;,
+   &#39;X_ITM&#39;: &#39;209296&#39;,
+   &#39;Y_ITM&#39;: &#39;710341&#39;,
+   &#39;first_csv_idx&#39;: 11326013,
+   &#39;last_csv_idx&#39;: 11659131},
+  {&#39;Name&#39;: &#39;KIRYAT_ATA&#39;,
+   &#39;Code&#39;: &#39;ATA&#39;,
+   &#39;X_ITM&#39;: &#39;210861&#39;,
+   &#39;Y_ITM&#39;: &#39;746333&#39;,
+   &#39;first_csv_idx&#39;: 11659131,
+   &#39;last_csv_idx&#39;: 11992249},
+  {&#39;Name&#39;: &#39;KIRYAT_BINYAMIN&#39;,
+   &#39;Code&#39;: &#39;BIN&#39;,
+   &#39;X_ITM&#39;: &#39;209342&#39;,
+   &#39;Y_ITM&#39;: &#39;744564&#39;,
+   &#39;first_csv_idx&#39;: 11992249,
+   &#39;last_csv_idx&#39;: 12325367},
+  {&#39;Name&#39;: &#39;KIRYAT_HAIM&#39;,
+   &#39;Code&#39;: &#39;HAM&#39;,
+   &#39;X_ITM&#39;: &#39;205824&#39;,
+   &#39;Y_ITM&#39;: &#39;748226&#39;,
+   &#39;first_csv_idx&#39;: 12325367,
+   &#39;last_csv_idx&#39;: 12658485},
+  {&#39;Name&#39;: &#39;KIRYAT_HAIM_REGAVIM&#39;,
+   &#39;Code&#39;: &#39;KHR&#39;,
+   &#39;X_ITM&#39;: &#39;205492&#39;,
+   &#39;Y_ITM&#39;: &#39;748547&#39;,
+   &#39;first_csv_idx&#39;: 12658485,
+   &#39;last_csv_idx&#39;: 12991603},
+  {&#39;Name&#39;: &#39;KVISH9&#39;,
+   &#39;Code&#39;: &#39;KV9&#39;,
+   &#39;X_ITM&#39;: &#39;218947&#39;,
+   &#39;Y_ITM&#39;: &#39;634660&#39;,
+   &#39;first_csv_idx&#39;: 12991603,
+   &#39;last_csv_idx&#39;: 13324721},
+  {&#39;Name&#39;: &#39;LOT&#39;,
+   &#39;Code&#39;: &#39;LOT&#39;,
+   &#39;X_ITM&#39;: &#39;237962&#39;,
+   &#39;Y_ITM&#39;: &#39;553165&#39;,
+   &#39;first_csv_idx&#39;: 13324721,
+   &#39;last_csv_idx&#39;: 13657839},
+  {&#39;Name&#39;: &#39;MAVKIIM&#39;,
+   &#39;Code&#39;: &#39;MAV&#39;,
+   &#39;X_ITM&#39;: &#39;160045&#39;,
+   &#39;Y_ITM&#39;: &#39;614630&#39;,
+   &#39;first_csv_idx&#39;: 13657839,
+   &#39;last_csv_idx&#39;: 13990957},
+  {&#39;Name&#39;: &#39;MODEIN&#39;,
+   &#39;Code&#39;: &#39;MOD&#39;,
+   &#39;X_ITM&#39;: &#39;201350&#39;,
+   &#39;Y_ITM&#39;: &#39;646186&#39;,
+   &#39;first_csv_idx&#39;: 13990957,
+   &#39;last_csv_idx&#39;: 14324075},
+  {&#39;Name&#39;: &#39;MODEIN_IEC&#39;,
+   &#39;Code&#39;: &#39;MIE&#39;,
+   &#39;X_ITM&#39;: &#39;199683&#39;,
+   &#39;Y_ITM&#39;: &#39;644433&#39;,
+   &#39;first_csv_idx&#39;: 14324075,
+   &#39;last_csv_idx&#39;: 14657193},
+  {&#39;Name&#39;: &#39;NAVE_SHANAAN&#39;,
+   &#39;Code&#39;: &#39;NSH&#39;,
+   &#39;X_ITM&#39;: &#39;202285&#39;,
+   &#39;Y_ITM&#39;: &#39;743626&#39;,
+   &#39;first_csv_idx&#39;: 14657193,
+   &#39;last_csv_idx&#39;: 14990311},
+  {&#39;Name&#39;: &#39;NAVE_YOSEF&#39;,
+   &#39;Code&#39;: &#39;NYO&#39;,
+   &#39;X_ITM&#39;: &#39;202450&#39;,
+   &#39;Y_ITM&#39;: &#39;743960&#39;,
+   &#39;first_csv_idx&#39;: 14990311,
+   &#39;last_csv_idx&#39;: 15323429},
+  {&#39;Name&#39;: &#39;NESHER&#39;,
+   &#39;Code&#39;: &#39;NES&#39;,
+   &#39;X_ITM&#39;: &#39;204317&#39;,
+   &#39;Y_ITM&#39;: &#39;741718&#39;,
+   &#39;first_csv_idx&#39;: 15323429,
+   &#39;last_csv_idx&#39;: 15656547},
+  {&#39;Name&#39;: &#39;NIR_GALIM&#39;,
+   &#39;Code&#39;: &#39;NGL&#39;,
+   &#39;X_ITM&#39;: &#39;170355&#39;,
+   &#39;Y_ITM&#39;: &#39;637320&#39;,
+   &#39;first_csv_idx&#39;: 15656547,
+   &#39;last_csv_idx&#39;: 15989665},
+  {&#39;Name&#39;: &#39;PARK_HACARMEL&#39;,
+   &#39;Code&#39;: &#39;PAR&#39;,
+   &#39;X_ITM&#39;: &#39;203682&#39;,
+   &#39;Y_ITM&#39;: &#39;738118&#39;,
+   &#39;first_csv_idx&#39;: 15989665,
+   &#39;last_csv_idx&#39;: 16322783},
+  {&#39;Name&#39;: &#39;PETAH_TIKVA_ROAD&#39;,
+   &#39;Code&#39;: &#39;PTR&#39;,
+   &#39;X_ITM&#39;: &#39;179013&#39;,
+   &#39;Y_ITM&#39;: &#39;663138&#39;,
+   &#39;first_csv_idx&#39;: 16322783,
+   &#39;last_csv_idx&#39;: 16655901},
+  {&#39;Name&#39;: &#39;REHOVOT&#39;,
+   &#39;Code&#39;: &#39;REH&#39;,
+   &#39;X_ITM&#39;: &#39;182742&#39;,
+   &#39;Y_ITM&#39;: &#39;645238&#39;,
+   &#39;first_csv_idx&#39;: 16655901,
+   &#39;last_csv_idx&#39;: 16989019},
+  {&#39;Name&#39;: &#39;ROMMEMA&#39;,
+   &#39;Code&#39;: &#39;ROM&#39;,
+   &#39;X_ITM&#39;: &#39;200530&#39;,
+   &#39;Y_ITM&#39;: &#39;743920&#39;,
+   &#39;first_csv_idx&#39;: 16989019,
+   &#39;last_csv_idx&#39;: 17322137},
+  {&#39;Name&#39;: &#39;SAFRA&#39;,
+   &#39;Code&#39;: &#39;SAF&#39;,
+   &#39;X_ITM&#39;: &#39;221380&#39;,
+   &#39;Y_ITM&#39;: &#39;631880&#39;,
+   &#39;first_csv_idx&#39;: 17322137,
+   &#39;last_csv_idx&#39;: 17655255},
+  {&#39;Name&#39;: &#39;SHFEYA&#39;,
+   &#39;Code&#39;: &#39;SHF&#39;,
+   &#39;X_ITM&#39;: &#39;197768&#39;,
+   &#39;Y_ITM&#39;: &#39;721586&#39;,
+   &#39;first_csv_idx&#39;: 17655255,
+   &#39;last_csv_idx&#39;: 17988373},
+  {&#39;Name&#39;: &#39;SHIKUN_L&#39;,
+   &#39;Code&#39;: &#39;SHL&#39;,
+   &#39;X_ITM&#39;: &#39;180346&#39;,
+   &#39;Y_ITM&#39;: &#39;668398&#39;,
+   &#39;first_csv_idx&#39;: 17988373,
+   &#39;last_csv_idx&#39;: 18321491},
+  {&#39;Name&#39;: &#39;SHUK&#39;,
+   &#39;Code&#39;: &#39;SHU&#39;,
+   &#39;X_ITM&#39;: &#39;200582&#39;,
+   &#39;Y_ITM&#39;: &#39;746022&#39;,
+   &#39;first_csv_idx&#39;: 18321491,
+   &#39;last_csv_idx&#39;: 18654609},
+  {&#39;Name&#39;: &#39;TAHANA_MERKAZIT&#39;,
+   &#39;Code&#39;: &#39;TMM&#39;,
+   &#39;X_ITM&#39;: &#39;179340&#39;,
+   &#39;Y_ITM&#39;: &#39;662666&#39;,
+   &#39;first_csv_idx&#39;: 18654609,
+   &#39;last_csv_idx&#39;: 18987727},
+  {&#39;Name&#39;: &#39;TAHANA_MERKAZIT_JERUSALEM&#39;,
+   &#39;Code&#39;: &#39;TMJ&#39;,
+   &#39;X_ITM&#39;: &#39;219397&#39;,
+   &#39;Y_ITM&#39;: &#39;632993&#39;,
+   &#39;first_csv_idx&#39;: 18987727,
+   &#39;last_csv_idx&#39;: 19320845},
+  {&#39;Name&#39;: &#39;UM_EL_KUTUF&#39;,
+   &#39;Code&#39;: &#39;UEK&#39;,
+   &#39;X_ITM&#39;: &#39;205652&#39;,
+   &#39;Y_ITM&#39;: &#39;708902&#39;,
+   &#39;first_csv_idx&#39;: 19320845,
+   &#39;last_csv_idx&#39;: 19653963},
+  {&#39;Name&#39;: &#39;WEST_GALIL&#39;,
+   &#39;Code&#39;: &#39;WGA&#39;,
+   &#39;X_ITM&#39;: &#39;227738&#39;,
+   &#39;Y_ITM&#39;: &#39;757843&#39;,
+   &#39;first_csv_idx&#39;: 19653963,
+   &#39;last_csv_idx&#39;: 19987081},
+  {&#39;Name&#39;: &#39;YAD_AVNER&#39;,
+   &#39;Code&#39;: &#39;DAV&#39;,
+   &#39;X_ITM&#39;: &#39;181743&#39;,
+   &#39;Y_ITM&#39;: &#39;669624&#39;,
+   &#39;first_csv_idx&#39;: 19987081,
+   &#39;last_csv_idx&#39;: 20320199},
+  {&#39;Name&#39;: &#39;YAD_LEBANIM&#39;,
+   &#39;Code&#39;: &#39;YLB&#39;,
+   &#39;X_ITM&#39;: &#39;183259&#39;,
+   &#39;Y_ITM&#39;: &#39;664871&#39;,
+   &#39;first_csv_idx&#39;: 20320199,
+   &#39;last_csv_idx&#39;: 20653317},
+  {&#39;Name&#39;: &#39;YAD_RAMBAM_2&#39;,
+   &#39;Code&#39;: &#39;YR2&#39;,
+   &#39;X_ITM&#39;: &#39;211212&#39;,
+   &#39;Y_ITM&#39;: &#39;618270&#39;,
+   &#39;first_csv_idx&#39;: 20653317,
+   &#39;last_csv_idx&#39;: 20986435},
+  {&#39;Name&#39;: &#39;YAVNE_CITY&#39;,
+   &#39;Code&#39;: &#39;YAV&#39;,
+   &#39;X_ITM&#39;: &#39;175444&#39;,
+   &#39;Y_ITM&#39;: &#39;642614&#39;,
+   &#39;first_csv_idx&#39;: 20986435,
+   &#39;last_csv_idx&#39;: 21319553},
+  {&#39;invalid_values_flags&#39;: {&#39;missing_lag&#39;: {&#39;description&#39;: &#39;in case na arised after calculating lags, including 0&#39;,
+     &#39;flag&#39;: -999},
+    &#39;missing_timestamp&#39;: {&#39;description&#39;: &#39;in case na arised after combining stations for a single pm type&#39;,
+     &#39;flag&#39;: -888},
+    &#39;missing_station&#39;: {&#39;description&#39;: &#39;in case na arised after combining pm_types&#39;,
+     &#39;flag&#39;: -777}}}],
+ &#39;PM25&#39;: [{&#39;Name&#39;: &#39;AFULA&#39;,
+   &#39;Code&#39;: &#39;AFU&#39;,
+   &#39;X_ITM&#39;: &#39;227646&#39;,
+   &#39;Y_ITM&#39;: &#39;723263&#39;,
+   &#39;first_csv_idx&#39;: 1,
+   &#39;last_csv_idx&#39;: 333119},
+  {&#39;Name&#39;: &#39;AGRIPAS&#39;,
+   &#39;Code&#39;: &#39;AGR&#39;,
+   &#39;X_ITM&#39;: &#39;220183&#39;,
+   &#39;Y_ITM&#39;: &#39;632369&#39;,
+   &#39;first_csv_idx&#39;: 333119,
+   &#39;last_csv_idx&#39;: 666237},
+  {&#39;Name&#39;: &#39;AHUZA_G&#39;,
+   &#39;Code&#39;: &#39;AHU&#39;,
+   &#39;X_ITM&#39;: &#39;199059&#39;,
+   &#39;Y_ITM&#39;: &#39;743556&#39;,
+   &#39;first_csv_idx&#39;: 666237,
+   &#39;last_csv_idx&#39;: 999355},
+  {&#39;Name&#39;: &#39;AKO&#39;,
+   &#39;Code&#39;: &#39;AKO&#39;,
+   &#39;X_ITM&#39;: &#39;207828&#39;,
+   &#39;Y_ITM&#39;: &#39;748341&#39;,
+   &#39;first_csv_idx&#39;: 999355,
+   &#39;last_csv_idx&#39;: 1332473},
+  {&#39;Name&#39;: &#39;ANTOKOLSKY&#39;,
+   &#39;Code&#39;: &#39;ANT&#39;,
+   &#39;X_ITM&#39;: &#39;179676&#39;,
+   &#39;Y_ITM&#39;: &#39;665772&#39;,
+   &#39;first_csv_idx&#39;: 1332473,
+   &#39;last_csv_idx&#39;: 1665591},
+  {&#39;Name&#39;: &#39;ASHALIM&#39;,
+   &#39;Code&#39;: &#39;ASL&#39;,
+   &#39;X_ITM&#39;: &#39;233739&#39;,
+   &#39;Y_ITM&#39;: &#39;547188&#39;,
+   &#39;first_csv_idx&#39;: 1665591,
+   &#39;last_csv_idx&#39;: 1998709},
+  {&#39;Name&#39;: &#39;ASHDOD_IGUD&#39;,
+   &#39;Code&#39;: &#39;ASH&#39;,
+   &#39;X_ITM&#39;: &#39;168907&#39;,
+   &#39;Y_ITM&#39;: &#39;636399&#39;,
+   &#39;first_csv_idx&#39;: 1998709,
+   &#39;last_csv_idx&#39;: 2331827},
+  {&#39;Name&#39;: &#39;ASHKELON&#39;,
+   &#39;Code&#39;: &#39;ASK&#39;,
+   &#39;X_ITM&#39;: &#39;159329&#39;,
+   &#39;Y_ITM&#39;: &#39;618777&#39;,
+   &#39;first_csv_idx&#39;: 2331827,
+   &#39;last_csv_idx&#39;: 2664945},
+  {&#39;Name&#39;: &#39;ASHKELON_SOUTH&#39;,
+   &#39;Code&#39;: &#39;ASS&#39;,
+   &#39;X_ITM&#39;: &#39;157590&#39;,
+   &#39;Y_ITM&#39;: &#39;618195&#39;,
+   &#39;first_csv_idx&#39;: 2664945,
+   &#39;last_csv_idx&#39;: 2998063},
+  {&#39;Name&#39;: &#39;ATZMAUT_B&#39;,
+   &#39;Code&#39;: &#39;AZB&#39;,
+   &#39;X_ITM&#39;: &#39;200549&#39;,
+   &#39;Y_ITM&#39;: &#39;746930&#39;,
+   &#39;first_csv_idx&#39;: 2998063,
+   &#39;last_csv_idx&#39;: 3331181},
+  {&#39;Name&#39;: &#39;AZUR&#39;,
+   &#39;Code&#39;: &#39;AZR&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 3331181,
+   &#39;last_csv_idx&#39;: 3664299},
+  {&#39;Name&#39;: &#39;BARKAI&#39;,
+   &#39;Code&#39;: &#39;BAR&#39;,
+   &#39;X_ITM&#39;: &#39;202422&#39;,
+   &#39;Y_ITM&#39;: &#39;709073&#39;,
+   &#39;first_csv_idx&#39;: 3664299,
+   &#39;last_csv_idx&#39;: 3997417},
+  {&#39;Name&#39;: &#39;BAR_ILAN&#39;,
+   &#39;Code&#39;: &#39;BIL&#39;,
+   &#39;X_ITM&#39;: &#39;220935&#39;,
+   &#39;Y_ITM&#39;: &#39;633613&#39;,
+   &#39;first_csv_idx&#39;: 3997417,
+   &#39;last_csv_idx&#39;: 4330535},
+  {&#39;Name&#39;: &#39;BEER_SHEVA&#39;,
+   &#39;Code&#39;: &#39;BSV&#39;,
+   &#39;X_ITM&#39;: &#39;179228&#39;,
+   &#39;Y_ITM&#39;: &#39;574024&#39;,
+   &#39;first_csv_idx&#39;: 4330535,
+   &#39;last_csv_idx&#39;: 4663653},
+  {&#39;Name&#39;: &#39;BEGIN&#39;,
+   &#39;Code&#39;: &#39;BEG&#39;,
+   &#39;X_ITM&#39;: &#39;208901&#39;,
+   &#39;Y_ITM&#39;: &#39;751058&#39;,
+   &#39;first_csv_idx&#39;: 4663653,
+   &#39;last_csv_idx&#39;: 4996771},
+  {&#39;Name&#39;: &#39;BEIT_RIVKA&#39;,
+   &#39;Code&#39;: &#39;BRV&#39;,
+   &#39;X_ITM&#39;: &#39;187360&#39;,
+   &#39;Y_ITM&#39;: &#39;655670&#39;,
+   &#39;first_csv_idx&#39;: 4996771,
+   &#39;last_csv_idx&#39;: 5329889},
+  {&#39;Name&#39;: &#39;BEN_GURION_AIRPORT&#39;,
+   &#39;Code&#39;: &#39;BGA&#39;,
+   &#39;X_ITM&#39;: &#39;190355&#39;,
+   &#39;Y_ITM&#39;: &#39;655382&#39;,
+   &#39;first_csv_idx&#39;: 5329889,
+   &#39;last_csv_idx&#39;: 5663007},
+  {&#39;Name&#39;: &#39;BNEI_ATAROT&#39;,
+   &#39;Code&#39;: &#39;BNA&#39;,
+   &#39;X_ITM&#39;: &#39;191806&#39;,
+   &#39;Y_ITM&#39;: &#39;659095&#39;,
+   &#39;first_csv_idx&#39;: 5663007,
+   &#39;last_csv_idx&#39;: 5996125},
+  {&#39;Name&#39;: &#39;BNEI_DAROM&#39;,
+   &#39;Code&#39;: &#39;BND&#39;,
+   &#39;X_ITM&#39;: &#39;171080&#39;,
+   &#39;Y_ITM&#39;: &#39;636420&#39;,
+   &#39;first_csv_idx&#39;: 5996125,
+   &#39;last_csv_idx&#39;: 6329243},
+  {&#39;Name&#39;: &#39;DALYA&#39;,
+   &#39;Code&#39;: &#39;DAL&#39;,
+   &#39;X_ITM&#39;: &#39;184155&#39;,
+   &#39;Y_ITM&#39;: &#39;626160&#39;,
+   &#39;first_csv_idx&#39;: 6329243,
+   &#39;last_csv_idx&#39;: 6662361},
+  {&#39;Name&#39;: &#39;EAST_NEGEV&#39;,
+   &#39;Code&#39;: &#39;ENV&#39;,
+   &#39;X_ITM&#39;: &#39;220513&#39;,
+   &#39;Y_ITM&#39;: &#39;573107&#39;,
+   &#39;first_csv_idx&#39;: 6662361,
+   &#39;last_csv_idx&#39;: 6995479},
+  {&#39;Name&#39;: &#39;EFRATA&#39;,
+   &#39;Code&#39;: &#39;EFR&#39;,
+   &#39;X_ITM&#39;: &#39;220763&#39;,
+   &#39;Y_ITM&#39;: &#39;629391&#39;,
+   &#39;first_csv_idx&#39;: 6995479,
+   &#39;last_csv_idx&#39;: 7328597},
+  {&#39;Name&#39;: &#39;EHAD_HAAM&#39;,
+   &#39;Code&#39;: &#39;EHA&#39;,
+   &#39;X_ITM&#39;: &#39;188084&#39;,
+   &#39;Y_ITM&#39;: &#39;667486&#39;,
+   &#39;first_csv_idx&#39;: 7328597,
+   &#39;last_csv_idx&#39;: 7661715},
+  {&#39;Name&#39;: &#39;GEDERA&#39;,
+   &#39;Code&#39;: &#39;GDR&#39;,
+   &#39;X_ITM&#39;: &#39;179222&#39;,
+   &#39;Y_ITM&#39;: &#39;635797&#39;,
+   &#39;first_csv_idx&#39;: 7661715,
+   &#39;last_csv_idx&#39;: 7994833},
+  {&#39;Name&#39;: &#39;GUSH_EZION&#39;,
+   &#39;Code&#39;: &#39;GTZ&#39;,
+   &#39;X_ITM&#39;: &#39;211946&#39;,
+   &#39;Y_ITM&#39;: &#39;618052&#39;,
+   &#39;first_csv_idx&#39;: 7994833,
+   &#39;last_csv_idx&#39;: 8327951},
+  {&#39;Name&#39;: &#39;GVARAAM&#39;,
+   &#39;Code&#39;: &#39;GVA&#39;,
+   &#39;X_ITM&#39;: &#39;163074&#39;,
+   &#39;Y_ITM&#39;: &#39;610974&#39;,
+   &#39;first_csv_idx&#39;: 8327951,
+   &#39;last_csv_idx&#39;: 8661069},
+  {&#39;Name&#39;: &#39;HADAR&#39;,
+   &#39;Code&#39;: &#39;HDR&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 8661069,
+   &#39;last_csv_idx&#39;: 8994187},
+  {&#39;Name&#39;: &#39;HADERA_B&#39;,
+   &#39;Code&#39;: &#39;HAB&#39;,
+   &#39;X_ITM&#39;: &#39;192141&#39;,
+   &#39;Y_ITM&#39;: &#39;706027&#39;,
+   &#39;first_csv_idx&#39;: 8994187,
+   &#39;last_csv_idx&#39;: 9327305},
+  {&#39;Name&#39;: &#39;HATIKVA&#39;,
+   &#39;Code&#39;: &#39;TIK&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 9327305,
+   &#39;last_csv_idx&#39;: 9660423},
+  {&#39;Name&#39;: &#39;HEFZIBA&#39;,
+   &#39;Code&#39;: &#39;HEF&#39;,
+   &#39;X_ITM&#39;: &#39;190692&#39;,
+   &#39;Y_ITM&#39;: &#39;707199&#39;,
+   &#39;first_csv_idx&#39;: 9660423,
+   &#39;last_csv_idx&#39;: 9993541},
+  {&#39;Name&#39;: &#39;HOLON&#39;,
+   &#39;Code&#39;: &#39;HOL&#39;,
+   &#39;X_ITM&#39;: &#39;178260&#39;,
+   &#39;Y_ITM&#39;: &#39;658402&#39;,
+   &#39;first_csv_idx&#39;: 9993541,
+   &#39;last_csv_idx&#39;: 10326659},
+  {&#39;Name&#39;: &#39;IGUD&#39;,
+   &#39;Code&#39;: &#39;IGU&#39;,
+   &#39;X_ITM&#39;: &#39;204108&#39;,
+   &#39;Y_ITM&#39;: &#39;743853&#39;,
+   &#39;first_csv_idx&#39;: 10326659,
+   &#39;last_csv_idx&#39;: 10659777},
+  {&#39;Name&#39;: &#39;IRONID&#39;,
+   &#39;Code&#39;: &#39;IRD&#39;,
+   &#39;X_ITM&#39;: &#39;180414&#39;,
+   &#39;Y_ITM&#39;: &#39;666788&#39;,
+   &#39;first_csv_idx&#39;: 10659777,
+   &#39;last_csv_idx&#39;: 10992895},
+  {&#39;Name&#39;: &#39;KAKAL&#39;,
+   &#39;Code&#39;: &#39;KAK&#39;,
+   &#39;X_ITM&#39;: &#39;207100&#39;,
+   &#39;Y_ITM&#39;: &#39;746464&#39;,
+   &#39;first_csv_idx&#39;: 10992895,
+   &#39;last_csv_idx&#39;: 11326013},
+  {&#39;Name&#39;: &#39;KARON_KIACH&#39;,
+   &#39;Code&#39;: &#39;KIH&#39;,
+   &#39;X_ITM&#39;: &#39;220325&#39;,
+   &#39;Y_ITM&#39;: &#39;632370&#39;,
+   &#39;first_csv_idx&#39;: 11326013,
+   &#39;last_csv_idx&#39;: 11659131},
+  {&#39;Name&#39;: &#39;KFAR_MASARIK&#39;,
+   &#39;Code&#39;: &#39;KMR&#39;,
+   &#39;X_ITM&#39;: &#39;209585&#39;,
+   &#39;Y_ITM&#39;: &#39;755010&#39;,
+   &#39;first_csv_idx&#39;: 11659131,
+   &#39;last_csv_idx&#39;: 11992249},
+  {&#39;Name&#39;: &#39;KFAR_SABA&#39;,
+   &#39;Code&#39;: &#39;KFS&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 11992249,
+   &#39;last_csv_idx&#39;: 12325367},
+  {&#39;Name&#39;: &#39;KIRYAT_ATA&#39;,
+   &#39;Code&#39;: &#39;ATA&#39;,
+   &#39;X_ITM&#39;: &#39;210861&#39;,
+   &#39;Y_ITM&#39;: &#39;746333&#39;,
+   &#39;first_csv_idx&#39;: 12325367,
+   &#39;last_csv_idx&#39;: 12658485},
+  {&#39;Name&#39;: &#39;KIRYAT_BIALIK&#39;,
+   &#39;Code&#39;: &#39;BIA&#39;,
+   &#39;X_ITM&#39;: &#39;208844&#39;,
+   &#39;Y_ITM&#39;: &#39;748787&#39;,
+   &#39;first_csv_idx&#39;: 12658485,
+   &#39;last_csv_idx&#39;: 12991603},
+  {&#39;Name&#39;: &#39;KIRYAT_BINYAMIN&#39;,
+   &#39;Code&#39;: &#39;BIN&#39;,
+   &#39;X_ITM&#39;: &#39;209342&#39;,
+   &#39;Y_ITM&#39;: &#39;744564&#39;,
+   &#39;first_csv_idx&#39;: 12991603,
+   &#39;last_csv_idx&#39;: 13324721},
+  {&#39;Name&#39;: &#39;KIRYAT_MALAHI&#39;,
+   &#39;Code&#39;: &#39;MAL&#39;,
+   &#39;X_ITM&#39;: &#39;175541&#39;,
+   &#39;Y_ITM&#39;: &#39;626284&#39;,
+   &#39;first_csv_idx&#39;: 13324721,
+   &#39;last_csv_idx&#39;: 13657839},
+  {&#39;Name&#39;: &#39;KIRYAT_TIVON&#39;,
+   &#39;Code&#39;: &#39;TIV&#39;,
+   &#39;X_ITM&#39;: &#39;212489&#39;,
+   &#39;Y_ITM&#39;: &#39;736400&#39;,
+   &#39;first_csv_idx&#39;: 13657839,
+   &#39;last_csv_idx&#39;: 13990957},
+  {&#39;Name&#39;: &#39;KVISH4&#39;,
+   &#39;Code&#39;: &#39;KV4&#39;,
+   &#39;X_ITM&#39;: &#39;185207&#39;,
+   &#39;Y_ITM&#39;: &#39;664177&#39;,
+   &#39;first_csv_idx&#39;: 13990957,
+   &#39;last_csv_idx&#39;: 14324075},
+  {&#39;Name&#39;: &#39;KVISH9&#39;,
+   &#39;Code&#39;: &#39;KV9&#39;,
+   &#39;X_ITM&#39;: &#39;218947&#39;,
+   &#39;Y_ITM&#39;: &#39;634660&#39;,
+   &#39;first_csv_idx&#39;: 14324075,
+   &#39;last_csv_idx&#39;: 14657193},
+  {&#39;Name&#39;: &#39;MAGAL&#39;,
+   &#39;Code&#39;: &#39;MGL&#39;,
+   &#39;X_ITM&#39;: &#39;203752&#39;,
+   &#39;Y_ITM&#39;: &#39;698998&#39;,
+   &#39;first_csv_idx&#39;: 14657193,
+   &#39;last_csv_idx&#39;: 14990311},
+  {&#39;Name&#39;: &#39;MODEIN&#39;,
+   &#39;Code&#39;: &#39;MOD&#39;,
+   &#39;X_ITM&#39;: &#39;201350&#39;,
+   &#39;Y_ITM&#39;: &#39;646186&#39;,
+   &#39;first_csv_idx&#39;: 14990311,
+   &#39;last_csv_idx&#39;: 15323429},
+  {&#39;Name&#39;: &#39;NAVE_ILAN&#39;,
+   &#39;Code&#39;: &#39;NAI&#39;,
+   &#39;X_ITM&#39;: &#39;208844&#39;,
+   &#39;Y_ITM&#39;: &#39;634288&#39;,
+   &#39;first_csv_idx&#39;: 15323429,
+   &#39;last_csv_idx&#39;: 15656547},
+  {&#39;Name&#39;: &#39;NAVE_SHANAAN&#39;,
+   &#39;Code&#39;: &#39;NSH&#39;,
+   &#39;X_ITM&#39;: &#39;202285&#39;,
+   &#39;Y_ITM&#39;: &#39;743626&#39;,
+   &#39;first_csv_idx&#39;: 15656547,
+   &#39;last_csv_idx&#39;: 15989665},
+  {&#39;Name&#39;: &#39;NEOT_HAKIKAR&#39;,
+   &#39;Code&#39;: &#39;NEK&#39;,
+   &#39;X_ITM&#39;: &#39;237103&#39;,
+   &#39;Y_ITM&#39;: &#39;539456&#39;,
+   &#39;first_csv_idx&#39;: 15989665,
+   &#39;last_csv_idx&#39;: 16322783},
+  {&#39;Name&#39;: &#39;NESHER&#39;,
+   &#39;Code&#39;: &#39;NES&#39;,
+   &#39;X_ITM&#39;: &#39;204317&#39;,
+   &#39;Y_ITM&#39;: &#39;741718&#39;,
+   &#39;first_csv_idx&#39;: 16322783,
+   &#39;last_csv_idx&#39;: 16655901},
+  {&#39;Name&#39;: &#39;NIR_ISRAEL&#39;,
+   &#39;Code&#39;: &#39;NIL&#39;,
+   &#39;X_ITM&#39;: &#39;165644&#39;,
+   &#39;Y_ITM&#39;: &#39;621692&#39;,
+   &#39;first_csv_idx&#39;: 16655901,
+   &#39;last_csv_idx&#39;: 16989019},
+  {&#39;Name&#39;: &#39;OFEK&#39;,
+   &#39;Code&#39;: &#39;OFE&#39;,
+   &#39;X_ITM&#39;: &#39;164859&#39;,
+   &#39;Y_ITM&#39;: &#39;631311&#39;,
+   &#39;first_csv_idx&#39;: 16989019,
+   &#39;last_csv_idx&#39;: 17322137},
+  {&#39;Name&#39;: &#39;ORT&#39;,
+   &#39;Code&#39;: &#39;ORT&#39;,
+   &#39;X_ITM&#39;: &#39;166858&#39;,
+   &#39;Y_ITM&#39;: &#39;636000&#39;,
+   &#39;first_csv_idx&#39;: 17322137,
+   &#39;last_csv_idx&#39;: 17655255},
+  {&#39;Name&#39;: &#39;PARDES_HANA&#39;,
+   &#39;Code&#39;: &#39;PAD&#39;,
+   &#39;X_ITM&#39;: &#39;196756&#39;,
+   &#39;Y_ITM&#39;: &#39;708054&#39;,
+   &#39;first_csv_idx&#39;: 17655255,
+   &#39;last_csv_idx&#39;: 17988373},
+  {&#39;Name&#39;: &#39;PARK_HACARMEL&#39;,
+   &#39;Code&#39;: &#39;PAR&#39;,
+   &#39;X_ITM&#39;: &#39;203682&#39;,
+   &#39;Y_ITM&#39;: &#39;738118&#39;,
+   &#39;first_csv_idx&#39;: 17988373,
+   &#39;last_csv_idx&#39;: 18321491},
+  {&#39;Name&#39;: &#39;PETAH_TIKVA_ROAD&#39;,
+   &#39;Code&#39;: &#39;PTR&#39;,
+   &#39;X_ITM&#39;: &#39;179013&#39;,
+   &#39;Y_ITM&#39;: &#39;663138&#39;,
+   &#39;first_csv_idx&#39;: 18321491,
+   &#39;last_csv_idx&#39;: 18654609},
+  {&#39;Name&#39;: &#39;RAANANA&#39;,
+   &#39;Code&#39;: &#39;RAA&#39;,
+   &#39;X_ITM&#39;: &#39;189030&#39;,
+   &#39;Y_ITM&#39;: &#39;676220&#39;,
+   &#39;first_csv_idx&#39;: 18654609,
+   &#39;last_csv_idx&#39;: 18987727},
+  {&#39;Name&#39;: &#39;RAKEVET_HASHALOM&#39;,
+   &#39;Code&#39;: &#39;RKS&#39;,
+   &#39;X_ITM&#39;: &#39;180620&#39;,
+   &#39;Y_ITM&#39;: &#39;664520&#39;,
+   &#39;first_csv_idx&#39;: 18987727,
+   &#39;last_csv_idx&#39;: 19320845},
+  {&#39;Name&#39;: &#39;REMEZ&#39;,
+   &#39;Code&#39;: &#39;REM&#39;,
+   &#39;X_ITM&#39;: &#39;183802&#39;,
+   &#39;Y_ITM&#39;: &#39;666558&#39;,
+   &#39;first_csv_idx&#39;: 19320845,
+   &#39;last_csv_idx&#39;: 19653963},
+  {&#39;Name&#39;: &#39;RISHON_LEZION&#39;,
+   &#39;Code&#39;: &#39;RSZ&#39;,
+   &#39;X_ITM&#39;: &#39;181395&#39;,
+   &#39;Y_ITM&#39;: &#39;651720&#39;,
+   &#39;first_csv_idx&#39;: 19653963,
+   &#39;last_csv_idx&#39;: 19987081},
+  {&#39;Name&#39;: &#39;ROVA_TV&#39;,
+   &#39;Code&#39;: &#39;RTV&#39;,
+   &#39;X_ITM&#39;: &#39;164954&#39;,
+   &#39;Y_ITM&#39;: &#39;631264&#39;,
+   &#39;first_csv_idx&#39;: 19987081,
+   &#39;last_csv_idx&#39;: 20320199},
+  {&#39;Name&#39;: &#39;SDEROT&#39;,
+   &#39;Code&#39;: &#39;SDR&#39;,
+   &#39;X_ITM&#39;: &#39;162256&#39;,
+   &#39;Y_ITM&#39;: &#39;604161&#39;,
+   &#39;first_csv_idx&#39;: 20320199,
+   &#39;last_csv_idx&#39;: 20653317},
+  {&#39;Name&#39;: &#39;SDE_YOAV&#39;,
+   &#39;Code&#39;: &#39;SYO&#39;,
+   &#39;X_ITM&#39;: &#39;169210&#39;,
+   &#39;Y_ITM&#39;: &#39;617196&#39;,
+   &#39;first_csv_idx&#39;: 20653317,
+   &#39;last_csv_idx&#39;: 20986435},
+  {&#39;Name&#39;: &#39;SHFEYA&#39;,
+   &#39;Code&#39;: &#39;SHF&#39;,
+   &#39;X_ITM&#39;: &#39;197768&#39;,
+   &#39;Y_ITM&#39;: &#39;721586&#39;,
+   &#39;first_csv_idx&#39;: 20986435,
+   &#39;last_csv_idx&#39;: 21319553},
+  {&#39;Name&#39;: &#39;TAHANA_MERKAZIT&#39;,
+   &#39;Code&#39;: &#39;TMM&#39;,
+   &#39;X_ITM&#39;: &#39;179340&#39;,
+   &#39;Y_ITM&#39;: &#39;662666&#39;,
+   &#39;first_csv_idx&#39;: 21319553,
+   &#39;last_csv_idx&#39;: 21652671},
+  {&#39;Name&#39;: &#39;UM_EL_FAHEM_C&#39;,
+   &#39;Code&#39;: &#39;UFC&#39;,
+   &#39;X_ITM&#39;: &#39;214360&#39;,
+   &#39;Y_ITM&#39;: &#39;715666&#39;,
+   &#39;first_csv_idx&#39;: 21652671,
+   &#39;last_csv_idx&#39;: 21985789},
+  {&#39;Name&#39;: &#39;YAD_LEBANIM&#39;,
+   &#39;Code&#39;: &#39;YLB&#39;,
+   &#39;X_ITM&#39;: &#39;183259&#39;,
+   &#39;Y_ITM&#39;: &#39;664871&#39;,
+   &#39;first_csv_idx&#39;: 21985789,
+   &#39;last_csv_idx&#39;: 22318907},
+  {&#39;Name&#39;: &#39;YAHALOM&#39;,
+   &#39;Code&#39;: &#39;YAH&#39;,
+   &#39;X_ITM&#39;: &#39;166336&#39;,
+   &#39;Y_ITM&#39;: &#39;635778&#39;,
+   &#39;first_csv_idx&#39;: 22318907,
+   &#39;last_csv_idx&#39;: 22652025},
+  {&#39;Name&#39;: &#39;YEFET_YAFO&#39;,
+   &#39;Code&#39;: &#39;YAF&#39;,
+   &#39;X_ITM&#39;: &#39;176798&#39;,
+   &#39;Y_ITM&#39;: &#39;661903&#39;,
+   &#39;first_csv_idx&#39;: 22652025,
+   &#39;last_csv_idx&#39;: 22985143},
+  {&#39;invalid_values_flags&#39;: {&#39;missing_lag&#39;: {&#39;description&#39;: &#39;in case na arised after calculating lags, including 0&#39;,
+     &#39;flag&#39;: -999},
+    &#39;missing_timestamp&#39;: {&#39;description&#39;: &#39;in case na arised after combining stations for a single pm type&#39;,
+     &#39;flag&#39;: -888},
+    &#39;missing_station&#39;: {&#39;description&#39;: &#39;in case na arised after combining pm_types&#39;,
+     &#39;flag&#39;: -777}}}],
+ &#39;all&#39;: [{&#39;Name&#39;: &#39;BEER_SHEVA&#39;,
+   &#39;Code&#39;: &#39;BSV&#39;,
+   &#39;X_ITM&#39;: &#39;179228&#39;,
+   &#39;Y_ITM&#39;: &#39;574024&#39;,
+   &#39;first_csv_idx&#39;: 3331181,
+   &#39;last_csv_idx&#39;: 3664299},
+  {&#39;Name&#39;: &#39;OFEK&#39;,
+   &#39;Code&#39;: &#39;OFE&#39;,
+   &#39;X_ITM&#39;: &#39;164859&#39;,
+   &#39;Y_ITM&#39;: &#39;631311&#39;,
+   &#39;first_csv_idx&#39;: 16989019,
+   &#39;last_csv_idx&#39;: 17322137},
+  {&#39;Name&#39;: &#39;KVISH9&#39;,
+   &#39;Code&#39;: &#39;KV9&#39;,
+   &#39;X_ITM&#39;: &#39;218947&#39;,
+   &#39;Y_ITM&#39;: &#39;634660&#39;,
+   &#39;first_csv_idx&#39;: 12991603,
+   &#39;last_csv_idx&#39;: 13324721},
+  {&#39;Name&#39;: &#39;MAVKIIM&#39;,
+   &#39;Code&#39;: &#39;MAV&#39;,
+   &#39;X_ITM&#39;: &#39;160045&#39;,
+   &#39;Y_ITM&#39;: &#39;614630&#39;,
+   &#39;first_csv_idx&#39;: 13657839,
+   &#39;last_csv_idx&#39;: 13990957},
+  {&#39;Name&#39;: &#39;GEDERA&#39;,
+   &#39;Code&#39;: &#39;GDR&#39;,
+   &#39;X_ITM&#39;: &#39;179222&#39;,
+   &#39;Y_ITM&#39;: &#39;635797&#39;,
+   &#39;first_csv_idx&#39;: 7661715,
+   &#39;last_csv_idx&#39;: 7994833},
+  {&#39;Name&#39;: &#39;KVISH4&#39;,
+   &#39;Code&#39;: &#39;KV4&#39;,
+   &#39;X_ITM&#39;: &#39;185207&#39;,
+   &#39;Y_ITM&#39;: &#39;664177&#39;,
+   &#39;first_csv_idx&#39;: 13990957,
+   &#39;last_csv_idx&#39;: 14324075},
+  {&#39;Name&#39;: &#39;EREZ&#39;,
+   &#39;Code&#39;: &#39;ERE&#39;,
+   &#39;X_ITM&#39;: &#39;158731&#39;,
+   &#39;Y_ITM&#39;: &#39;607995&#39;,
+   &#39;first_csv_idx&#39;: 7661715,
+   &#39;last_csv_idx&#39;: 7994833},
+  {&#39;Name&#39;: &#39;SDEROT&#39;,
+   &#39;Code&#39;: &#39;SDR&#39;,
+   &#39;X_ITM&#39;: &#39;162256&#39;,
+   &#39;Y_ITM&#39;: &#39;604161&#39;,
+   &#39;first_csv_idx&#39;: 20320199,
+   &#39;last_csv_idx&#39;: 20653317},
+  {&#39;Name&#39;: &#39;NESHER&#39;,
+   &#39;Code&#39;: &#39;NES&#39;,
+   &#39;X_ITM&#39;: &#39;204317&#39;,
+   &#39;Y_ITM&#39;: &#39;741718&#39;,
+   &#39;first_csv_idx&#39;: 15323429,
+   &#39;last_csv_idx&#39;: 15656547},
+  {&#39;Name&#39;: &#39;MODEIN&#39;,
+   &#39;Code&#39;: &#39;MOD&#39;,
+   &#39;X_ITM&#39;: &#39;201350&#39;,
+   &#39;Y_ITM&#39;: &#39;646186&#39;,
+   &#39;first_csv_idx&#39;: 13990957,
+   &#39;last_csv_idx&#39;: 14324075},
+  {&#39;Name&#39;: &#39;ARIEL&#39;,
+   &#39;Code&#39;: &#39;ARI&#39;,
+   &#39;X_ITM&#39;: &#39;219954&#39;,
+   &#39;Y_ITM&#39;: &#39;667860&#39;,
+   &#39;first_csv_idx&#39;: 999355,
+   &#39;last_csv_idx&#39;: 1332473},
+  {&#39;Name&#39;: &#39;NIR_GALIM&#39;,
+   &#39;Code&#39;: &#39;NGL&#39;,
+   &#39;X_ITM&#39;: &#39;170355&#39;,
+   &#39;Y_ITM&#39;: &#39;637320&#39;,
+   &#39;first_csv_idx&#39;: 15656547,
+   &#39;last_csv_idx&#39;: 15989665},
+  {&#39;Name&#39;: &#39;KIRYAT_MALAHI&#39;,
+   &#39;Code&#39;: &#39;MAL&#39;,
+   &#39;X_ITM&#39;: &#39;175541&#39;,
+   &#39;Y_ITM&#39;: &#39;626284&#39;,
+   &#39;first_csv_idx&#39;: 13324721,
+   &#39;last_csv_idx&#39;: 13657839},
+  {&#39;Name&#39;: &#39;KIRYAT_TIVON&#39;,
+   &#39;Code&#39;: &#39;TIV&#39;,
+   &#39;X_ITM&#39;: &#39;212489&#39;,
+   &#39;Y_ITM&#39;: &#39;736400&#39;,
+   &#39;first_csv_idx&#39;: 13657839,
+   &#39;last_csv_idx&#39;: 13990957},
+  {&#39;Name&#39;: &#39;YAVNE_CITY&#39;,
+   &#39;Code&#39;: &#39;YAV&#39;,
+   &#39;X_ITM&#39;: &#39;175444&#39;,
+   &#39;Y_ITM&#39;: &#39;642614&#39;,
+   &#39;first_csv_idx&#39;: 20986435,
+   &#39;last_csv_idx&#39;: 21319553},
+  {&#39;Name&#39;: &#39;PARK_HACARMEL&#39;,
+   &#39;Code&#39;: &#39;PAR&#39;,
+   &#39;X_ITM&#39;: &#39;203682&#39;,
+   &#39;Y_ITM&#39;: &#39;738118&#39;,
+   &#39;first_csv_idx&#39;: 15989665,
+   &#39;last_csv_idx&#39;: 16322783},
+  {&#39;Name&#39;: &#39;AFULA&#39;,
+   &#39;Code&#39;: &#39;AFU&#39;,
+   &#39;X_ITM&#39;: &#39;227646&#39;,
+   &#39;Y_ITM&#39;: &#39;723263&#39;,
+   &#39;first_csv_idx&#39;: 1,
+   &#39;last_csv_idx&#39;: 333119},
+  {&#39;Name&#39;: &#39;BEGIN&#39;,
+   &#39;Code&#39;: &#39;BEG&#39;,
+   &#39;X_ITM&#39;: &#39;208901&#39;,
+   &#39;Y_ITM&#39;: &#39;751058&#39;,
+   &#39;first_csv_idx&#39;: 3664299,
+   &#39;last_csv_idx&#39;: 3997417},
+  {&#39;Name&#39;: &#39;PARDES_HANA&#39;,
+   &#39;Code&#39;: &#39;PAD&#39;,
+   &#39;X_ITM&#39;: &#39;196756&#39;,
+   &#39;Y_ITM&#39;: &#39;708054&#39;,
+   &#39;first_csv_idx&#39;: 17655255,
+   &#39;last_csv_idx&#39;: 17988373},
+  {&#39;Name&#39;: &#39;NAVE_YOSEF&#39;,
+   &#39;Code&#39;: &#39;NYO&#39;,
+   &#39;X_ITM&#39;: &#39;202450&#39;,
+   &#39;Y_ITM&#39;: &#39;743960&#39;,
+   &#39;first_csv_idx&#39;: 14990311,
+   &#39;last_csv_idx&#39;: 15323429},
+  {&#39;Name&#39;: &#39;EAST_NEGEV&#39;,
+   &#39;Code&#39;: &#39;ENV&#39;,
+   &#39;X_ITM&#39;: &#39;220513&#39;,
+   &#39;Y_ITM&#39;: &#39;573107&#39;,
+   &#39;first_csv_idx&#39;: 5996125,
+   &#39;last_csv_idx&#39;: 6329243},
+  {&#39;Name&#39;: &#39;REHOVOT&#39;,
+   &#39;Code&#39;: &#39;REH&#39;,
+   &#39;X_ITM&#39;: &#39;182742&#39;,
+   &#39;Y_ITM&#39;: &#39;645238&#39;,
+   &#39;first_csv_idx&#39;: 16655901,
+   &#39;last_csv_idx&#39;: 16989019},
+  {&#39;Name&#39;: &#39;ASHDOD_IGUD&#39;,
+   &#39;Code&#39;: &#39;ASH&#39;,
+   &#39;X_ITM&#39;: &#39;168907&#39;,
+   &#39;Y_ITM&#39;: &#39;636399&#39;,
+   &#39;first_csv_idx&#39;: 1998709,
+   &#39;last_csv_idx&#39;: 2331827},
+  {&#39;Name&#39;: &#39;HEFZIBA&#39;,
+   &#39;Code&#39;: &#39;HEF&#39;,
+   &#39;X_ITM&#39;: &#39;190692&#39;,
+   &#39;Y_ITM&#39;: &#39;707199&#39;,
+   &#39;first_csv_idx&#39;: 9993541,
+   &#39;last_csv_idx&#39;: 10326659},
+  {&#39;Name&#39;: &#39;KFAR_MASARIK&#39;,
+   &#39;Code&#39;: &#39;KMR&#39;,
+   &#39;X_ITM&#39;: &#39;209585&#39;,
+   &#39;Y_ITM&#39;: &#39;755010&#39;,
+   &#39;first_csv_idx&#39;: 11659131,
+   &#39;last_csv_idx&#39;: 11992249},
+  {&#39;Name&#39;: &#39;IGUD&#39;,
+   &#39;Code&#39;: &#39;IGU&#39;,
+   &#39;X_ITM&#39;: &#39;204108&#39;,
+   &#39;Y_ITM&#39;: &#39;743853&#39;,
+   &#39;first_csv_idx&#39;: 10326659,
+   &#39;last_csv_idx&#39;: 10659777},
+  {&#39;Name&#39;: &#39;BEIT_HASHMONAY&#39;,
+   &#39;Code&#39;: &#39;BHS&#39;,
+   &#39;X_ITM&#39;: &#39;192082&#39;,
+   &#39;Y_ITM&#39;: &#39;644094&#39;,
+   &#39;first_csv_idx&#39;: 3997417,
+   &#39;last_csv_idx&#39;: 4330535},
+  {&#39;Name&#39;: &#39;ASHKELON&#39;,
+   &#39;Code&#39;: &#39;ASK&#39;,
+   &#39;X_ITM&#39;: &#39;159329&#39;,
+   &#39;Y_ITM&#39;: &#39;618777&#39;,
+   &#39;first_csv_idx&#39;: 1332473,
+   &#39;last_csv_idx&#39;: 1665591},
+  {&#39;Name&#39;: &#39;LOT&#39;,
+   &#39;Code&#39;: &#39;LOT&#39;,
+   &#39;X_ITM&#39;: &#39;237962&#39;,
+   &#39;Y_ITM&#39;: &#39;553165&#39;,
+   &#39;first_csv_idx&#39;: 13324721,
+   &#39;last_csv_idx&#39;: 13657839},
+  {&#39;Name&#39;: &#39;YAD_RAMBAM_2&#39;,
+   &#39;Code&#39;: &#39;YR2&#39;,
+   &#39;X_ITM&#39;: &#39;211212&#39;,
+   &#39;Y_ITM&#39;: &#39;618270&#39;,
+   &#39;first_csv_idx&#39;: 20653317,
+   &#39;last_csv_idx&#39;: 20986435},
+  {&#39;Name&#39;: &#39;SHFEYA&#39;,
+   &#39;Code&#39;: &#39;SHF&#39;,
+   &#39;X_ITM&#39;: &#39;197768&#39;,
+   &#39;Y_ITM&#39;: &#39;721586&#39;,
+   &#39;first_csv_idx&#39;: 17655255,
+   &#39;last_csv_idx&#39;: 17988373},
+  {&#39;Name&#39;: &#39;KARMEY_YOSSEF&#39;,
+   &#39;Code&#39;: &#39;KRY&#39;,
+   &#39;X_ITM&#39;: &#39;192484&#39;,
+   &#39;Y_ITM&#39;: &#39;639345&#39;,
+   &#39;first_csv_idx&#39;: 10992895,
+   &#39;last_csv_idx&#39;: 11326013},
+  {&#39;Name&#39;: &#39;IZRAELIA&#39;,
+   &#39;Code&#39;: &#39;IZR&#39;,
+   &#39;X_ITM&#39;: &#39;201240&#39;,
+   &#39;Y_ITM&#39;: &#39;743960&#39;,
+   &#39;first_csv_idx&#39;: 10659777,
+   &#39;last_csv_idx&#39;: 10992895},
+  {&#39;Name&#39;: &#39;KAZIR_NEW&#39;,
+   &#39;Code&#39;: &#39;KAN&#39;,
+   &#39;X_ITM&#39;: &#39;209296&#39;,
+   &#39;Y_ITM&#39;: &#39;710341&#39;,
+   &#39;first_csv_idx&#39;: 11326013,
+   &#39;last_csv_idx&#39;: 11659131},
+  {&#39;Name&#39;: &#39;NAVE_ILAN&#39;,
+   &#39;Code&#39;: &#39;NAI&#39;,
+   &#39;X_ITM&#39;: &#39;208844&#39;,
+   &#39;Y_ITM&#39;: &#39;634288&#39;,
+   &#39;first_csv_idx&#39;: 15323429,
+   &#39;last_csv_idx&#39;: 15656547},
+  {&#39;Name&#39;: &#39;GVARAAM&#39;,
+   &#39;Code&#39;: &#39;GVA&#39;,
+   &#39;X_ITM&#39;: &#39;163074&#39;,
+   &#39;Y_ITM&#39;: &#39;610974&#39;,
+   &#39;first_csv_idx&#39;: 8327951,
+   &#39;last_csv_idx&#39;: 8661069},
+  {&#39;Name&#39;: &#39;NIR_ISRAEL&#39;,
+   &#39;Code&#39;: &#39;NIL&#39;,
+   &#39;X_ITM&#39;: &#39;165644&#39;,
+   &#39;Y_ITM&#39;: &#39;621692&#39;,
+   &#39;first_csv_idx&#39;: 16655901,
+   &#39;last_csv_idx&#39;: 16989019},
+  {&#39;Name&#39;: &#39;ROVA_TV&#39;,
+   &#39;Code&#39;: &#39;RTV&#39;,
+   &#39;X_ITM&#39;: &#39;164954&#39;,
+   &#39;Y_ITM&#39;: &#39;631264&#39;,
+   &#39;first_csv_idx&#39;: 19987081,
+   &#39;last_csv_idx&#39;: 20320199},
+  {&#39;Name&#39;: &#39;TAHANA_MERKAZIT&#39;,
+   &#39;Code&#39;: &#39;TMM&#39;,
+   &#39;X_ITM&#39;: &#39;179340&#39;,
+   &#39;Y_ITM&#39;: &#39;662666&#39;,
+   &#39;first_csv_idx&#39;: 18654609,
+   &#39;last_csv_idx&#39;: 18987727},
+  {&#39;Name&#39;: &#39;BEN_GURION_AIRPORT&#39;,
+   &#39;Code&#39;: &#39;BGA&#39;,
+   &#39;X_ITM&#39;: &#39;190355&#39;,
+   &#39;Y_ITM&#39;: &#39;655382&#39;,
+   &#39;first_csv_idx&#39;: 5329889,
+   &#39;last_csv_idx&#39;: 5663007},
+  {&#39;Name&#39;: &#39;EVEN_AMI&#39;,
+   &#39;Code&#39;: &#39;EVN&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 7994833,
+   &#39;last_csv_idx&#39;: 8327951},
+  {&#39;Name&#39;: &#39;AMIEL&#39;,
+   &#39;Code&#39;: &#39;AMI&#39;,
+   &#39;X_ITM&#39;: &#39;180611&#39;,
+   &#39;Y_ITM&#39;: &#39;661648&#39;,
+   &#39;first_csv_idx&#39;: 333119,
+   &#39;last_csv_idx&#39;: 666237},
+  {&#39;Name&#39;: &#39;KARON_KIACH&#39;,
+   &#39;Code&#39;: &#39;KIH&#39;,
+   &#39;X_ITM&#39;: &#39;220325&#39;,
+   &#39;Y_ITM&#39;: &#39;632370&#39;,
+   &#39;first_csv_idx&#39;: 11326013,
+   &#39;last_csv_idx&#39;: 11659131},
+  {&#39;Name&#39;: &#39;SDE_YOAV&#39;,
+   &#39;Code&#39;: &#39;SYO&#39;,
+   &#39;X_ITM&#39;: &#39;169210&#39;,
+   &#39;Y_ITM&#39;: &#39;617196&#39;,
+   &#39;first_csv_idx&#39;: 20653317,
+   &#39;last_csv_idx&#39;: 20986435},
+  {&#39;Name&#39;: &#39;REMEZ&#39;,
+   &#39;Code&#39;: &#39;REM&#39;,
+   &#39;X_ITM&#39;: &#39;183802&#39;,
+   &#39;Y_ITM&#39;: &#39;666558&#39;,
+   &#39;first_csv_idx&#39;: 19320845,
+   &#39;last_csv_idx&#39;: 19653963},
+  {&#39;Name&#39;: &#39;SHIKUN_L&#39;,
+   &#39;Code&#39;: &#39;SHL&#39;,
+   &#39;X_ITM&#39;: &#39;180346&#39;,
+   &#39;Y_ITM&#39;: &#39;668398&#39;,
+   &#39;first_csv_idx&#39;: 17988373,
+   &#39;last_csv_idx&#39;: 18321491},
+  {&#39;Name&#39;: &#39;YAD_LEBANIM&#39;,
+   &#39;Code&#39;: &#39;YLB&#39;,
+   &#39;X_ITM&#39;: &#39;183259&#39;,
+   &#39;Y_ITM&#39;: &#39;664871&#39;,
+   &#39;first_csv_idx&#39;: 20320199,
+   &#39;last_csv_idx&#39;: 20653317},
+  {&#39;Name&#39;: &#39;BNEI_ATAROT&#39;,
+   &#39;Code&#39;: &#39;BNA&#39;,
+   &#39;X_ITM&#39;: &#39;191806&#39;,
+   &#39;Y_ITM&#39;: &#39;659095&#39;,
+   &#39;first_csv_idx&#39;: 5663007,
+   &#39;last_csv_idx&#39;: 5996125},
+  {&#39;Name&#39;: &#39;BEIT_SHEMESH&#39;,
+   &#39;Code&#39;: &#39;BSH&#39;,
+   &#39;X_ITM&#39;: &#39;199379&#39;,
+   &#39;Y_ITM&#39;: &#39;628733&#39;,
+   &#39;first_csv_idx&#39;: 4330535,
+   &#39;last_csv_idx&#39;: 4663653},
+  {&#39;Name&#39;: &#39;BAT_HADAR&#39;,
+   &#39;Code&#39;: &#39;BHD&#39;,
+   &#39;X_ITM&#39;: &#39;161744&#39;,
+   &#39;Y_ITM&#39;: &#39;617399&#39;,
+   &#39;first_csv_idx&#39;: 2998063,
+   &#39;last_csv_idx&#39;: 3331181},
+  {&#39;Name&#39;: &#39;EILAT6&#39;,
+   &#39;Code&#39;: &#39;EI6&#39;,
+   &#39;X_ITM&#39;: &#39;192932&#39;,
+   &#39;Y_ITM&#39;: &#39;384325&#39;,
+   &#39;first_csv_idx&#39;: 6995479,
+   &#39;last_csv_idx&#39;: 7328597},
+  {&#39;Name&#39;: &#39;CEASARIA&#39;,
+   &#39;Code&#39;: &#39;CSA&#39;,
+   &#39;X_ITM&#39;: &#39;194160&#39;,
+   &#39;Y_ITM&#39;: &#39;711743&#39;,
+   &#39;first_csv_idx&#39;: 5663007,
+   &#39;last_csv_idx&#39;: 5996125},
+  {&#39;Name&#39;: &#39;KIRYAT_ATA&#39;,
+   &#39;Code&#39;: &#39;ATA&#39;,
+   &#39;X_ITM&#39;: &#39;210861&#39;,
+   &#39;Y_ITM&#39;: &#39;746333&#39;,
+   &#39;first_csv_idx&#39;: 11659131,
+   &#39;last_csv_idx&#39;: 11992249},
+  {&#39;Name&#39;: &#39;ROMMEMA&#39;,
+   &#39;Code&#39;: &#39;ROM&#39;,
+   &#39;X_ITM&#39;: &#39;200530&#39;,
+   &#39;Y_ITM&#39;: &#39;743920&#39;,
+   &#39;first_csv_idx&#39;: 16989019,
+   &#39;last_csv_idx&#39;: 17322137},
+  {&#39;Name&#39;: &#39;IRONID&#39;,
+   &#39;Code&#39;: &#39;IRD&#39;,
+   &#39;X_ITM&#39;: &#39;180414&#39;,
+   &#39;Y_ITM&#39;: &#39;666788&#39;,
+   &#39;first_csv_idx&#39;: 10659777,
+   &#39;last_csv_idx&#39;: 10992895},
+  {&#39;Name&#39;: &#39;BNEI_DAROM&#39;,
+   &#39;Code&#39;: &#39;BND&#39;,
+   &#39;X_ITM&#39;: &#39;171080&#39;,
+   &#39;Y_ITM&#39;: &#39;636420&#39;,
+   &#39;first_csv_idx&#39;: 5996125,
+   &#39;last_csv_idx&#39;: 6329243},
+  {&#39;Name&#39;: &#39;ORT&#39;,
+   &#39;Code&#39;: &#39;ORT&#39;,
+   &#39;X_ITM&#39;: &#39;166858&#39;,
+   &#39;Y_ITM&#39;: &#39;636000&#39;,
+   &#39;first_csv_idx&#39;: 17322137,
+   &#39;last_csv_idx&#39;: 17655255},
+  {&#39;Name&#39;: &#39;KAKAL&#39;,
+   &#39;Code&#39;: &#39;KAK&#39;,
+   &#39;X_ITM&#39;: &#39;207100&#39;,
+   &#39;Y_ITM&#39;: &#39;746464&#39;,
+   &#39;first_csv_idx&#39;: 10992895,
+   &#39;last_csv_idx&#39;: 11326013},
+  {&#39;Name&#39;: &#39;HAKFAR_HAYAROK&#39;,
+   &#39;Code&#39;: &#39;KFY&#39;,
+   &#39;X_ITM&#39;: &#39;184410&#39;,
+   &#39;Y_ITM&#39;: &#39;617120&#39;,
+   &#39;first_csv_idx&#39;: 9660423,
+   &#39;last_csv_idx&#39;: 9993541},
+  {&#39;Name&#39;: &#39;UM_EL_FAHEM_C&#39;,
+   &#39;Code&#39;: &#39;UFC&#39;,
+   &#39;X_ITM&#39;: &#39;214360&#39;,
+   &#39;Y_ITM&#39;: &#39;715666&#39;,
+   &#39;first_csv_idx&#39;: 21652671,
+   &#39;last_csv_idx&#39;: 21985789},
+  {&#39;Name&#39;: &#39;MAGAL&#39;,
+   &#39;Code&#39;: &#39;MGL&#39;,
+   &#39;X_ITM&#39;: &#39;203752&#39;,
+   &#39;Y_ITM&#39;: &#39;698998&#39;,
+   &#39;first_csv_idx&#39;: 14657193,
+   &#39;last_csv_idx&#39;: 14990311},
+  {&#39;Name&#39;: &#39;YAD_AVNER&#39;,
+   &#39;Code&#39;: &#39;DAV&#39;,
+   &#39;X_ITM&#39;: &#39;181743&#39;,
+   &#39;Y_ITM&#39;: &#39;669624&#39;,
+   &#39;first_csv_idx&#39;: 19987081,
+   &#39;last_csv_idx&#39;: 20320199},
+  {&#39;Name&#39;: &#39;SAFRA&#39;,
+   &#39;Code&#39;: &#39;SAF&#39;,
+   &#39;X_ITM&#39;: &#39;221380&#39;,
+   &#39;Y_ITM&#39;: &#39;631880&#39;,
+   &#39;first_csv_idx&#39;: 17322137,
+   &#39;last_csv_idx&#39;: 17655255},
+  {&#39;Name&#39;: &#39;BAR_ILAN&#39;,
+   &#39;Code&#39;: &#39;BIL&#39;,
+   &#39;X_ITM&#39;: &#39;220935&#39;,
+   &#39;Y_ITM&#39;: &#39;633613&#39;,
+   &#39;first_csv_idx&#39;: 2664945,
+   &#39;last_csv_idx&#39;: 2998063},
+  {&#39;Name&#39;: &#39;HADAR&#39;,
+   &#39;Code&#39;: &#39;HDR&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 8661069,
+   &#39;last_csv_idx&#39;: 8994187},
+  {&#39;Name&#39;: &#39;ANTOKOLSKY&#39;,
+   &#39;Code&#39;: &#39;ANT&#39;,
+   &#39;X_ITM&#39;: &#39;179676&#39;,
+   &#39;Y_ITM&#39;: &#39;665772&#39;,
+   &#39;first_csv_idx&#39;: 1332473,
+   &#39;last_csv_idx&#39;: 1665591},
+  {&#39;Name&#39;: &#39;TAHANA_MERKAZIT_JERUSALEM&#39;,
+   &#39;Code&#39;: &#39;TMJ&#39;,
+   &#39;X_ITM&#39;: &#39;219397&#39;,
+   &#39;Y_ITM&#39;: &#39;632993&#39;,
+   &#39;first_csv_idx&#39;: 18987727,
+   &#39;last_csv_idx&#39;: 19320845},
+  {&#39;Name&#39;: &#39;BARKAI&#39;,
+   &#39;Code&#39;: &#39;BAR&#39;,
+   &#39;X_ITM&#39;: &#39;202422&#39;,
+   &#39;Y_ITM&#39;: &#39;709073&#39;,
+   &#39;first_csv_idx&#39;: 3664299,
+   &#39;last_csv_idx&#39;: 3997417},
+  {&#39;Name&#39;: &#39;WEST_GALIL&#39;,
+   &#39;Code&#39;: &#39;WGA&#39;,
+   &#39;X_ITM&#39;: &#39;227738&#39;,
+   &#39;Y_ITM&#39;: &#39;757843&#39;,
+   &#39;first_csv_idx&#39;: 19653963,
+   &#39;last_csv_idx&#39;: 19987081},
+  {&#39;Name&#39;: &#39;ATZMAUT_B&#39;,
+   &#39;Code&#39;: &#39;AZB&#39;,
+   &#39;X_ITM&#39;: &#39;200549&#39;,
+   &#39;Y_ITM&#39;: &#39;746930&#39;,
+   &#39;first_csv_idx&#39;: 1998709,
+   &#39;last_csv_idx&#39;: 2331827},
+  {&#39;Name&#39;: &#39;KIRYAT_BINYAMIN&#39;,
+   &#39;Code&#39;: &#39;BIN&#39;,
+   &#39;X_ITM&#39;: &#39;209342&#39;,
+   &#39;Y_ITM&#39;: &#39;744564&#39;,
+   &#39;first_csv_idx&#39;: 11992249,
+   &#39;last_csv_idx&#39;: 12325367},
+  {&#39;Name&#39;: &#39;ARAD_MUNICIPALITY&#39;,
+   &#39;Code&#39;: &#39;ARD&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 666237,
+   &#39;last_csv_idx&#39;: 999355},
+  {&#39;Name&#39;: &#39;CARMEL_ZARFATI&#39;,
+   &#39;Code&#39;: &#39;CAZ&#39;,
+   &#39;X_ITM&#39;: &#39;198159&#39;,
+   &#39;Y_ITM&#39;: &#39;747329&#39;,
+   &#39;first_csv_idx&#39;: 4996771,
+   &#39;last_csv_idx&#39;: 5329889},
+  {&#39;Name&#39;: &#39;GIVATAIM&#39;,
+   &#39;Code&#39;: &#39;GIV&#39;,
+   &#39;X_ITM&#39;: &#39;182301&#39;,
+   &#39;Y_ITM&#39;: &#39;664067&#39;,
+   &#39;first_csv_idx&#39;: 8661069,
+   &#39;last_csv_idx&#39;: 8994187},
+  {&#39;Name&#39;: &#39;HADERA_B&#39;,
+   &#39;Code&#39;: &#39;HAB&#39;,
+   &#39;X_ITM&#39;: &#39;192141&#39;,
+   &#39;Y_ITM&#39;: &#39;706027&#39;,
+   &#39;first_csv_idx&#39;: 9327305,
+   &#39;last_csv_idx&#39;: 9660423},
+  {&#39;Name&#39;: &#39;HATIKVA&#39;,
+   &#39;Code&#39;: &#39;TIK&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 9327305,
+   &#39;last_csv_idx&#39;: 9660423},
+  {&#39;Name&#39;: &#39;NEOT_HAKIKAR&#39;,
+   &#39;Code&#39;: &#39;NEK&#39;,
+   &#39;X_ITM&#39;: &#39;237103&#39;,
+   &#39;Y_ITM&#39;: &#39;539456&#39;,
+   &#39;first_csv_idx&#39;: 15989665,
+   &#39;last_csv_idx&#39;: 16322783},
+  {&#39;Name&#39;: &#39;YEFET_YAFO&#39;,
+   &#39;Code&#39;: &#39;YAF&#39;,
+   &#39;X_ITM&#39;: &#39;176798&#39;,
+   &#39;Y_ITM&#39;: &#39;661903&#39;,
+   &#39;first_csv_idx&#39;: 22652025,
+   &#39;last_csv_idx&#39;: 22985143},
+  {&#39;Name&#39;: &#39;GUSH_EZION&#39;,
+   &#39;Code&#39;: &#39;GTZ&#39;,
+   &#39;X_ITM&#39;: &#39;211946&#39;,
+   &#39;Y_ITM&#39;: &#39;618052&#39;,
+   &#39;first_csv_idx&#39;: 8994187,
+   &#39;last_csv_idx&#39;: 9327305},
+  {&#39;Name&#39;: &#39;ASHALIM&#39;,
+   &#39;Code&#39;: &#39;ASL&#39;,
+   &#39;X_ITM&#39;: &#39;233739&#39;,
+   &#39;Y_ITM&#39;: &#39;547188&#39;,
+   &#39;first_csv_idx&#39;: 1665591,
+   &#39;last_csv_idx&#39;: 1998709},
+  {&#39;Name&#39;: &#39;MODEIN_IEC&#39;,
+   &#39;Code&#39;: &#39;MIE&#39;,
+   &#39;X_ITM&#39;: &#39;199683&#39;,
+   &#39;Y_ITM&#39;: &#39;644433&#39;,
+   &#39;first_csv_idx&#39;: 14324075,
+   &#39;last_csv_idx&#39;: 14657193},
+  {&#39;Name&#39;: &#39;AHUZA_G&#39;,
+   &#39;Code&#39;: &#39;AHU&#39;,
+   &#39;X_ITM&#39;: &#39;199059&#39;,
+   &#39;Y_ITM&#39;: &#39;743556&#39;,
+   &#39;first_csv_idx&#39;: 666237,
+   &#39;last_csv_idx&#39;: 999355},
+  {&#39;Name&#39;: &#39;KIRYAT_HAIM_REGAVIM&#39;,
+   &#39;Code&#39;: &#39;KHR&#39;,
+   &#39;X_ITM&#39;: &#39;205492&#39;,
+   &#39;Y_ITM&#39;: &#39;748547&#39;,
+   &#39;first_csv_idx&#39;: 12658485,
+   &#39;last_csv_idx&#39;: 12991603},
+  {&#39;Name&#39;: &#39;EHAD_HAAM&#39;,
+   &#39;Code&#39;: &#39;EHA&#39;,
+   &#39;X_ITM&#39;: &#39;188084&#39;,
+   &#39;Y_ITM&#39;: &#39;667486&#39;,
+   &#39;first_csv_idx&#39;: 6662361,
+   &#39;last_csv_idx&#39;: 6995479},
+  {&#39;Name&#39;: &#39;EFRATA&#39;,
+   &#39;Code&#39;: &#39;EFR&#39;,
+   &#39;X_ITM&#39;: &#39;220763&#39;,
+   &#39;Y_ITM&#39;: &#39;629391&#39;,
+   &#39;first_csv_idx&#39;: 6329243,
+   &#39;last_csv_idx&#39;: 6662361},
+  {&#39;Name&#39;: &#39;DALYA&#39;,
+   &#39;Code&#39;: &#39;DAL&#39;,
+   &#39;X_ITM&#39;: &#39;184155&#39;,
+   &#39;Y_ITM&#39;: &#39;626160&#39;,
+   &#39;first_csv_idx&#39;: 6329243,
+   &#39;last_csv_idx&#39;: 6662361},
+  {&#39;Name&#39;: &#39;HOLON&#39;,
+   &#39;Code&#39;: &#39;HOL&#39;,
+   &#39;X_ITM&#39;: &#39;178260&#39;,
+   &#39;Y_ITM&#39;: &#39;658402&#39;,
+   &#39;first_csv_idx&#39;: 9993541,
+   &#39;last_csv_idx&#39;: 10326659},
+  {&#39;Name&#39;: &#39;KIRYAT_BIALIK&#39;,
+   &#39;Code&#39;: &#39;BIA&#39;,
+   &#39;X_ITM&#39;: &#39;208844&#39;,
+   &#39;Y_ITM&#39;: &#39;748787&#39;,
+   &#39;first_csv_idx&#39;: 12658485,
+   &#39;last_csv_idx&#39;: 12991603},
+  {&#39;Name&#39;: &#39;CARMELIA&#39;,
+   &#39;Code&#39;: &#39;CAR&#39;,
+   &#39;X_ITM&#39;: &#39;197620&#39;,
+   &#39;Y_ITM&#39;: &#39;744760&#39;,
+   &#39;first_csv_idx&#39;: 4663653,
+   &#39;last_csv_idx&#39;: 4996771},
+  {&#39;Name&#39;: &#39;CARMIYA&#39;,
+   &#39;Code&#39;: &#39;CRM&#39;,
+   &#39;X_ITM&#39;: &#39;156479&#39;,
+   &#39;Y_ITM&#39;: &#39;612687&#39;,
+   &#39;first_csv_idx&#39;: 5329889,
+   &#39;last_csv_idx&#39;: 5663007},
+  {&#39;Name&#39;: &#39;UM_EL_KUTUF&#39;,
+   &#39;Code&#39;: &#39;UEK&#39;,
+   &#39;X_ITM&#39;: &#39;205652&#39;,
+   &#39;Y_ITM&#39;: &#39;708902&#39;,
+   &#39;first_csv_idx&#39;: 19320845,
+   &#39;last_csv_idx&#39;: 19653963},
+  {&#39;Name&#39;: &#39;BEIT_RIVKA&#39;,
+   &#39;Code&#39;: &#39;BRV&#39;,
+   &#39;X_ITM&#39;: &#39;187360&#39;,
+   &#39;Y_ITM&#39;: &#39;655670&#39;,
+   &#39;first_csv_idx&#39;: 4996771,
+   &#39;last_csv_idx&#39;: 5329889},
+  {&#39;Name&#39;: &#39;AZUR&#39;,
+   &#39;Code&#39;: &#39;AZR&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 3331181,
+   &#39;last_csv_idx&#39;: 3664299},
+  {&#39;Name&#39;: &#39;KFAR_SABA&#39;,
+   &#39;Code&#39;: &#39;KFS&#39;,
+   &#39;X_ITM&#39;: &#39;NaN&#39;,
+   &#39;Y_ITM&#39;: &#39;NaN&#39;,
+   &#39;first_csv_idx&#39;: 11992249,
+   &#39;last_csv_idx&#39;: 12325367},
+  {&#39;Name&#39;: &#39;PETAH_TIKVA_ROAD&#39;,
+   &#39;Code&#39;: &#39;PTR&#39;,
+   &#39;X_ITM&#39;: &#39;179013&#39;,
+   &#39;Y_ITM&#39;: &#39;663138&#39;,
+   &#39;first_csv_idx&#39;: 16322783,
+   &#39;last_csv_idx&#39;: 16655901},
+  {&#39;Name&#39;: &#39;AKO&#39;,
+   &#39;Code&#39;: &#39;AKO&#39;,
+   &#39;X_ITM&#39;: &#39;207828&#39;,
+   &#39;Y_ITM&#39;: &#39;748341&#39;,
+   &#39;first_csv_idx&#39;: 999355,
+   &#39;last_csv_idx&#39;: 1332473},
+  {&#39;Name&#39;: &#39;AGRIPAS&#39;,
+   &#39;Code&#39;: &#39;AGR&#39;,
+   &#39;X_ITM&#39;: &#39;220183&#39;,
+   &#39;Y_ITM&#39;: &#39;632369&#39;,
+   &#39;first_csv_idx&#39;: 333119,
+   &#39;last_csv_idx&#39;: 666237},
+  {&#39;Name&#39;: &#39;BARTAA&#39;,
+   &#39;Code&#39;: &#39;BAT&#39;,
+   &#39;X_ITM&#39;: &#39;208316&#39;,
+   &#39;Y_ITM&#39;: &#39;709212&#39;,
+   &#39;first_csv_idx&#39;: 2331827,
+   &#39;last_csv_idx&#39;: 2664945},
+  {&#39;Name&#39;: &#39;GIMZO&#39;,
+   &#39;Code&#39;: &#39;GIM&#39;,
+   &#39;X_ITM&#39;: &#39;194757&#39;,
+   &#39;Y_ITM&#39;: &#39;648078&#39;,
+   &#39;first_csv_idx&#39;: 8327951,
+   &#39;last_csv_idx&#39;: 8661069},
+  {&#39;Name&#39;: &#39;NAVE_SHANAAN&#39;,
+   &#39;Code&#39;: &#39;NSH&#39;,
+   &#39;X_ITM&#39;: &#39;202285&#39;,
+   &#39;Y_ITM&#39;: &#39;743626&#39;,
+   &#39;first_csv_idx&#39;: 14657193,
+   &#39;last_csv_idx&#39;: 14990311},
+  {&#39;Name&#39;: &#39;YAHALOM&#39;,
+   &#39;Code&#39;: &#39;YAH&#39;,
+   &#39;X_ITM&#39;: &#39;166336&#39;,
+   &#39;Y_ITM&#39;: &#39;635778&#39;,
+   &#39;first_csv_idx&#39;: 22318907,
+   &#39;last_csv_idx&#39;: 22652025},
+  {&#39;Name&#39;: &#39;EILAT_IEC&#39;,
+   &#39;Code&#39;: &#39;IEC&#39;,
+   &#39;X_ITM&#39;: &#39;194714&#39;,
+   &#39;Y_ITM&#39;: &#39;385170&#39;,
+   &#39;first_csv_idx&#39;: 7328597,
+   &#39;last_csv_idx&#39;: 7661715},
+  {&#39;Name&#39;: &#39;ASHKELON_SOUTH&#39;,
+   &#39;Code&#39;: &#39;ASS&#39;,
+   &#39;X_ITM&#39;: &#39;157590&#39;,
+   &#39;Y_ITM&#39;: &#39;618195&#39;,
+   &#39;first_csv_idx&#39;: 1665591,
+   &#39;last_csv_idx&#39;: 1998709},
+  {&#39;Name&#39;: &#39;KIRYAT_HAIM&#39;,
+   &#39;Code&#39;: &#39;HAM&#39;,
+   &#39;X_ITM&#39;: &#39;205824&#39;,
+   &#39;Y_ITM&#39;: &#39;748226&#39;,
+   &#39;first_csv_idx&#39;: 12325367,
+   &#39;last_csv_idx&#39;: 12658485},
+  {&#39;Name&#39;: &#39;RISHON_LEZION&#39;,
+   &#39;Code&#39;: &#39;RSZ&#39;,
+   &#39;X_ITM&#39;: &#39;181395&#39;,
+   &#39;Y_ITM&#39;: &#39;651720&#39;,
+   &#39;first_csv_idx&#39;: 19653963,
+   &#39;last_csv_idx&#39;: 19987081},
+  {&#39;Name&#39;: &#39;RAANANA&#39;,
+   &#39;Code&#39;: &#39;RAA&#39;,
+   &#39;X_ITM&#39;: &#39;189030&#39;,
+   &#39;Y_ITM&#39;: &#39;676220&#39;,
+   &#39;first_csv_idx&#39;: 18654609,
+   &#39;last_csv_idx&#39;: 18987727},
+  {&#39;Name&#39;: &#39;RAKEVET_HASHALOM&#39;,
+   &#39;Code&#39;: &#39;RKS&#39;,
+   &#39;X_ITM&#39;: &#39;180620&#39;,
+   &#39;Y_ITM&#39;: &#39;664520&#39;,
+   &#39;first_csv_idx&#39;: 18987727,
+   &#39;last_csv_idx&#39;: 19320845},
+  {&#39;Name&#39;: &#39;SHUK&#39;,
+   &#39;Code&#39;: &#39;SHU&#39;,
+   &#39;X_ITM&#39;: &#39;200582&#39;,
+   &#39;Y_ITM&#39;: &#39;746022&#39;,
+   &#39;first_csv_idx&#39;: 18321491,
+   &#39;last_csv_idx&#39;: 18654609}]}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[27]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">row_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">])):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">row_idx</span><span class="p">],</span><span class="n">dust_debug_csv</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="n">row_idx</span><span class="p">])</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>תאריך ושעה 
+עפולה, עפולה PM10
+תל אביב-יפו, רחוב לחי PM10
+ PM2.5
+אריאל, אריאל PM10
+ירושלים, רחוב בר אילן PM2.5
+באר שבע, שכונה ו PM10
+ PM2.5
+בית שמש, בית שמש PM10
+כרמיאל, גליל מערבי PM10
+ירושלים, בקעה PM10
+ PM2.5
+אלון שבות, גוש עציון PM10
+ PM2.5
+חולון, חולון PM2.5
+תל אביב-יפו, רחוב יהודה המכבי PM2.5
+רחובות, רחובות PM10
+בני ברק, רחוב ז&#39;בוטינסקי PM2.5
+בני ברק, כביש 4 PM2.5
+ירושלים, כיכר ספרא PM10
+תל אביב-יפו, אוניברסיטה PM10
+נתניה, ניידת -1 PM10
+ PM2.5
+אשדוד, ניידת -  2 PM2.5
+פתח תקווה, רחוב גיסין PM2.5
+רמת גן, יד לבנים PM10
+ PM2.5
+תל אביב-יפו, הצפון החדש PM2.5
+תל אביב-יפו, שיכון ל PM10
+ניר גלים, ניר גלים 1 PM10
+מודיעין, מודיעין PM10
+יבנה, יבנה PM10
+חיפה, פארק הכרמל PM2.5
+בת הדר, בת הדר PM10
+תל אביב-יפו, לב תל אביב PM2.5
+חדרה, תחנת הכוח אורות רבין PM10
+חיפה, נווה שאנן PM10
+ PM2.5
+נשר, נשר PM10
+ PM2.5
+קריית אתא, מרכז העיר PM10
+ PM2.5
+קריית ים, קריית ים PM2.5
+חיפה, צ&#39;ק פוסט PM10
+ PM2.5
+קריית אתא, קריית בנימין PM10
+ PM2.5
+חדרה, בית אליעזר PM2.5
+פרדס חנה, פרדס חנה PM2.5
+אליכין, אליכין PM2.5
+אום אל פאחם, כביש 65 PM10
+ PM2.5
+אשדוד, אזור תעשייה קלה PM2.5
+גן יבנה, גן יבנה PM2.5
+גדרה, גדרה PM2.5
+יד בנימין, יד בנימין PM2.5
+אשקלון, גן הורדים PM2.5
+קריית גת, קריית גת PM2.5
+קריית מלאכי, קריית מלאכי PM2.5
+שדרות, שדרות PM2.5
+גברעם, גברעם PM2.5
+שדה יואב, שדה יואב PM2.5
+ניר ישראל, ניר ישראל PM2.5
+כרמיה, כרמיה PM2.5
+ארז, ארז PM2.5
+חיפה, אחוזה PM10
+ PM2.5
+קיריית טבעון, קריית טבעון PM10
+ PM2.5
+ראשון לציון, רחוב הרצל PM2.5
+מועצה אזורית חוף הכרמל, טורבינת הגז קיסריה PM10
+רעננה, רחוב אחוזה PM2.5
+ערד, נגב מזרחי PM10
+ PM2.5
+אשקלון, שמשון PM2.5
+תל אביב-יפו, רחוב יפת PM2.5
+סדום, לוט PM10
+סדום, נחל אשלים PM2.5
+נאות הכיכר, נאות הכיכר PM2.5
+חיפה, עצמאות חיפה PM10
+ PM2.5
+ירושלים, רוממה PM2.5
+אילת, שכונת שחמון PM10
+מבקיעים, מבקיעים PM10
+ PM2.5
+אום אל קוטוף, אום אל קוטוף PM10
+ירושלים, רציף 10 תחנה מרכזית PM2.5
+נתניה, קריית השרון PM10
+ PM2.5
+קריית אתא, ניידת - 4 PM2.5
+כפר מסריק, כפר מסריק החדשה PM2.5
+ירושלים, אזור תעשייה עטרות PM10
+כפר מנחם, שכונת ההרחבה PM2.5
+בנימינה, ניידת - 2 רכבת ישראל PM2.5
+חיפה, ניידת - 6 PM2.5
+יד רמב&#34;ם, יד רמב&#34;ם החדשה PM10
+תל אביב-יפו, ניידת - 5 PM2.5
+מועצה אזורית חוף הכרמל, כפר הנוער שפיה PM10
+ PM2.5
+תל אביב-יפו, תחנת רכבת השלום PM2.5
+חולון, תחנת רכבת וולפסון PM2.5
+בני עטרות, בני עטרות PM2.5
+בני דרום, בני דרום PM2.5
+בית חשמונאי, בית חשמונאי PM10
+ PM2.5
+אור יהודה, אור יהודה PM2.5
+כפר סבא, כפר סבא PM2.5
+קציר, קציר PM10
+קריית ביאליק, דרום PM10
+ PM2.5
+קריית מוצקין, נווה גנים PM10
+ PM2.5
+אשדוד, רובע ט&#34;ו החדשה PM2.5
+תל אביב-יפו, תחנת רכבת ההגנה PM2.5
+חולון, תחנת רכבת קוממיות PM2.5
+גליל עליון, מכללת תל חי PM2.5
+חיפה, הרצל - בלפור PM2.5
+יבנה, ניידת - 7 PM2.5
+קטורה, קטורה PM2.5
+חדרה, חפציבה PM2.5
+אשדוד, שדרות ירושלים PM2.5
+תל אביב-יפו, רחוב לוינסקי PM10
+ PM2.5
+ברטעה, ברטעה PM10
+אשלים, אשלים PM10
+אשדוד, פארק לכיש PM2.5
+מצפה נטופה, מצפה נטופה PM10
+ PM2.5
+טורעאן, טורעאן החדשה PM10
+ PM2.5
+בת שלמה, קרון איגוד שרון-כרמל 2 PM2.5
+קיסריה, מוזיאון ראלי PM2.5
+ברקאי, ברקאי החדשה PM10
+ PM2.5
+ירושלים, רחוב דבורה הנביאה PM2.5
+אלעד, אלעד PM10
+אביגדור, אביגדור PM2.5
+תימורים, תימורים PM2.5
+נחשולים, נחשולים PM2.5
+חיפה, קרית חיים - מערבית PM10
+ PM2.5
+איבטין, איבטין PM2.5
+חריש, חריש PM2.5
+ירושלים, מלכי ישראל PM2.5
+אלעד, רובע א PM10
+ PM2.5
+רמלה, שכונת האמנים PM10
+ PM2.5
+רמת השרון, איילון PM2.5
+כסייפה, כסייפה PM10
+ PM2.5
+פלוגות, פלוגות PM2.5
+קריית גת, רובע הבנים PM2.5
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[31]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM10&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">continue</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, x: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;X_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, y: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Y_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, PM10&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">dust_df_metadata</span><span class="p">[</span><span class="s2">&quot;PM25&quot;</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="s1">&#39;Name&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">s</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+        <span class="k">continue</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Name&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, x: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;X_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, y: </span><span class="si">{</span><span class="n">s</span><span class="p">[</span><span class="s1">&#39;Y_ITM&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">, PM2.5&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>AFULA, x: 227646, y: 723263, PM10
+AMIEL, x: 180611, y: 661648, PM10
+ARAD_MUNICIPALITY, x: NaN, y: NaN, PM10
+ARIEL, x: 219954, y: 667860, PM10
+ASHKELON, x: 159329, y: 618777, PM10
+ASHKELON_SOUTH, x: 157590, y: 618195, PM10
+ATZMAUT_B, x: 200549, y: 746930, PM10
+BARTAA, x: 208316, y: 709212, PM10
+BAR_ILAN, x: 220935, y: 633613, PM10
+BAT_HADAR, x: 161744, y: 617399, PM10
+BEER_SHEVA, x: 179228, y: 574024, PM10
+BEGIN, x: 208901, y: 751058, PM10
+BEIT_HASHMONAY, x: 192082, y: 644094, PM10
+BEIT_SHEMESH, x: 199379, y: 628733, PM10
+CARMELIA, x: 197620, y: 744760, PM10
+CARMEL_ZARFATI, x: 198159, y: 747329, PM10
+CARMIYA, x: 156479, y: 612687, PM10
+CEASARIA, x: 194160, y: 711743, PM10
+EAST_NEGEV, x: 220513, y: 573107, PM10
+EFRATA, x: 220763, y: 629391, PM10
+EHAD_HAAM, x: 188084, y: 667486, PM10
+EILAT6, x: 192932, y: 384325, PM10
+EILAT_IEC, x: 194714, y: 385170, PM10
+EREZ, x: 158731, y: 607995, PM10
+EVEN_AMI, x: NaN, y: NaN, PM10
+GIMZO, x: 194757, y: 648078, PM10
+GIVATAIM, x: 182301, y: 664067, PM10
+GUSH_EZION, x: 211946, y: 618052, PM10
+HADERA_B, x: 192141, y: 706027, PM10
+HAKFAR_HAYAROK, x: 184410, y: 617120, PM10
+HEFZIBA, x: 190692, y: 707199, PM10
+IGUD, x: 204108, y: 743853, PM10
+IZRAELIA, x: 201240, y: 743960, PM10
+KARMEY_YOSSEF, x: 192484, y: 639345, PM10
+KAZIR_NEW, x: 209296, y: 710341, PM10
+KIRYAT_ATA, x: 210861, y: 746333, PM10
+KIRYAT_BINYAMIN, x: 209342, y: 744564, PM10
+KIRYAT_HAIM, x: 205824, y: 748226, PM10
+KIRYAT_HAIM_REGAVIM, x: 205492, y: 748547, PM10
+KVISH9, x: 218947, y: 634660, PM10
+LOT, x: 237962, y: 553165, PM10
+MAVKIIM, x: 160045, y: 614630, PM10
+MODEIN, x: 201350, y: 646186, PM10
+MODEIN_IEC, x: 199683, y: 644433, PM10
+NAVE_SHANAAN, x: 202285, y: 743626, PM10
+NAVE_YOSEF, x: 202450, y: 743960, PM10
+NESHER, x: 204317, y: 741718, PM10
+NIR_GALIM, x: 170355, y: 637320, PM10
+PARK_HACARMEL, x: 203682, y: 738118, PM10
+PETAH_TIKVA_ROAD, x: 179013, y: 663138, PM10
+REHOVOT, x: 182742, y: 645238, PM10
+ROMMEMA, x: 200530, y: 743920, PM10
+SAFRA, x: 221380, y: 631880, PM10
+SHFEYA, x: 197768, y: 721586, PM10
+SHIKUN_L, x: 180346, y: 668398, PM10
+SHUK, x: 200582, y: 746022, PM10
+TAHANA_MERKAZIT, x: 179340, y: 662666, PM10
+TAHANA_MERKAZIT_JERUSALEM, x: 219397, y: 632993, PM10
+UM_EL_KUTUF, x: 205652, y: 708902, PM10
+WEST_GALIL, x: 227738, y: 757843, PM10
+YAD_AVNER, x: 181743, y: 669624, PM10
+YAD_LEBANIM, x: 183259, y: 664871, PM10
+YAD_RAMBAM_2, x: 211212, y: 618270, PM10
+YAVNE_CITY, x: 175444, y: 642614, PM10
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+AFULA, x: 227646, y: 723263, PM2.5
+AGRIPAS, x: 220183, y: 632369, PM2.5
+AHUZA_G, x: 199059, y: 743556, PM2.5
+AKO, x: 207828, y: 748341, PM2.5
+ANTOKOLSKY, x: 179676, y: 665772, PM2.5
+ASHALIM, x: 233739, y: 547188, PM2.5
+ASHDOD_IGUD, x: 168907, y: 636399, PM2.5
+ASHKELON, x: 159329, y: 618777, PM2.5
+ASHKELON_SOUTH, x: 157590, y: 618195, PM2.5
+ATZMAUT_B, x: 200549, y: 746930, PM2.5
+AZUR, x: NaN, y: NaN, PM2.5
+BARKAI, x: 202422, y: 709073, PM2.5
+BAR_ILAN, x: 220935, y: 633613, PM2.5
+BEER_SHEVA, x: 179228, y: 574024, PM2.5
+BEGIN, x: 208901, y: 751058, PM2.5
+BEIT_RIVKA, x: 187360, y: 655670, PM2.5
+BEN_GURION_AIRPORT, x: 190355, y: 655382, PM2.5
+BNEI_ATAROT, x: 191806, y: 659095, PM2.5
+BNEI_DAROM, x: 171080, y: 636420, PM2.5
+DALYA, x: 184155, y: 626160, PM2.5
+EAST_NEGEV, x: 220513, y: 573107, PM2.5
+EFRATA, x: 220763, y: 629391, PM2.5
+EHAD_HAAM, x: 188084, y: 667486, PM2.5
+GEDERA, x: 179222, y: 635797, PM2.5
+GUSH_EZION, x: 211946, y: 618052, PM2.5
+GVARAAM, x: 163074, y: 610974, PM2.5
+HADAR, x: NaN, y: NaN, PM2.5
+HADERA_B, x: 192141, y: 706027, PM2.5
+HATIKVA, x: NaN, y: NaN, PM2.5
+HEFZIBA, x: 190692, y: 707199, PM2.5
+HOLON, x: 178260, y: 658402, PM2.5
+IGUD, x: 204108, y: 743853, PM2.5
+IRONID, x: 180414, y: 666788, PM2.5
+KAKAL, x: 207100, y: 746464, PM2.5
+KARON_KIACH, x: 220325, y: 632370, PM2.5
+KFAR_MASARIK, x: 209585, y: 755010, PM2.5
+KFAR_SABA, x: NaN, y: NaN, PM2.5
+KIRYAT_ATA, x: 210861, y: 746333, PM2.5
+KIRYAT_BIALIK, x: 208844, y: 748787, PM2.5
+KIRYAT_BINYAMIN, x: 209342, y: 744564, PM2.5
+KIRYAT_MALAHI, x: 175541, y: 626284, PM2.5
+KIRYAT_TIVON, x: 212489, y: 736400, PM2.5
+KVISH4, x: 185207, y: 664177, PM2.5
+KVISH9, x: 218947, y: 634660, PM2.5
+MAGAL, x: 203752, y: 698998, PM2.5
+MODEIN, x: 201350, y: 646186, PM2.5
+NAVE_ILAN, x: 208844, y: 634288, PM2.5
+NAVE_SHANAAN, x: 202285, y: 743626, PM2.5
+NEOT_HAKIKAR, x: 237103, y: 539456, PM2.5
+NESHER, x: 204317, y: 741718, PM2.5
+NIR_ISRAEL, x: 165644, y: 621692, PM2.5
+OFEK, x: 164859, y: 631311, PM2.5
+ORT, x: 166858, y: 636000, PM2.5
+PARDES_HANA, x: 196756, y: 708054, PM2.5
+PARK_HACARMEL, x: 203682, y: 738118, PM2.5
+PETAH_TIKVA_ROAD, x: 179013, y: 663138, PM2.5
+RAANANA, x: 189030, y: 676220, PM2.5
+RAKEVET_HASHALOM, x: 180620, y: 664520, PM2.5
+REMEZ, x: 183802, y: 666558, PM2.5
+RISHON_LEZION, x: 181395, y: 651720, PM2.5
+ROVA_TV, x: 164954, y: 631264, PM2.5
+SDEROT, x: 162256, y: 604161, PM2.5
+SDE_YOAV, x: 169210, y: 617196, PM2.5
+SHFEYA, x: 197768, y: 721586, PM2.5
+TAHANA_MERKAZIT, x: 179340, y: 662666, PM2.5
+UM_EL_FAHEM_C, x: 214360, y: 715666, PM2.5
+YAD_LEBANIM, x: 183259, y: 664871, PM2.5
+YAHALOM, x: 166336, y: 635778, PM2.5
+YEFET_YAFO, x: 176798, y: 661903, PM2.5
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
