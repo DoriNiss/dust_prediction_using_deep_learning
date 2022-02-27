@@ -2,7 +2,7 @@
 <html>
 <head><meta charset="utf-8" />
 
-<title>Untitled</title>
+<title>dust_creation_all_stations_2019_to_2020_pm10_pm25_past7d_future7d</title>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -13079,6 +13079,1318 @@ div#notebook {
   <div tabindex="-1" id="notebook" class="border-box-sizing">
     <div class="container" id="notebook-container">
 
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../packages/data_handlers&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">DustToPandasHandler_MultiStations_MOEP_hebrew</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span> 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[6]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">data_dir</span> <span class="o">=</span> <span class="s2">&quot;../../data&quot;</span>
+<span class="n">dust_dir</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">data_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_2019_2020&quot;</span>
+<span class="n">dust_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/dust_MOEP_raw_2019to2020_pm10_pm25.csv&quot;</span>
+<span class="n">base_stations_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/base_stations.pkl&quot;</span>
+
+<span class="n">result_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dust_dir</span><span class="si">}</span><span class="s2">/dataframes/dust_df_MOEP_2019_2020&quot;</span>
+
+<span class="c1"># dust_pm10_older_filename = f&quot;{data_dir}/data_pm10_all_stations.csv&quot;</span>
+<span class="c1"># dust_df_metadata_filename = f&quot;{dust_dir}/metadata/dust_df_all_stations_2000_to_2018_pm10_pm25_past7d_future7d_metadata_all.pkl&quot;</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[3]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">base_stations_list</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">base_stations_filename</span><span class="p">)</span>
+
+<span class="n">lags</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="o">-</span><span class="mi">7</span><span class="o">*</span><span class="mi">24</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span><span class="o">+</span><span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">7</span><span class="o">*</span><span class="mi">24</span><span class="o">+</span><span class="mi">3</span><span class="p">,</span><span class="mi">3</span><span class="p">)]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">lags</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">lags</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[0, -168, -165, -162, -159, -156, -153, -150, -147, -144, -141, -138, -135, -132, -129, -126, -123, -120, -117, -114, -111, -108, -105, -102, -99, -96, -93, -90, -87, -84, -81, -78, -75, -72, -69, -66, -63, -60, -57, -54, -51, -48, -45, -42, -39, -36, -33, -30, -27, -24, -21, -18, -15, -12, -9, -6, -3, 3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36, 39, 42, 45, 48, 51, 54, 57, 60, 63, 66, 69, 72, 75, 78, 81, 84, 87, 90, 93, 96, 99, 102, 105, 108, 111, 114, 117, 120, 123, 126, 129, 132, 135, 138, 141, 144, 147, 150, 153, 156, 159, 162, 165, 168] 113
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[4]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span> <span class="o">=</span> <span class="n">DustToPandasHandler_MultiStations_MOEP_hebrew</span><span class="p">(</span>
+    <span class="n">timezone</span><span class="o">=</span><span class="s2">&quot;Asia/Jerusalem&quot;</span><span class="p">,</span> <span class="n">num_hours_to_avg</span><span class="o">=</span><span class="s2">&quot;3h&quot;</span><span class="p">,</span><span class="n">lags</span><span class="o">=</span><span class="n">lags</span><span class="p">,</span>
+    <span class="n">delta_hours</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">saveto</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">avg_th</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">origin_start</span><span class="o">=</span><span class="s2">&quot;2019-01-01 00:00:00+00:00&quot;</span><span class="p">,</span>
+    <span class="n">debug</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">keep_na</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">data_csv_filename</span><span class="o">=</span><span class="n">dust_filename</span><span class="p">,</span> <span class="n">loaded_file</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">stations_num_values_th</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> 
+    <span class="n">pm_csv_titles_to_base_titles_translation</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;PM10&quot;</span><span class="p">:</span><span class="s2">&quot;PM10&quot;</span><span class="p">,</span><span class="s2">&quot;PM2.5&quot;</span><span class="p">:</span><span class="s2">&quot;PM25&quot;</span><span class="p">},</span>
+    <span class="n">base_stations</span><span class="o">=</span><span class="n">base_stations_list</span><span class="p">,</span> <span class="n">hebrew_station_titles_row</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">pm_types_titles_row</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> 
+    <span class="n">invalid_values_flags</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">only_from_stations_by_names</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">add_value_counts</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">years</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">invalid_rows_idxs</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">4</span><span class="p">],</span>
+    <span class="n">timestamp_format_day_first</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Loading .csv data: ...
+Initiated handler! Number of rows in csv file: 35088, number of cols: 105
+Use self.create_and_save_batched_dataframes(base_filename,batch_size=None,num_jobs=2) to create and save dataframes (batch_size=None means one batch for all file, so no parallelism)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[5]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">handler</span><span class="o">.</span><span class="n">create_and_save_batched_dataframes</span><span class="p">(</span><span class="n">result_filename</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">17544</span><span class="p">,</span> <span class="n">num_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>[Parallel(n_jobs=1)]: Using backend SequentialBackend with 1 concurrent workers.
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>100%|██████████| 17544/17544 [00:02&lt;00:00, 5930.01it/s]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Saved dataframe of batch #0, of len 2924
+[Parallel(n_jobs=1)]: Done   1 out of   1 | elapsed:   53.5s remaining:    0.0s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stderr output_text">
+<pre>100%|██████████| 17544/17544 [00:02&lt;00:00, 6150.08it/s]
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+    <div class="prompt"></div>
+
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Saved dataframe of batch #1, of len 2925
+[Parallel(n_jobs=1)]: Done   2 out of   2 | elapsed:  1.7min remaining:    0.0s
+[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed:  1.7min remaining:    0.0s
+[Parallel(n_jobs=1)]: Done   3 out of   3 | elapsed:  1.7min finished
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="mi">73224</span><span class="o">/</span><span class="mi">339</span><span class="o">/</span><span class="mi">2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[14]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>108.0</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[7]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result1</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_filename</span><span class="si">}</span><span class="s2">_b0.pkl&quot;</span><span class="p">)</span>
+<span class="n">result1</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[7]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MAVKIIM_PM10_0</th>
+      <th>MAVKIIM_PM10_values_count_0</th>
+      <th>MAVKIIM_PM25_0</th>
+      <th>MAVKIIM_PM25_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM10_0</th>
+      <th>YAD_RAMBAM_2_PM10_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM25_0</th>
+      <th>YAD_RAMBAM_2_PM25_values_count_0</th>
+      <th>KVISH9_PM10_0</th>
+      <th>KVISH9_PM10_values_count_0</th>
+      <th>...</th>
+      <th>UM_EL_KUTUF_PM25_values_count_141</th>
+      <th>UM_EL_KUTUF_PM25_values_count_144</th>
+      <th>UM_EL_KUTUF_PM25_values_count_147</th>
+      <th>UM_EL_KUTUF_PM25_values_count_150</th>
+      <th>UM_EL_KUTUF_PM25_values_count_153</th>
+      <th>UM_EL_KUTUF_PM25_values_count_156</th>
+      <th>UM_EL_KUTUF_PM25_values_count_159</th>
+      <th>UM_EL_KUTUF_PM25_values_count_162</th>
+      <th>UM_EL_KUTUF_PM25_values_count_165</th>
+      <th>UM_EL_KUTUF_PM25_values_count_168</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>21.683333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>24.550000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 03:00:00+00:00</th>
+      <td>14.650000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>21.750000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 06:00:00+00:00</th>
+      <td>25.766667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>26.216667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 09:00:00+00:00</th>
+      <td>35.416667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>39.116667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 12:00:00+00:00</th>
+      <td>21.116667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>35.183333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2019-12-31 18:00:00+00:00</th>
+      <td>32.033333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>50.233333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-12-31 21:00:00+00:00</th>
+      <td>34.050000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>44.583333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 00:00:00+00:00</th>
+      <td>15.866667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>26.133333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 03:00:00+00:00</th>
+      <td>18.450000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>20.233333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 06:00:00+00:00</th>
+      <td>20.750000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>24.500000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2923 rows × 73224 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[8]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result2</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_filename</span><span class="si">}</span><span class="s2">_b1.pkl&quot;</span><span class="p">)</span>
+<span class="n">result2</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[8]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MAVKIIM_PM10_0</th>
+      <th>MAVKIIM_PM10_values_count_0</th>
+      <th>MAVKIIM_PM25_0</th>
+      <th>MAVKIIM_PM25_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM10_0</th>
+      <th>YAD_RAMBAM_2_PM10_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM25_0</th>
+      <th>YAD_RAMBAM_2_PM25_values_count_0</th>
+      <th>KVISH9_PM10_0</th>
+      <th>KVISH9_PM10_values_count_0</th>
+      <th>...</th>
+      <th>UM_EL_KUTUF_PM25_values_count_141</th>
+      <th>UM_EL_KUTUF_PM25_values_count_144</th>
+      <th>UM_EL_KUTUF_PM25_values_count_147</th>
+      <th>UM_EL_KUTUF_PM25_values_count_150</th>
+      <th>UM_EL_KUTUF_PM25_values_count_153</th>
+      <th>UM_EL_KUTUF_PM25_values_count_156</th>
+      <th>UM_EL_KUTUF_PM25_values_count_159</th>
+      <th>UM_EL_KUTUF_PM25_values_count_162</th>
+      <th>UM_EL_KUTUF_PM25_values_count_165</th>
+      <th>UM_EL_KUTUF_PM25_values_count_168</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2020-01-01 09:00:00+00:00</th>
+      <td>34.450000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>28.750000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 12:00:00+00:00</th>
+      <td>18.766667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>18.916667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 15:00:00+00:00</th>
+      <td>15.183333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>27.383333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 18:00:00+00:00</th>
+      <td>25.300000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>29.100000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-01-01 21:00:00+00:00</th>
+      <td>11.766667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>24.500000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 09:00:00+00:00</th>
+      <td>66.200000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>54.416667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 12:00:00+00:00</th>
+      <td>48.116667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>81.133333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 15:00:00+00:00</th>
+      <td>52.033333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>82.000000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 18:00:00+00:00</th>
+      <td>51.900000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>65.433333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 21:00:00+00:00</th>
+      <td>48.550000</td>
+      <td>2.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>58.000000</td>
+      <td>2.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>2925 rows × 73224 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[9]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df_all</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">result1</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span><span class="n">result2</span><span class="p">])</span>
+<span class="n">df_all</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[9]:</div>
+
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>MAVKIIM_PM10_0</th>
+      <th>MAVKIIM_PM10_values_count_0</th>
+      <th>MAVKIIM_PM25_0</th>
+      <th>MAVKIIM_PM25_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM10_0</th>
+      <th>YAD_RAMBAM_2_PM10_values_count_0</th>
+      <th>YAD_RAMBAM_2_PM25_0</th>
+      <th>YAD_RAMBAM_2_PM25_values_count_0</th>
+      <th>KVISH9_PM10_0</th>
+      <th>KVISH9_PM10_values_count_0</th>
+      <th>...</th>
+      <th>UM_EL_KUTUF_PM25_values_count_141</th>
+      <th>UM_EL_KUTUF_PM25_values_count_144</th>
+      <th>UM_EL_KUTUF_PM25_values_count_147</th>
+      <th>UM_EL_KUTUF_PM25_values_count_150</th>
+      <th>UM_EL_KUTUF_PM25_values_count_153</th>
+      <th>UM_EL_KUTUF_PM25_values_count_156</th>
+      <th>UM_EL_KUTUF_PM25_values_count_159</th>
+      <th>UM_EL_KUTUF_PM25_values_count_162</th>
+      <th>UM_EL_KUTUF_PM25_values_count_165</th>
+      <th>UM_EL_KUTUF_PM25_values_count_168</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2019-01-01 00:00:00+00:00</th>
+      <td>21.683333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>24.550000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 03:00:00+00:00</th>
+      <td>14.650000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>21.750000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 06:00:00+00:00</th>
+      <td>25.766667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>26.216667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 09:00:00+00:00</th>
+      <td>35.416667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>39.116667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2019-01-01 12:00:00+00:00</th>
+      <td>21.116667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>35.183333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 09:00:00+00:00</th>
+      <td>66.200000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>54.416667</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 12:00:00+00:00</th>
+      <td>48.116667</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>81.133333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 15:00:00+00:00</th>
+      <td>52.033333</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>82.000000</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 18:00:00+00:00</th>
+      <td>51.900000</td>
+      <td>6.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>65.433333</td>
+      <td>6.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2020-12-31 21:00:00+00:00</th>
+      <td>48.550000</td>
+      <td>2.0</td>
+      <td>-999.0</td>
+      <td>0.0</td>
+      <td>58.000000</td>
+      <td>2.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>-777.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5848 rows × 73224 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[10]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">result_filename</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+
+<div class="output_area">
+
+    <div class="prompt output_prompt">Out[10]:</div>
+
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&#39;../../data/dust_MOEP_2019_2020/dataframes/dust_df_MOEP_2019_2020&#39;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+<div class="prompt input_prompt">In&nbsp;[11]:</div>
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">df_all</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_filename</span><span class="si">}</span><span class="s2">_full.pkl&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
 <div class="prompt input_prompt">In&nbsp;[&nbsp;]:</div>
