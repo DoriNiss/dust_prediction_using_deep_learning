@@ -220,6 +220,68 @@ metadata
 torch.save(metadata,f"{base_filename}_metadata.pkl")
 
 
+# RUN FROM START TO HERE TO BUILD CORRECT TENSORS
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+base_filename
+
+
+save_as_base_filename
+
+
+
+
+
+import matplotlib.pyplot as plt
+t_sample_year = torch.load(f"{base_filename}_2006_tensor_full.pkl")
+plt.imshow(t_sample_year[0,11,:,:])
+
+
+plt.imshow(t_sample_year[100,11,:,:])
+
+
+plt.imshow(t_sample_year[100,10,:,:])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
