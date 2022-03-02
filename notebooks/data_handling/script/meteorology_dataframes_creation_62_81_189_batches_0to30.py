@@ -291,6 +291,27 @@ handler.create_yearly_dataframes_parallel_batches(base_filename,years=years,add_
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # years = [2013]
 # base_filename = "../../data/meteorology_dataframes_62_81_189/meteorology_df"
 # handler.create_yearly_dataframes_parallel(base_filename,years=years,add_year_to_name=True,njobs=1)
