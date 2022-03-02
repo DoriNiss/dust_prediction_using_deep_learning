@@ -16149,7 +16149,7 @@ lags: [0, -168, -165, -162, -159, -156, -153, -150, -147, -144, -141, -138, -135
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[6]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">dims_cols_strings</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span><span class="n">all_stations</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="n">pm_types</span><span class="p">,</span> <span class="mi">3</span><span class="p">:</span><span class="n">data_suffixes</span><span class="p">}</span>
@@ -16169,7 +16169,7 @@ lags: [0, -168, -165, -162, -159, -156, -153, -150, -147, -144, -141, -138, -135
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[7]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[6]:</div>
 
 
 
@@ -16634,7 +16634,7 @@ lags: [0, -168, -165, -162, -159, -156, -153, -150, -147, -144, -141, -138, -135
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[7]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">new_dust_dataframe</span>
@@ -16682,7 +16682,7 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[8]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">metadata_new_years</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_metadata.pkl&quot;</span><span class="p">)</span>
@@ -16702,7 +16702,7 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-OutputArea-child">
 
     
-    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[8]:</div>
 
 
 
@@ -19078,14 +19078,17 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">tensors_list</span><span class="p">,</span> <span class="n">timestamps_list</span> <span class="o">=</span> <span class="p">[],[]</span>
-<span class="n">tensors_path_list</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2019_tensor.pkl&quot;</span><span class="p">,</span>
-                     <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2020_tensor.pkl&quot;</span><span class="p">,</span>
-                     <span class="n">old_tensor</span>
-                    <span class="p">]</span>
-<span class="n">timestamps_path_list</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2019_timestamps.pkl&quot;</span><span class="p">,</span>
-                        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2020_timestamps.pkl&quot;</span><span class="p">,</span>
-                        <span class="n">old_timestamps</span>
-                       <span class="p">]</span>
+<span class="n">tensors_path_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">old_tensor</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2019_tensor.pkl&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2020_tensor.pkl&quot;</span>
+<span class="p">]</span>
+
+<span class="n">timestamps_path_list</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">old_timestamps</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2019_timestamps.pkl&quot;</span><span class="p">,</span>
+    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_2020_timestamps.pkl&quot;</span><span class="p">,</span>
+<span class="p">]</span>
 
 <span class="k">for</span> <span class="n">path_idx</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tensors_path_list</span><span class="p">))):</span>
     <span class="n">tensors_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">torch</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">tensors_path_list</span><span class="p">[</span><span class="n">path_idx</span><span class="p">]))</span>
@@ -19148,9 +19151,9 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 
 
 <div class="jp-RenderedText jp-OutputArea-output" data-mime-type="text/plain">
-<pre>0 torch.Size([2920, 108, 2, 339]) 3
-1 torch.Size([2928, 108, 2, 339]) 3
-2 torch.Size([55520, 108, 2, 339]) 3
+<pre>0 torch.Size([55520, 108, 2, 339]) 3
+1 torch.Size([2920, 108, 2, 339]) 3
+2 torch.Size([2928, 108, 2, 339]) 3
 </pre>
 </div>
 </div>
@@ -19162,7 +19165,7 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[15]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[11]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged_tensor</span><span class="p">,</span><span class="n">merged_timestamps</span> <span class="o">=</span> <span class="n">DatasetHandler_DataframeToTensor_Dust</span><span class="o">.</span><span class="n">merge_by_timestamps</span><span class="p">(</span>
@@ -19197,10 +19200,58 @@ load_merge_and_save_yearly_tensors_by_timestamps(base_filename,years,timestamps,
 
 </div>
 
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell   ">
+<div class="jp-Cell-inputWrapper">
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[12]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+     <div class="CodeMirror cm-s-jupyter">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged_timestamps</span>
+</pre></div>
+
+     </div>
+</div>
+</div>
+</div>
+
+<div class="jp-Cell-outputWrapper">
+
+
+<div class="jp-OutputArea jp-Cell-outputArea">
+
+<div class="jp-OutputArea-child">
+
+    
+    <div class="jp-OutputPrompt jp-OutputArea-prompt">Out[12]:</div>
+
+
+
+
+<div class="jp-RenderedText jp-OutputArea-output jp-OutputArea-executeResult" data-mime-type="text/plain">
+<pre>DatetimeIndex([&#39;2000-01-01 00:00:00+00:00&#39;, &#39;2000-01-01 03:00:00+00:00&#39;,
+               &#39;2000-01-01 06:00:00+00:00&#39;, &#39;2000-01-01 09:00:00+00:00&#39;,
+               &#39;2000-01-01 12:00:00+00:00&#39;, &#39;2000-01-01 15:00:00+00:00&#39;,
+               &#39;2000-01-01 18:00:00+00:00&#39;, &#39;2000-01-01 21:00:00+00:00&#39;,
+               &#39;2000-01-02 00:00:00+00:00&#39;, &#39;2000-01-02 03:00:00+00:00&#39;,
+               ...
+               &#39;2020-12-30 18:00:00+00:00&#39;, &#39;2020-12-30 21:00:00+00:00&#39;,
+               &#39;2020-12-31 00:00:00+00:00&#39;, &#39;2020-12-31 03:00:00+00:00&#39;,
+               &#39;2020-12-31 06:00:00+00:00&#39;, &#39;2020-12-31 09:00:00+00:00&#39;,
+               &#39;2020-12-31 12:00:00+00:00&#39;, &#39;2020-12-31 15:00:00+00:00&#39;,
+               &#39;2020-12-31 18:00:00+00:00&#39;, &#39;2020-12-31 21:00:00+00:00&#39;],
+              dtype=&#39;datetime64[ns, UTC]&#39;, length=61368, freq=None)</pre>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 </div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs  ">
 <div class="jp-Cell-inputWrapper">
 <div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[16]:</div>
+<div class="jp-InputPrompt jp-InputArea-prompt">In&nbsp;[13]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
      <div class="CodeMirror cm-s-jupyter">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">merged_tensor</span><span class="p">,</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">result_dir</span><span class="si">}</span><span class="s2">/dust_61368_108_2_339_full_tensor.pkl&quot;</span><span class="p">)</span>
