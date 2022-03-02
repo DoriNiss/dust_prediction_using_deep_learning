@@ -70,14 +70,17 @@ metadata_new_years
 
 
 tensors_list, timestamps_list = [],[]
-tensors_path_list = [f"{result_dir}/dust_61368_108_2_339_2019_tensor.pkl",
-                     f"{result_dir}/dust_61368_108_2_339_2020_tensor.pkl",
-                     old_tensor
-                    ]
-timestamps_path_list = [f"{result_dir}/dust_61368_108_2_339_2019_timestamps.pkl",
-                        f"{result_dir}/dust_61368_108_2_339_2020_timestamps.pkl",
-                        old_timestamps
-                       ]
+tensors_path_list = [
+    old_tensor,
+    f"{result_dir}/dust_61368_108_2_339_2019_tensor.pkl",
+    f"{result_dir}/dust_61368_108_2_339_2020_tensor.pkl"
+]
+
+timestamps_path_list = [
+    old_timestamps,
+    f"{result_dir}/dust_61368_108_2_339_2019_timestamps.pkl",
+    f"{result_dir}/dust_61368_108_2_339_2020_timestamps.pkl",
+]
 
 for path_idx in tqdm(range(len(tensors_path_list))):
     tensors_list.append(torch.load(tensors_path_list[path_idx]))
@@ -93,6 +96,9 @@ merged_tensor,merged_timestamps = DatasetHandler_DataframeToTensor_Dust.merge_by
     tensors_list, timestamps_list
 )
 print(f"Merged! {merged_tensor.shape}, {len(merged_timestamps)}")
+
+
+merged_timestamps
 
 
 torch.save(merged_tensor,f"{result_dir}/dust_61368_108_2_339_full_tensor.pkl")
