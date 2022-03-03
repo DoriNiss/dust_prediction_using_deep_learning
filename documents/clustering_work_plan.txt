@@ -1,0 +1,14 @@
+CLUSTERING PLAN
+
+1. dust tensors: 
+	a. Split to regions by x,y and average (local - copy full dust tensor). 
+	b. Define 3-5 areas of dust events and their thresholds. Check for PM10 only.
+	c. Label idxs by type of event (only in one region or a combination of them) and see the frequencies of occurences.
+
+2. Meteorology: averages of 7 days sequences (X62 channels). Find the most significant signal. Find the most interesting levels.
+
+3. Compression:
+	a. Patch compression - understand each chosen channel's area of interest and patch (6 values)
+	b. Test: Large areas (27X27) or bigger, maybe 3 patches per area of interest, only averages and lots of channels
+
+
